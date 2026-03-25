@@ -33,6 +33,7 @@
             flex-direction: column;
             align-items: center;
             height: 100vh;
+            height: 100dvh; /* Support for dynamic viewport height on mobile */
             overflow: hidden;
             touch-action: manipulation;
         }
@@ -44,7 +45,8 @@
             display: flex;
             flex-direction: column;
             padding: 10px;
-            gap: 10px;
+            padding-bottom: 80px; /* Space for social links */
+            gap: 5px;
         }
 
         /* Logo & Subtitle */
@@ -52,24 +54,25 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
         }
 
         #game-logo {
-            width: 120px;
-            height: 120px;
-            border-radius: 15px;
-            border: 4px solid var(--text);
-            box-shadow: var(--chunky-shadow);
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            border: 3px solid var(--text);
+            box-shadow: 2px 2px 0px #000;
             object-fit: cover;
         }
 
         #game-subtitle {
-            font-size: 8px;
+            font-size: 7px;
             margin-top: 10px;
             color: var(--retro-pink);
             text-align: center;
-            line-height: 1.4;
+            line-height: 1.2;
             text-transform: uppercase;
             font-weight: bold;
         }
@@ -77,76 +80,77 @@
         /* Header Section */
         #header {
             text-align: center;
-            padding-top: 5px;
+            padding-top: 2px;
+            flex-shrink: 0;
         }
 
         #objective {
-            font-size: 10px;
-            line-height: 1.5;
+            font-size: 9px;
+            line-height: 1.3;
             color: var(--retro-cyan);
-            margin-bottom: 10px;
-            min-height: 30px;
+            margin-bottom: 5px;
+            min-height: 24px;
             font-weight: bold;
         }
 
         #lives {
             display: flex;
             justify-content: center;
-            gap: 5px;
-            font-size: 18px;
+            gap: 4px;
+            font-size: 14px;
         }
 
         .heart {
             color: #ff4d4d;
-            font-size: 20px;
+            font-size: 16px;
         }
 
         /* Fusion Section */
         #fusion-area {
-            flex: 0 0 auto;
+            flex-shrink: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 8px;
         }
 
         #fusion-bar {
             width: 100%;
-            height: 70px;
+            height: 55px;
             background: rgba(0, 0, 0, 0.05);
-            border: 4px solid var(--retro-pink);
-            box-shadow: var(--chunky-shadow);
-            border-radius: 10px;
+            border: 3px solid var(--retro-pink);
+            box-shadow: 3px 3px 0px #000;
+            border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
-            padding: 5px;
+            gap: 8px;
+            padding: 4px;
         }
 
         .fusion-slot {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             background: #fff;
-            border: 3px solid var(--text);
-            border-radius: 5px;
+            border: 2px solid var(--text);
+            border-radius: 4px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
         }
 
         #fusion-btn {
-            width: 90%;
-            padding: 15px;
+            width: 85%;
+            padding: 10px;
             background: var(--retro-green);
             color: #fff;
-            border: 4px solid var(--text);
-            border-radius: 10px;
+            border: 3px solid var(--text);
+            border-radius: 8px;
             font-family: 'Press Start 2P', cursive;
-            font-size: 14px;
-            box-shadow: var(--chunky-shadow);
+            font-size: 11px;
+            box-shadow: 3px 3px 0px #000;
             cursor: pointer;
             transition: transform 0.1s, box-shadow 0.1s;
         }
@@ -161,22 +165,25 @@
             flex: 1;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(5, 1fr);
-            gap: 8px;
-            padding-bottom: 10px;
+            gap: 6px;
+            padding-bottom: 5px;
+            margin-top: 5px;
+            min-height: 0; /* Important for flex shrink */
         }
 
         .emoji-btn {
             background: #fff;
-            border: 3px solid var(--text);
-            border-radius: 8px;
+            border: 2px solid var(--text);
+            border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 28px;
+            font-size: 22px;
             cursor: pointer;
-            box-shadow: var(--chunky-shadow);
+            box-shadow: 2px 2px 0px #000;
             transition: transform 0.1s;
+            height: 100%;
+            width: 100%;
         }
 
         .emoji-btn:active {
@@ -186,6 +193,111 @@
         .emoji-btn.selected {
             opacity: 0.3;
             pointer-events: none;
+        }
+
+        /* Info Button */
+        #info-btn {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            background: var(--retro-cyan);
+            color: white;
+            border: 3px solid var(--text);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px #000;
+            z-index: 50;
+            transition: transform 0.1s;
+        }
+
+        #info-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* Rules Overlay */
+        #rules-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #rules-overlay.active {
+            display: flex;
+        }
+
+        #rules-content {
+            background: var(--bg);
+            border: 4px solid var(--text);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 350px;
+            text-align: left;
+            box-shadow: var(--chunky-shadow);
+        }
+
+        /* Social Links */
+        .social-links-container {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            z-index: 150; /* Above screens */
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            background: rgba(253, 246, 227, 0.9);
+            padding: 5px 12px;
+            border-radius: 15px;
+            border: 2px solid var(--text);
+            box-shadow: 2px 2px 0px #000;
+            pointer-events: auto;
+        }
+
+        .social-links a {
+            display: block;
+            width: 20px;
+            height: 20px;
+            transition: transform 0.2s;
+        }
+
+        .social-links a:active {
+            transform: scale(0.8);
+        }
+
+        .social-links img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .copyright {
+            font-size: 6px;
+            color: var(--text);
+            opacity: 0.6;
+            text-align: center;
+            text-transform: uppercase;
         }
 
         /* Screens */
@@ -204,6 +316,7 @@
             text-align: center;
             padding: 20px;
             color: var(--text);
+            overflow-y: auto;
         }
 
         .screen.active {
@@ -283,6 +396,36 @@
         <div id="emoji-grid"></div>
     </div>
 
+    <div class="social-links-container">
+        <div class="social-links">
+            <a href="https://www.tiktok.com/@hugo_bsqt" target="_blank" rel="noopener noreferrer">
+                <img src="https://cdn.simpleicons.org/tiktok/2d2d2d" alt="TikTok">
+            </a>
+            <a href="https://www.instagram.com/hugo_bsqt/" target="_blank" rel="noopener noreferrer">
+                <img src="https://cdn.simpleicons.org/instagram/2d2d2d" alt="Instagram">
+            </a>
+            <a href="https://www.youtube.com/channel/UCUAfM0_WdPb1o-gRWAP8xWg" target="_blank" rel="noopener noreferrer">
+                <img src="https://cdn.simpleicons.org/youtube/2d2d2d" alt="YouTube">
+            </a>
+        </div>
+        <div class="copyright">Hugo_BSQT 2026 tous droits réservés</div>
+    </div>
+
+    <div id="info-btn" onclick="game.toggleRules()">i</div>
+
+    <div id="rules-overlay" onclick="game.toggleRules()">
+        <div id="rules-content" onclick="event.stopPropagation()">
+            <h2 style="color: var(--retro-pink); font-size: 14px; margin-bottom: 15px; text-align: center;">RAPPEL DES RÈGLES</h2>
+            <div style="font-size: 9px; line-height: 1.8; color: var(--text);">
+                <p>🧪 <span style="color: var(--retro-green);">RÈGLES :</span></p>
+                <p>1. Associe les bons émojis pour recréer la référence pop culture.</p>
+                <p>2. Clique sur FUSIONNER pour valider.</p>
+                <p>3. Attention : 4 vies par palier. Si tu tombes à 0, retour au Niveau 1 !</p>
+            </div>
+            <button class="btn-restart" style="width: 100%; margin-top: 20px; font-size: 12px; padding: 10px;" onclick="game.toggleRules()">FERMER</button>
+        </div>
+    </div>
+
     <!-- Start Screen -->
     <div id="start-screen" class="screen active">
         <img src="input_file_0.png" onerror="this.src='https://picsum.photos/seed/popcorn/200/200'" style="width: 150px; border-radius: 20px; margin-bottom: 20px; border: 4px solid var(--text); box-shadow: var(--chunky-shadow);" alt="Logo">
@@ -293,7 +436,10 @@
             <p>2. Clique sur FUSIONNER pour valider.</p>
             <p>3. Attention : 4 vies par palier. Si tu tombes à 0, retour au Niveau 1 !</p>
         </div>
-        <button class="btn-restart" onclick="game.start()">JOUER</button>
+        <div id="start-buttons" style="display: flex; flex-direction: column; gap: 15px; width: 100%; align-items: center;">
+            <button id="btn-resume" class="btn-restart" style="display: none; background: var(--retro-green); color: white;" onclick="game.resume()">REPRENDRE</button>
+            <button class="btn-restart" onclick="game.start()">NOUVELLE PARTIE</button>
+        </div>
     </div>
 
     <!-- Tier Transition Screen -->
@@ -355,7 +501,7 @@
         }
 
         // --- Levels Configuration ---
-        const COMMON_DECOYS = ["🔥", "💧", "⚡", "🌈", "💀", "🍕", "🚗", "🎮", "🎸", "👽", "🍔", "🍦", "🚀", "💎", "👑", "🎩", "👠", "🎻", "🎲", "🎯", "🎨", "🎭", "🎪", "🎫", "🎬", "🎤", "🎧", "🎷", "🎺", "🎸", "🎻", "🎹"];
+        const COMMON_DECOYS = ["🔥", "💧", "⚡", "🌈", "💀", "🍕", "🚗", "🎮", "🎸", "👽", "🍔", "🍦", "🚀", "💎", "👑", "🎩", "👠", "🎻", "🎲", "🎯", "🎨", "🎭", "🎪", "🎫", "🎬", "🎤", "🎧", "🎷", "🎺", "🎹", "🥨", "🍩", "🍿", "🥤", "🛹", "🚲", "🛸", "🪐"];
 
         const LEVELS = [
             // Palier 1 (1-20) : 2 emojis
@@ -465,15 +611,24 @@
                     return;
                 }
 
-                // Shuffle levels within each tier to ensure variety
-                const tier1 = LEVELS.slice(0, 20).sort(() => Math.random() - 0.5);
-                const tier2 = LEVELS.slice(20, 40).sort(() => Math.random() - 0.5);
-                const tier3 = LEVELS.slice(40, 60).sort(() => Math.random() - 0.5);
-                const tier4 = LEVELS.slice(60, 80).sort(() => Math.random() - 0.5);
-                this.sessionLevels = [...tier1, ...tier2, ...tier3, ...tier4];
+                // Check for saved game
+                const savedData = localStorage.getItem('popcorn_alchemy_save');
+                if (savedData) {
+                    try {
+                        const data = JSON.parse(savedData);
+                        this.sessionLevels = data.sessionLevels;
+                        this.currentLevelIndex = data.currentLevelIndex;
+                        this.lives = data.lives;
+                        document.getElementById('btn-resume').style.display = 'block';
+                        document.getElementById('btn-resume').innerText = `REPRENDRE (Niv. ${this.currentLevelIndex + 1})`;
+                    } catch (e) {
+                        console.error("Failed to load save", e);
+                        this.createNewSession();
+                    }
+                } else {
+                    this.createNewSession();
+                }
 
-                this.currentLevelIndex = 0;
-                this.lives = 4;
                 this.selected = [];
                 this.isProcessing = false;
                 document.getElementById('start-screen').classList.add('active');
@@ -510,7 +665,34 @@
                 }
             },
 
+            createNewSession() {
+                // Shuffle levels within each tier to ensure variety
+                const tier1 = LEVELS.slice(0, 20).sort(() => Math.random() - 0.5);
+                const tier2 = LEVELS.slice(20, 40).sort(() => Math.random() - 0.5);
+                const tier3 = LEVELS.slice(40, 60).sort(() => Math.random() - 0.5);
+                const tier4 = LEVELS.slice(60, 80).sort(() => Math.random() - 0.5);
+                this.sessionLevels = [...tier1, ...tier2, ...tier3, ...tier4];
+                this.currentLevelIndex = 0;
+                this.lives = 4;
+                localStorage.removeItem('popcorn_alchemy_save');
+            },
+
+            saveGame() {
+                const data = {
+                    sessionLevels: this.sessionLevels,
+                    currentLevelIndex: this.currentLevelIndex,
+                    lives: this.lives
+                };
+                localStorage.setItem('popcorn_alchemy_save', JSON.stringify(data));
+            },
+
             start() {
+                this.createNewSession();
+                document.getElementById('start-screen').classList.remove('active');
+                this.loadLevel();
+            },
+
+            resume() {
                 document.getElementById('start-screen').classList.remove('active');
                 this.loadLevel();
             },
@@ -519,6 +701,7 @@
                 const level = this.sessionLevels[this.currentLevelIndex];
                 this.selected = [];
                 this.updateUI();
+                this.saveGame();
                 
                 // Objective
                 document.getElementById('objective').innerText = level.objective;
@@ -539,8 +722,11 @@
                 grid.innerHTML = '';
                 
                 // Combine solution + decoys and shuffle
+                // Filter decoys to avoid duplicates with solution and ensure uniqueness
+                const uniqueCommonDecoys = [...new Set(COMMON_DECOYS)];
+                const availableDecoys = uniqueCommonDecoys.filter(e => !level.solution.includes(e));
                 const decoysNeeded = 20 - level.solution.length;
-                const decoys = [...COMMON_DECOYS].sort(() => 0.5 - Math.random()).slice(0, decoysNeeded);
+                const decoys = [...availableDecoys].sort(() => 0.5 - Math.random()).slice(0, decoysNeeded);
                 const allEmojis = [...level.solution, ...decoys];
                 this.shuffle(allEmojis);
 
@@ -646,9 +832,11 @@
                     setTimeout(() => document.body.classList.remove('shake'), 500);
 
                     if (this.lives <= 0) {
+                        localStorage.removeItem('popcorn_alchemy_save');
                         this.showGameOver();
                     } else {
                         // Reset selection on error
+                        this.saveGame();
                         this.selected.forEach(s => s.btn.classList.remove('selected'));
                         this.selected = [];
                         this.renderFusionBar();
@@ -677,12 +865,18 @@
             },
 
             showVictory() {
+                localStorage.removeItem('popcorn_alchemy_save');
                 confetti({
                     particleCount: 500,
                     spread: 160,
                     origin: { y: 0.5 }
                 });
                 document.getElementById('victory-screen').classList.add('active');
+            },
+
+            toggleRules() {
+                const overlay = document.getElementById('rules-overlay');
+                overlay.classList.toggle('active');
             }
         };
 
