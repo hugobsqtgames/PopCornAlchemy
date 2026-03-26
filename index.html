@@ -176,31 +176,30 @@
         /* Fever Mode */
         .fever-mode #game-container {
             border: 4px solid var(--retro-yellow);
-            box-shadow: 0 0 20px var(--retro-yellow);
-            animation: fever-glow 1s infinite alternate;
+            box-shadow: 0 0 30px var(--retro-yellow);
+            animation: fever-glow 0.8s infinite alternate;
         }
 
         @keyframes fever-glow {
-            from { box-shadow: 0 0 10px var(--retro-yellow); }
-            to { box-shadow: 0 0 30px var(--retro-yellow); }
+            from { 
+                box-shadow: 0 0 15px var(--retro-yellow);
+                border-color: var(--retro-yellow);
+            }
+            to { 
+                box-shadow: 0 0 40px var(--retro-pink);
+                border-color: var(--retro-pink);
+            }
         }
 
-        .fever-mode {
-            animation: fever-shake 0.2s infinite;
+        .fever-mode #combo-display {
+            animation: combo-pulse 0.5s infinite alternate;
+            color: var(--retro-yellow) !important;
+            text-shadow: 2px 2px 0px #000, 0 0 10px var(--retro-yellow);
         }
 
-        @keyframes fever-shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        @keyframes combo-pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.3); }
         }
 
         /* Animations */
@@ -222,6 +221,45 @@
 
         .shake-anim {
             animation: shake 0.2s ease-in-out 2;
+        }
+
+        /* Popcorn Particles */
+        .popcorn-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 2000;
+            font-size: 20px;
+            animation: popcorn-fly 1s ease-out forwards;
+        }
+
+        @keyframes popcorn-fly {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) rotate(var(--tr)) scale(0.5); opacity: 0; }
+        }
+
+        /* Fever Overlay */
+        #fever-overlay {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 24px;
+            color: var(--retro-yellow);
+            text-shadow: 0 0 10px var(--retro-pink), 3px 3px 0px #000;
+            pointer-events: none;
+            z-index: 500;
+            display: none;
+            animation: fever-pulse-text 0.5s infinite alternate;
+        }
+
+        @keyframes fever-pulse-text {
+            from { transform: translateX(-50%) scale(1); opacity: 0.8; }
+            to { transform: translateX(-50%) scale(1.2); opacity: 1; }
+        }
+
+        .fever-mode #fever-overlay {
+            display: block;
         }
 
         /* Achievement Notification */
@@ -408,11 +446,25 @@
             pointer-events: none;
             z-index: 1000;
             animation: float-up 1s ease-out forwards;
+            white-space: nowrap;
+        }
+
+        .floating-feedback.record {
+            top: 40%; /* Higher position for record to avoid overlap */
+            font-size: 18px;
+            animation: float-up-record 1.5s ease-out forwards;
         }
 
         @keyframes float-up {
             0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
             20% { transform: translate(-50%, -60%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -100%) scale(1); opacity: 0; }
+        }
+
+        @keyframes float-up-record {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            20% { transform: translate(-50%, -60%) scale(1.5); opacity: 1; }
+            80% { transform: translate(-50%, -70%) scale(1.5); opacity: 1; }
             100% { transform: translate(-50%, -100%) scale(1); opacity: 0; }
         }
 
@@ -423,11 +475,16 @@
 
         /* Info & Mute Buttons */
         .control-btns {
-            display: flex;
+            display: none;
             flex-direction: row;
-            gap: 10px;
+            gap: 12px;
             pointer-events: auto;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+
+        body.game-active .control-btns {
+            display: flex;
         }
 
         .ctrl-btn {
@@ -624,6 +681,7 @@
     <div class="popcorn-bg" id="popcorn-bg"></div>
 
     <div id="game-container">
+        <div id="fever-overlay">FEVER!</div>
         <div id="logo-container">
             <img id="game-logo" src="input_file_0.png" alt="Pop-Corn Alchemy Logo" onerror="this.src='https://picsum.photos/seed/popcorn/200/200'" referrerPolicy="no-referrer">
             <div id="game-subtitle">Combine les émojis pour trouver le film</div>
@@ -1021,6 +1079,7 @@
                 this.selected = [];
                 this.isProcessing = false;
                 this.isPaused = false;
+                document.body.classList.remove('game-active');
                 document.getElementById('start-screen').classList.add('active');
                 document.getElementById('game-over-screen').classList.remove('active');
                 document.getElementById('victory-screen').classList.remove('active');
@@ -1163,7 +1222,40 @@
                 }
             },
 
+            spawnPopcorn(x, y) {
+                const count = 15;
+                for (let i = 0; i < count; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'popcorn-particle';
+                    p.innerText = '🍿';
+                    const tx = (Math.random() - 0.5) * 400;
+                    const ty = (Math.random() - 0.5) * 400 - 100;
+                    const tr = (Math.random() - 0.5) * 720;
+                    p.style.setProperty('--tx', `${tx}px`);
+                    p.style.setProperty('--ty', `${ty}px`);
+                    p.style.setProperty('--tr', `${tr}deg`);
+                    p.style.left = `${x}px`;
+                    p.style.top = `${y}px`;
+                    document.body.appendChild(p);
+                    setTimeout(() => p.remove(), 1000);
+                }
+            },
+
+            updateTierColors() {
+                const tier = Math.ceil((this.currentLevelIndex + 1) / 20);
+                const colors = [
+                    '#39ff14', // Tier 1: Green
+                    '#00ffff', // Tier 2: Cyan
+                    '#ff00ff', // Tier 3: Pink
+                    '#ffc107'  // Tier 4: Gold
+                ];
+                const color = colors[(tier - 1) % colors.length];
+                document.documentElement.style.setProperty('--retro-cyan', color);
+            },
+
             loadLevel() {
+                document.body.classList.add('game-active');
+                this.updateTierColors();
                 const level = this.sessionLevels[this.currentLevelIndex];
                 this.selected = [];
                 this.hintsUsedInLevel = false;
@@ -1219,7 +1311,14 @@
                 clearInterval(this.timerInterval);
                 this.timer = 100;
                 this.isPaused = false;
-                const duration = Math.max(5000, 15000 - (this.currentLevelIndex * 200)); // Gets faster
+                
+                // Difficulty increase: timer gets faster as levels progress
+                const tier = Math.ceil((this.currentLevelIndex + 1) / 20);
+                const baseDuration = 15000;
+                const levelReduction = this.currentLevelIndex * 250;
+                const tierReduction = (tier - 1) * 2000;
+                
+                const duration = Math.max(4000, baseDuration - levelReduction - tierReduction);
                 const step = 100 / (duration / 100);
                 
                 this.timerInterval = setInterval(() => {
@@ -1236,6 +1335,13 @@
 
             handleTimeOut() {
                 this.showFeedback('PLUS DE BONUS !', 'var(--retro-pink)');
+                this.vibrate(100);
+                
+                // Subtle shake on timeout
+                const container = document.getElementById('game-container');
+                container.classList.add('shake-anim');
+                setTimeout(() => container.classList.remove('shake-anim'), 400);
+
                 this.combo = 0;
                 this.timer = 0;
                 document.getElementById('timer-bar').style.width = `0%`;
@@ -1263,13 +1369,13 @@
                 }
             },
 
-            showFeedback(text, color) {
+            showFeedback(text, color, isRecord = false) {
                 const feedback = document.createElement('div');
-                feedback.className = 'floating-feedback';
+                feedback.className = 'floating-feedback' + (isRecord ? ' record' : '');
                 feedback.innerText = text;
                 feedback.style.color = color;
                 document.body.appendChild(feedback);
-                setTimeout(() => feedback.remove(), 1000);
+                setTimeout(() => feedback.remove(), isRecord ? 1500 : 1000);
             },
 
             addToFusion(emoji, btn) {
@@ -1473,6 +1579,10 @@
                     playSound('success');
                     this.showFeedback('CORRECT!', 'var(--retro-green)');
                     
+                    // Popcorn particles
+                    const rect = fusionBar.getBoundingClientRect();
+                    this.spawnPopcorn(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
                     // Score calculation
                     const timeBonus = this.timer / 10;
                     const levelPoints = 100 * (1 + (this.currentLevelIndex / 10));
@@ -1486,7 +1596,7 @@
                         
                         // New High Score celebration
                         if (oldHighScore > 0 && this.score > oldHighScore) {
-                            this.showFeedback('NOUVEAU RECORD!', 'var(--retro-yellow)');
+                            this.showFeedback('NOUVEAU RECORD!', 'var(--retro-yellow)', true);
                             confetti({
                                 particleCount: 150,
                                 spread: 100,
@@ -1526,6 +1636,12 @@
                     playSound('error');
                     this.showFeedback('OUCH!', 'var(--retro-pink)');
                     this.vibrate(200);
+                    
+                    // Screen shake on error
+                    const container = document.getElementById('game-container');
+                    container.classList.add('shake-anim');
+                    setTimeout(() => container.classList.remove('shake-anim'), 400);
+
                     this.lives--;
                     this.combo = 0;
                     this.updateUI();
@@ -1548,6 +1664,7 @@
 
             showGameOver() {
                 playSound('gameover');
+                document.body.classList.remove('game-active');
                 localStorage.removeItem('popcorn_alchemy_save');
                 document.getElementById('final-score-gameover').innerText = `SCORE: ${Math.floor(this.score)}`;
                 document.getElementById('game-over-screen').classList.add('active');
@@ -1555,6 +1672,7 @@
 
             showTierTransition() {
                 playSound('victory');
+                document.body.classList.remove('game-active');
                 const tier = Math.ceil((this.currentLevelIndex + 1) / 20);
                 document.getElementById('tier-title').innerText = `PALIER ${tier} TERMINÉ !`;
                 document.getElementById('tier-screen').classList.add('active');
@@ -1572,6 +1690,7 @@
 
             showVictory() {
                 playSound('victory');
+                document.body.classList.remove('game-active');
                 document.getElementById('final-score-victory').innerText = `SCORE: ${Math.floor(this.score)}`;
                 localStorage.removeItem('popcorn_alchemy_save');
                 confetti({
@@ -1652,6 +1771,16 @@
             if (e.key === ' ' || e.key === 'Enter') {
                 e.preventDefault();
                 game.checkFusion();
+                return;
+            }
+
+            // Number keys 1-9 for emoji selection
+            if (e.key >= '1' && e.key <= '9') {
+                const index = parseInt(e.key) - 1;
+                const gridBtns = document.querySelectorAll('.emoji-btn');
+                if (gridBtns[index] && !gridBtns[index].classList.contains('selected')) {
+                    gridBtns[index].click();
+                }
                 return;
             }
 
