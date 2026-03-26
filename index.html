@@ -9,12 +9,16 @@
     <style>
         :root {
             --bg: #fdf6e3;
+            --card-bg: #ffffff;
             --retro-pink: #e91e63;
             --retro-cyan: #00bcd4;
             --retro-green: #4caf50;
             --retro-yellow: #ffc107;
             --text: #2d2d2d;
+            --objective-bg: #2c3e50;
+            --objective-text: #ffffff;
             --chunky-shadow: 4px 4px 0px #000;
+            --slot-bg: #ffffff;
         }
 
         * {
@@ -92,12 +96,131 @@
             font-weight: bold;
         }
 
-        /* Header Section */
-        #header {
-            text-align: center;
-            padding-top: 2px;
-            flex-shrink: 0;
+        /* Menu Buttons Grid */
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             width: 100%;
+            max-width: 250px;
+        }
+
+        /* Category Grid */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .cat-card {
+            background: var(--card-bg);
+            border: 3px solid var(--text);
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.1s;
+            box-shadow: 3px 3px 0px #000;
+            color: var(--text);
+        }
+
+        .cat-card:active {
+            transform: scale(0.95);
+            box-shadow: 1px 1px 0px #000;
+        }
+
+        .cat-icon { font-size: 24px; margin-bottom: 5px; }
+        .cat-name { font-size: 10px; font-weight: bold; text-transform: uppercase; }
+
+        /* Skins Grid */
+        .skins-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .skin-card {
+            background: var(--card-bg);
+            border: 3px solid var(--text);
+            border-radius: 15px;
+            padding: 10px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px #000;
+            text-align: center;
+            color: var(--text);
+        }
+
+        .skin-card.active { border-color: var(--retro-pink); }
+        .skin-preview { height: 40px; border-radius: 8px; margin-bottom: 5px; border: 1px solid #ddd; }
+        .skin-name { font-size: 9px; font-weight: bold; }
+
+        /* Wheel */
+        #wheel-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+        #wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid var(--text);
+            position: relative;
+            overflow: hidden;
+            transition: transform 3s cubic-bezier(0.1, 0, 0.1, 1);
+            background: #fff;
+        }
+
+        .wheel-section {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: 100% 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 1px solid #eee;
+        }
+
+        #wheel-pointer {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 20px solid var(--retro-pink);
+            z-index: 10;
+        }
+
+        /* Leaderboard */
+        #leaderboard-list {
+            width: 100%;
+            max-width: 300px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .leader-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            font-size: 12px;
         }
 
         #progress-container {
@@ -271,12 +394,20 @@
         }
 
         #objective {
-            font-size: 9px;
-            line-height: 1.3;
-            color: var(--retro-cyan);
-            margin-bottom: 5px;
-            min-height: 24px;
-            font-weight: bold;
+            font-size: 16px;
+            line-height: 1.4;
+            color: var(--objective-text);
+            background: var(--objective-bg);
+            padding: 10px 20px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            min-height: 36px;
+            font-weight: 800;
+            display: inline-block;
+            border: 2px solid var(--retro-cyan); /* Clear border */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         #lives {
@@ -330,7 +461,7 @@
         #fusion-bar {
             width: 100%;
             height: 55px;
-            background: rgba(0, 0, 0, 0.05);
+            background: rgba(0, 0, 0, 0.1);
             border: 3px solid var(--retro-pink);
             box-shadow: 3px 3px 0px #000;
             border-radius: 8px;
@@ -344,7 +475,7 @@
         .fusion-slot {
             width: 40px;
             height: 40px;
-            background: #fff;
+            background: var(--slot-bg);
             border: 2px solid var(--text);
             border-radius: 4px;
             display: flex;
@@ -402,7 +533,7 @@
         }
 
         .emoji-btn {
-            background: #fff;
+            background: var(--card-bg);
             border: 2px solid var(--text);
             border-radius: 6px;
             display: flex;
@@ -414,6 +545,7 @@
             transition: transform 0.1s;
             height: 100%;
             width: 100%;
+            color: var(--text);
         }
 
         .emoji-btn:active {
@@ -456,8 +588,9 @@
         }
 
         .emoji-btn.selected {
-            opacity: 0.3;
+            opacity: 0.2;
             pointer-events: none;
+            filter: grayscale(1);
         }
 
         /* Info & Mute Buttons */
@@ -683,6 +816,7 @@
             </div>
             <div id="timer-container">
                 <div id="timer-bar"></div>
+                <div id="timer-display" style="position: absolute; right: 10px; top: 0; font-size: 8px; color: #fff; line-height: 10px;">60s</div>
             </div>
             <div id="objective">Objectif : Chargement...</div>
             <div id="lives"></div>
@@ -735,25 +869,119 @@
 
     <!-- Start Screen -->
     <div id="start-screen" class="screen active">
-        <img src="input_file_1.png" onerror="this.src='input_file_0.png'; this.onerror=function(){this.src='https://images.unsplash.com/photo-1585647347483-22b66260dfff?q=80&w=200&h=200&auto=format&fit=crop'}" style="width: 150px; border-radius: 20px; margin-bottom: 20px; border: 4px solid var(--text); box-shadow: var(--chunky-shadow);" alt="Logo">
-        <h1 style="color: var(--retro-pink); font-size: 18px;">POP-CORN ALCHEMY</h1>
-        <div style="font-size: 9px; line-height: 1.8; margin: 20px 0; color: var(--text); text-align: left; background: rgba(0,0,0,0.05); padding: 15px; border-radius: 10px; border: 2px solid var(--text);">
-            <p>🧪 <span style="color: var(--retro-green);">RÈGLES :</span></p>
-            <p>1. Associe les bons émojis pour recréer la référence.</p>
-            <p>2. Clique sur FUSIONNER pour valider.</p>
-            <p>3. Sois rapide ! Le <span style="color: var(--retro-pink);">Timer</span> impacte ton score.</p>
-            <p>4. Enchaîne les succès pour booster ton <span style="color: var(--retro-yellow);">Combo</span> !</p>
-            <p>5. Attention : 4 vies par palier. Si tu tombes à 0, retour au Niveau 1 !</p>
+        <div id="logo-container-start">
+            <img src="input_file_1.png" alt="Pop-Corn Alchemy Logo" style="width: 150px; height: 150px; border-radius: 20px; border: 4px solid var(--text); box-shadow: 4px 4px 0px #000; margin-bottom: 20px;" onerror="this.src='input_file_0.png'; this.onerror=function(){this.src='https://images.unsplash.com/photo-1585647347483-22b66260dfff?q=80&w=200&h=200&auto=format&fit=crop'}" referrerPolicy="no-referrer">
         </div>
-        <div id="start-buttons" style="display: flex; flex-direction: column; gap: 15px; width: 100%; align-items: center;">
-            <div id="daily-streak-display" style="font-size: 10px; color: var(--retro-pink); margin-bottom: 5px; display: none;">🔥 Série : 0 jours</div>
-            <button id="btn-resume" class="btn-restart" style="display: none; background: var(--retro-green); color: white;" onclick="game.resume()">REPRENDRE</button>
-            <button class="btn-restart" onclick="game.start()">NOUVELLE PARTIE</button>
-            <button class="btn-restart" style="background: var(--retro-cyan); color: white;" onclick="game.startDaily()">DÉFI DU JOUR</button>
+        <h1 style="font-size: 28px; margin-bottom: 10px;">POP-CORN ALCHEMY</h1>
+        <p style="margin-bottom: 30px; font-size: 10px; opacity: 0.8;">L'art de la fusion d'émojis</p>
+        
+        <div id="daily-streak-display" style="margin-bottom: 20px; color: var(--retro-pink); font-size: 12px; display: none;">🔥 Série : 0 jours</div>
+
+        <div class="menu-buttons">
+            <button id="btn-resume" class="btn-restart" style="background: var(--retro-green); display: none; margin-bottom: 15px;" onclick="game.resumeSavedGame()">REPRENDRE</button>
+            <button class="btn-restart" onclick="game.showCategorySelect()">JOUER</button>
+            <button class="btn-restart" style="background: var(--retro-yellow); color: #000;" onclick="game.startDaily()">DÉFI DU JOUR</button>
+            <button class="btn-restart" style="background: var(--retro-cyan);" onclick="game.showModes()">MODES DE JEU</button>
+            <button class="btn-restart" style="background: var(--retro-yellow); color: #000;" onclick="game.showSkins()">BOUTIQUE / SKINS</button>
+            <button class="btn-restart" style="background: var(--retro-pink);" onclick="game.showDailyWheel()">ROUE DE LA CHANCE</button>
+            <button class="btn-restart" style="background: #fff; color: #000;" onclick="game.showLeaderboard()">CLASSEMENT</button>
         </div>
     </div>
 
-    <!-- Tier Transition Screen -->
+    <!-- Category Selection -->
+    <div id="category-screen" class="screen">
+        <h1 style="font-size: 24px; margin-bottom: 20px;">CHOISIR UNE CATÉGORIE</h1>
+        <div class="category-grid">
+            <button class="cat-card" onclick="game.startGame('all')">
+                <span class="cat-icon">🌟</span>
+                <span class="cat-name">TOUT</span>
+            </button>
+            <button class="cat-card" onclick="game.startGame('movie')">
+                <span class="cat-icon">🎬</span>
+                <span class="cat-name">FILMS</span>
+            </button>
+            <button class="cat-card" onclick="game.startGame('series')">
+                <span class="cat-icon">📺</span>
+                <span class="cat-name">SÉRIES</span>
+            </button>
+            <button class="cat-card" onclick="game.startGame('game')">
+                <span class="cat-icon">🎮</span>
+                <span class="cat-name">JEUX VIDÉO</span>
+            </button>
+            <button class="cat-card" onclick="game.startGame('music')">
+                <span class="cat-icon">🎵</span>
+                <span class="cat-name">MUSIQUE</span>
+            </button>
+        </div>
+        <button class="btn-restart" style="margin-top: 20px;" onclick="game.showStart()">RETOUR</button>
+    </div>
+
+    <!-- Game Modes -->
+    <div id="modes-screen" class="screen">
+        <h1 style="font-size: 24px; margin-bottom: 20px;">MODES DE JEU</h1>
+        <div class="menu-buttons">
+            <button class="btn-restart" onclick="game.startGame('all', 'classic')">CLASSIQUE</button>
+            <button class="btn-restart" style="background: var(--retro-yellow); color: #000;" onclick="game.startGame('all', 'timeattack')">CHRONO (60s)</button>
+            <button class="btn-restart" style="background: var(--retro-pink);" onclick="game.startGame('all', 'hardcore')">HARDCORE (1 VIE)</button>
+        </div>
+        <button class="btn-restart" style="margin-top: 20px;" onclick="game.showStart()">RETOUR</button>
+    </div>
+
+    <!-- Skins / Themes -->
+    <div id="skins-screen" class="screen">
+        <h1 style="font-size: 24px; margin-bottom: 20px;">BOUTIQUE</h1>
+        <div id="coins-display" style="margin-bottom: 20px; font-size: 14px; color: var(--retro-yellow);">💰 <span id="user-coins">0</span> PIÈCES</div>
+        <div class="skins-grid">
+            <div class="skin-card active" onclick="game.setTheme('default')">
+                <div class="skin-preview" style="background: #fdf6e3;"></div>
+                <div class="skin-name">CLASSIQUE</div>
+            </div>
+            <div class="skin-card" onclick="game.setTheme('dark')">
+                <div class="skin-preview" style="background: #1a1a1a;"></div>
+                <div class="skin-name">DARK MODE</div>
+            </div>
+            <div class="skin-card" onclick="game.setTheme('neon')">
+                <div class="skin-preview" style="background: #000; border: 1px solid var(--retro-cyan);"></div>
+                <div class="skin-name">NEON NIGHT</div>
+            </div>
+            <div class="skin-card" onclick="game.setTheme('retro')">
+                <div class="skin-preview" style="background: #ffcc33;"></div>
+                <div class="skin-name">RETRO GOLD</div>
+            </div>
+            <div class="skin-card" onclick="game.setTheme('cyber')">
+                <div class="skin-preview" style="background: #2b0054; border: 1px solid #ff0055;"></div>
+                <div class="skin-name">CYBERPUNK</div>
+            </div>
+        </div>
+        <button class="btn-restart" style="margin-top: 20px;" onclick="game.showStart()">RETOUR</button>
+    </div>
+
+    <!-- Daily Wheel -->
+    <div id="wheel-screen" class="screen">
+        <h1 style="font-size: 24px; margin-bottom: 20px;">ROUE DE LA CHANCE</h1>
+        <div id="wheel-container">
+            <div id="wheel">
+                <div class="wheel-section" style="transform: rotate(0deg);">🎁</div>
+                <div class="wheel-section" style="transform: rotate(60deg);">💰</div>
+                <div class="wheel-section" style="transform: rotate(120deg);">💡</div>
+                <div class="wheel-section" style="transform: rotate(180deg);">❌</div>
+                <div class="wheel-section" style="transform: rotate(240deg);">💰</div>
+                <div class="wheel-section" style="transform: rotate(300deg);">💡</div>
+            </div>
+            <div id="wheel-pointer"></div>
+        </div>
+        <button id="spin-btn" class="btn-restart" style="margin-top: 30px; background: var(--retro-pink);" onclick="game.spinWheel()">LANCER !</button>
+        <button class="btn-restart" style="margin-top: 10px;" onclick="game.showStart()">RETOUR</button>
+    </div>
+
+    <!-- Leaderboard -->
+    <div id="leaderboard-screen" class="screen">
+        <h1 style="font-size: 24px; margin-bottom: 20px;">CLASSEMENT</h1>
+        <div id="leaderboard-list">
+            <p style="opacity: 0.5;">Chargement du classement...</p>
+        </div>
+        <button class="btn-restart" style="margin-top: 20px;" onclick="game.showStart()">RETOUR</button>
+    </div>
     <div id="tier-screen" class="screen">
         <h1 id="tier-title" style="color: var(--retro-green);">PALIER TERMINÉ !</h1>
         <p style="margin-bottom: 20px; font-size: 10px; line-height: 1.6;">Félicitations Alchimiste !<br><br>Tes vies ont été restaurées.<br>Le niveau de difficulté augmente...</p>
@@ -795,6 +1023,7 @@
         <h1 style="color: var(--retro-cyan);">PAUSE</h1>
         <p style="margin-bottom: 30px; font-size: 10px;">Le jeu est en pause.</p>
         <button class="btn-restart" onclick="game.resumeGame()">REPRENDRE</button>
+        <button class="btn-restart" style="margin-top: 10px; background: var(--retro-cyan); font-size: 8px;" onclick="game.shareChallenge()">DÉFIER UN AMI</button>
         <button class="btn-restart" style="margin-top: 15px; background: var(--retro-pink); color: white;" onclick="game.goToHome()">ACCUEIL</button>
     </div>
 
@@ -877,92 +1106,104 @@
 
         const LEVELS = [
             // Palier 1 (1-20) : 2 emojis
-            { id: 1, objective: "Objectif : Titanic", solution: ["🚢", "🧊"] },
-            { id: 2, objective: "Objectif : Spider-Man", solution: ["🕷️", "👦"] },
-            { id: 3, objective: "Objectif : Harry Potter", solution: ["⚡", "👓"] },
-            { id: 4, objective: "Objectif : Batman", solution: ["🦇", "👨"] },
-            { id: 5, objective: "Objectif : Le Roi Lion", solution: ["🦁", "👑"] },
-            { id: 6, objective: "Objectif : Les Dents de la Mer", solution: ["🦈", "🌊"] },
-            { id: 7, objective: "Objectif : Là-Haut", solution: ["🎈", "🏠"] },
-            { id: 8, objective: "Objectif : La Reine des Neiges", solution: ["❄️", "👸"] },
-            { id: 9, objective: "Objectif : Joker", solution: ["🤡", "🃏"] },
-            { id: 10, objective: "Objectif : Shrek", solution: ["👹", "🧅"] },
-            { id: 11, objective: "Objectif : Toy Story", solution: ["🤠", "🚀"] },
-            { id: 12, objective: "Objectif : Le Monde de Nemo", solution: ["🤡", "🐟"] },
-            { id: 13, objective: "Objectif : King Kong", solution: ["🦍", "🏢"] },
-            { id: 14, objective: "Objectif : Cendrillon", solution: ["👠", "🎃"] },
-            { id: 15, objective: "Objectif : Aladdin", solution: ["🧞", "🏮"] },
-            { id: 16, objective: "Objectif : Pinocchio", solution: ["🤥", "🪵"] },
-            { id: 17, objective: "Objectif : Blanche-Neige", solution: ["🍎", "👸"] },
-            { id: 18, objective: "Objectif : Ratatouille", solution: ["🐀", "👨‍🍳"] },
-            { id: 19, objective: "Objectif : Wall-E", solution: ["🤖", "🌱"] },
-            { id: 20, objective: "Objectif : Cars", solution: ["🏎️", "⚡"] },
+            { id: 1, objective: "Objectif : Titanic", solution: ["🚢", "🧊"], category: "movie" },
+            { id: 2, objective: "Objectif : Spider-Man", solution: ["🕷️", "👦"], category: "movie" },
+            { id: 3, objective: "Objectif : Harry Potter", solution: ["⚡", "👓"], category: "movie" },
+            { id: 4, objective: "Objectif : Batman", solution: ["🦇", "👨"], category: "movie" },
+            { id: 5, objective: "Objectif : Le Roi Lion", solution: ["🦁", "👑"], category: "movie" },
+            { id: 6, objective: "Objectif : Les Dents de la Mer", solution: ["🦈", "🌊"], category: "movie" },
+            { id: 7, objective: "Objectif : Là-Haut", solution: ["🎈", "🏠"], category: "movie" },
+            { id: 8, objective: "Objectif : La Reine des Neiges", solution: ["❄️", "👸"], category: "movie" },
+            { id: 9, objective: "Objectif : Joker", solution: ["🤡", "🃏"], category: "movie" },
+            { id: 10, objective: "Objectif : Shrek", solution: ["👹", "🧅"], category: "movie" },
+            { id: 11, objective: "Objectif : Toy Story", solution: ["🤠", "🚀"], category: "movie" },
+            { id: 12, objective: "Objectif : Le Monde de Nemo", solution: ["🤡", "🐟"], category: "movie" },
+            { id: 13, objective: "Objectif : King Kong", solution: ["🦍", "🏢"], category: "movie" },
+            { id: 14, objective: "Objectif : Cendrillon", solution: ["👠", "🎃"], category: "movie" },
+            { id: 15, objective: "Objectif : Aladdin", solution: ["🧞", "🏮"], category: "movie" },
+            { id: 16, objective: "Objectif : Pinocchio", solution: ["🤥", "🪵"], category: "movie" },
+            { id: 17, objective: "Objectif : Blanche-Neige", solution: ["🍎", "👸"], category: "movie" },
+            { id: 18, objective: "Objectif : Ratatouille", solution: ["🐀", "👨‍🍳"], category: "movie" },
+            { id: 19, objective: "Objectif : Wall-E", solution: ["🤖", "🌱"], category: "movie" },
+            { id: 20, objective: "Objectif : Cars", solution: ["🏎️", "⚡"], category: "movie" },
 
             // Palier 2 (21-40) : 3 emojis
-            { id: 21, objective: "Objectif : Star Wars", solution: ["⚔️", "🌌", "🤖"] },
-            { id: 22, objective: "Objectif : Jurassic Park", solution: ["🦖", "🦟", "🧬"] },
-            { id: 23, objective: "Objectif : Matrix", solution: ["💊", "🕶️", "💻"] },
-            { id: 24, objective: "Objectif : Retour vers le Futur", solution: ["🚗", "⚡", "🕰️"] },
-            { id: 25, objective: "Objectif : Pirates des Caraïbes", solution: ["🏴‍☠️", "⚓", "🦜"] },
-            { id: 26, objective: "Objectif : SOS Fantômes", solution: ["👻", "🚫", "🔫"] },
-            { id: 27, objective: "Objectif : Indiana Jones", solution: ["🤠", "🐍", "💎"] },
-            { id: 28, objective: "Objectif : E.T. l'extra-terrestre", solution: ["👽", "🚲", "🌕"] },
-            { id: 29, objective: "Objectif : Men in Black", solution: ["🕶️", "👽", "🔫"] },
-            { id: 30, objective: "Objectif : Terminator", solution: ["🤖", "🕶️", "🏍️"] },
-            { id: 31, objective: "Objectif : Gladiator", solution: ["⚔️", "🏟️", "🛡️"] },
-            { id: 32, objective: "Objectif : Forrest Gump", solution: ["🏃", "🍫", "👟"] },
-            { id: 33, objective: "Objectif : Seul au Monde", solution: ["🏝️", "🏐", "📦"] },
-            { id: 34, objective: "Objectif : Maman j'ai raté l'avion", solution: ["🏠", "👦", "❄️"] },
-            { id: 35, objective: "Objectif : L'Exorciste", solution: ["👧", "🤮", "⛪"] },
-            { id: 36, objective: "Objectif : Psychose", solution: ["🚿", "🔪", "🏨"] },
-            { id: 37, objective: "Objectif : Scream", solution: ["😱", "🔪", "📞"] },
-            { id: 38, objective: "Objectif : Saw", solution: ["🤡", "🚲", "🪚"] },
-            { id: 39, objective: "Objectif : Ça (IT)", solution: ["🤡", "🎈", "⛵"] },
-            { id: 40, objective: "Objectif : Shining", solution: ["🪓", "🏨", "❄️"] },
+            { id: 21, objective: "Objectif : Star Wars", solution: ["⚔️", "🌌", "🤖"], category: "movie" },
+            { id: 22, objective: "Objectif : Jurassic Park", solution: ["🦖", "🦟", "🧬"], category: "movie" },
+            { id: 23, objective: "Objectif : Matrix", solution: ["💊", "🕶️", "💻"], category: "movie" },
+            { id: 24, objective: "Objectif : Retour vers le Futur", solution: ["🚗", "⚡", "🕰️"], category: "movie" },
+            { id: 25, objective: "Objectif : Pirates des Caraïbes", solution: ["🏴‍☠️", "⚓", "🦜"], category: "movie" },
+            { id: 26, objective: "Objectif : SOS Fantômes", solution: ["👻", "🚫", "🔫"], category: "movie" },
+            { id: 27, objective: "Objectif : Indiana Jones", solution: ["🤠", "🐍", "💎"], category: "movie" },
+            { id: 28, objective: "Objectif : E.T. l'extra-terrestre", solution: ["👽", "🚲", "🌕"], category: "movie" },
+            { id: 29, objective: "Objectif : Men in Black", solution: ["🕶️", "👽", "🔫"], category: "movie" },
+            { id: 30, objective: "Objectif : Terminator", solution: ["🤖", "🕶️", "🏍️"], category: "movie" },
+            { id: 31, objective: "Objectif : Gladiator", solution: ["⚔️", "🏟️", "🛡️"], category: "movie" },
+            { id: 32, objective: "Objectif : Forrest Gump", solution: ["🏃", "🍫", "👟"], category: "movie" },
+            { id: 33, objective: "Objectif : Seul au Monde", solution: ["🏝️", "🏐", "📦"], category: "movie" },
+            { id: 34, objective: "Objectif : Maman j'ai raté l'avion", solution: ["🏠", "👦", "❄️"], category: "movie" },
+            { id: 35, objective: "Objectif : L'Exorciste", solution: ["👧", "🤮", "⛪"], category: "movie" },
+            { id: 36, objective: "Objectif : Psychose", solution: ["🚿", "🔪", "🏨"], category: "movie" },
+            { id: 37, objective: "Objectif : Scream", solution: ["😱", "🔪", "📞"], category: "movie" },
+            { id: 38, objective: "Objectif : Saw", solution: ["🤡", "🚲", "🪚"], category: "movie" },
+            { id: 39, objective: "Objectif : Ça (IT)", solution: ["🤡", "🎈", "⛵"], category: "movie" },
+            { id: 40, objective: "Objectif : Shining", solution: ["🪓", "🏨", "❄️"], category: "movie" },
 
             // Palier 3 (41-60) : 4 emojis
-            { id: 41, objective: "Objectif : Avengers", solution: ["🛡️", "🔨", "🏹", "🦾"] },
-            { id: 42, objective: "Objectif : Stranger Things", solution: ["🧇", "🚲", "🔦", "👾"] },
-            { id: 43, objective: "Objectif : Super Mario", solution: ["🍄", "🐢", "🏰", "👨‍🔧"] },
-            { id: 44, objective: "Objectif : Pokémon", solution: ["🐭", "⚡", "🔴", "⚪"] },
-            { id: 45, objective: "Objectif : Zelda", solution: ["🗡️", "🛡️", "🧚", "👑"] },
-            { id: 46, objective: "Objectif : Minecraft", solution: ["🟩", "⛏️", "🧱", "🧟"] },
-            { id: 47, objective: "Objectif : Fortnite", solution: ["🔫", "🧱", "🕺", "🚌"] },
-            { id: 48, objective: "Objectif : GTA", solution: ["🚗", "🔫", "💰", "🚁"] },
-            { id: 49, objective: "Objectif : Pac-Man", solution: ["🟡", "👻", "🍒", "🕹️"] },
-            { id: 50, objective: "Objectif : Tetris", solution: ["🧱", "🟦", "🟥", "🟨"] },
-            { id: 51, objective: "Objectif : Sonic", solution: ["🦔", "💨", "🔵", "💍"] },
-            { id: 52, objective: "Objectif : Street Fighter", solution: ["🥋", "🥊", "👊", "💥"] },
-            { id: 53, objective: "Objectif : Mortal Kombat", solution: ["🐉", "🩸", "💀", "❄️"] },
-            { id: 54, objective: "Objectif : Resident Evil", solution: ["🧟", "🔫", "💊", "🏢"] },
-            { id: 55, objective: "Objectif : Tomb Raider", solution: ["🏹", "🏺", "🧗", "🔫"] },
-            { id: 56, objective: "Objectif : God of War", solution: ["🪓", "🧔", "🏹", "❄️"] },
-            { id: 57, objective: "Objectif : Halo", solution: ["🔫", "🛸", "🪐", "🦾"] },
-            { id: 58, objective: "Objectif : Call of Duty", solution: ["🔫", "🚁", "💣", "🪖"] },
-            { id: 59, objective: "Objectif : Assassin's Creed", solution: ["🦅", "🗡️", "⛪", "🕰️"] },
-            { id: 60, objective: "Objectif : The Witcher", solution: ["🐺", "⚔️", "🧙‍♀️", "🐎"] },
+            { id: 41, objective: "Objectif : Avengers", solution: ["🛡️", "🔨", "🏹", "🦾"], category: "movie" },
+            { id: 42, objective: "Objectif : Stranger Things", solution: ["🧇", "🚲", "🔦", "👾"], category: "series" },
+            { id: 43, objective: "Objectif : Super Mario", solution: ["🍄", "🐢", "🏰", "👨‍🔧"], category: "game" },
+            { id: 44, objective: "Objectif : Pokémon", solution: ["🐭", "⚡", "🔴", "⚪"], category: "game" },
+            { id: 45, objective: "Objectif : Zelda", solution: ["🗡️", "🛡️", "🧚", "👑"], category: "game" },
+            { id: 46, objective: "Objectif : Minecraft", solution: ["🟩", "⛏️", "🧱", "🧟"], category: "game" },
+            { id: 47, objective: "Objectif : Fortnite", solution: ["🔫", "🧱", "🕺", "🚌"], category: "game" },
+            { id: 48, objective: "Objectif : GTA", solution: ["🚗", "🔫", "💰", "🚁"], category: "game" },
+            { id: 49, objective: "Objectif : Pac-Man", solution: ["🟡", "👻", "🍒", "🕹️"], category: "game" },
+            { id: 50, objective: "Objectif : Tetris", solution: ["🧱", "🟦", "🟥", "🟨"], category: "game" },
+            { id: 51, objective: "Objectif : Sonic", solution: ["🦔", "💨", "🔵", "💍"], category: "game" },
+            { id: 52, objective: "Objectif : Street Fighter", solution: ["🥋", "🥊", "👊", "💥"], category: "game" },
+            { id: 53, objective: "Objectif : Mortal Kombat", solution: ["🐉", "🩸", "💀", "❄️"], category: "game" },
+            { id: 54, objective: "Objectif : Resident Evil", solution: ["🧟", "🔫", "💊", "🏢"], category: "game" },
+            { id: 55, objective: "Objectif : Tomb Raider", solution: ["🏹", "🏺", "🧗", "🔫"], category: "game" },
+            { id: 56, objective: "Objectif : God of War", solution: ["🪓", "🧔", "🏹", "❄️"], category: "game" },
+            { id: 57, objective: "Objectif : Halo", solution: ["🔫", "🛸", "🪐", "🦾"], category: "game" },
+            { id: 58, objective: "Objectif : Call of Duty", solution: ["🔫", "🚁", "💣", "🪖"], category: "game" },
+            { id: 59, objective: "Objectif : Assassin's Creed", solution: ["🦅", "🗡️", "⛪", "🕰️"], category: "game" },
+            { id: 60, objective: "Objectif : The Witcher", solution: ["🐺", "⚔️", "🧙‍♀️", "🐎"], category: "game" },
 
             // Palier 4 (61-80) : 5 emojis
-            { id: 61, objective: "Objectif : Inception", solution: ["🌀", "🏢", "🔫", "🛌", "⏳"] },
-            { id: 62, objective: "Objectif : Le Seigneur des Anneaux", solution: ["💍", "🌋", "🗡️", "🧙‍♂️", "👣"] },
-            { id: 63, objective: "Objectif : Squid Game", solution: ["🦑", "🔴", "🔺", "🟥", "🟢"] },
-            { id: 64, objective: "Objectif : Game of Thrones", solution: ["🐉", "❄️", "🐺", "👑", "⚔️"] },
-            { id: 65, objective: "Objectif : Breaking Bad", solution: ["🧪", "🚐", "💵", "🏜️", "👨‍🔬"] },
-            { id: 66, objective: "Objectif : La Casa de Papel", solution: ["👺", "🏦", "💵", "🔫", "🇪🇸"] },
-            { id: 67, objective: "Objectif : Peaky Blinders", solution: ["🎩", "🚬", "🐴", "🥃", "🇬🇧"] },
-            { id: 68, objective: "Objectif : The Walking Dead", solution: ["🧟", "🏹", "🤠", "🏚️", "🧟‍♂️"] },
-            { id: 69, objective: "Objectif : Sherlock Holmes", solution: ["🕵️‍♂️", "🎻", "🔍", "🎩", "🇬🇧"] },
-            { id: 70, objective: "Objectif : James Bond", solution: ["🔫", "🍸", "🚗", "🤵", "🇬🇧"] },
-            { id: 71, objective: "Objectif : Mission Impossible", solution: ["💣", "🚁", "🧗", "🕶️", "🏃"] },
-            { id: 72, objective: "Objectif : Fast & Furious", solution: ["🏎️", "🏁", "💥", "👨‍👩‍👧‍👦", "🚗"] },
-            { id: 73, objective: "Objectif : Mad Max: Fury Road", solution: ["🏜️", "🚗", "⛓️", "🎸", "💀"] },
-            { id: 74, objective: "Objectif : Blade Runner", solution: ["🤖", "🏙️", "🚗", "👁️", "☔"] },
-            { id: 75, objective: "Objectif : Interstellar", solution: ["🚀", "🪐", "⏳", "🌽", "🌌"] },
-            { id: 76, objective: "Objectif : Gravity", solution: ["🚀", "👩‍🚀", "🛰️", "🌍", "🌑"] },
-            { id: 77, objective: "Objectif : Seul sur Mars", solution: ["🚀", "🥔", "🏜️", "👨‍🚀", "🔴"] },
-            { id: 78, objective: "Objectif : Dune", solution: ["🏜️", "🐛", "👁️", "🗡️", "👑"] },
-            { id: 79, objective: "Objectif : Avatar", solution: ["🟦", "🏹", "🐉", "🌳", "🪐"] },
-            { id: 80, objective: "Objectif : Black Panther", solution: ["🐆", "🦾", "🟣", "👑", "🌍"] }
+            { id: 61, objective: "Objectif : Inception", solution: ["🌀", "🏢", "🔫", "🛌", "⏳"], category: "movie" },
+            { id: 62, objective: "Objectif : Le Seigneur des Anneaux", solution: ["💍", "🌋", "🗡️", "🧙‍♂️", "👣"], category: "movie" },
+            { id: 63, objective: "Objectif : Squid Game", solution: ["🦑", "🔴", "🔺", "🟥", "🟢"], category: "series" },
+            { id: 64, objective: "Objectif : Game of Thrones", solution: ["🐉", "❄️", "🐺", "👑", "⚔️"], category: "series" },
+            { id: 65, objective: "Objectif : Breaking Bad", solution: ["🧪", "🚐", "💵", "🏜️", "👨‍🔬"], category: "series" },
+            { id: 66, objective: "Objectif : La Casa de Papel", solution: ["👺", "🏦", "💵", "🔫", "🇪🇸"], category: "series" },
+            { id: 67, objective: "Objectif : Peaky Blinders", solution: ["🎩", "🚬", "🐴", "🥃", "🇬🇧"], category: "series" },
+            { id: 68, objective: "Objectif : The Walking Dead", solution: ["🧟", "🏹", "🤠", "🏚️", "🧟‍♂️"], category: "series" },
+            { id: 69, objective: "Objectif : Sherlock Holmes", solution: ["🕵️‍♂️", "🎻", "🔍", "🎩", "🇬🇧"], category: "movie" },
+            { id: 70, objective: "Objectif : James Bond", solution: ["🔫", "🍸", "🚗", "🤵", "🇬🇧"], category: "movie" },
+            { id: 71, objective: "Objectif : Mission Impossible", solution: ["💣", "🚁", "🧗", "🕶️", "🏃"], category: "movie" },
+            { id: 72, objective: "Objectif : Fast & Furious", solution: ["🏎️", "🏁", "💥", "👨‍👩‍👧‍👦", "🚗"], category: "movie" },
+            { id: 73, objective: "Objectif : Mad Max: Fury Road", solution: ["🏜️", "🚗", "⛓️", "🎸", "💀"], category: "movie" },
+            { id: 74, objective: "Objectif : Blade Runner", solution: ["🤖", "🏙️", "🚗", "👁️", "☔"], category: "movie" },
+            { id: 75, objective: "Objectif : Interstellar", solution: ["🚀", "🪐", "⏳", "🌽", "🌌"], category: "movie" },
+            { id: 76, objective: "Objectif : Gravity", solution: ["🚀", "👩‍🚀", "🛰️", "🌍", "🌑"], category: "movie" },
+            { id: 77, objective: "Objectif : Seul sur Mars", solution: ["🚀", "🥔", "🏜️", "👨‍🚀", "🔴"], category: "movie" },
+            { id: 78, objective: "Objectif : Dune", solution: ["🏜️", "🐛", "👁️", "🗡️", "👑"], category: "movie" },
+            { id: 79, objective: "Objectif : Avatar", solution: ["🟦", "🏹", "🐉", "🌳", "🪐"], category: "movie" },
+            { id: 80, objective: "Objectif : Black Panther", solution: ["🐆", "🦾", "🟣", "👑", "🌍"], category: "movie" },
+
+            // Musique (81-100)
+            { id: 81, objective: "Objectif : Michael Jackson", solution: ["🎤", "🧤", "🧟"], category: "music" },
+            { id: 82, objective: "Objectif : Queen", solution: ["👑", "👨🏻‍🦱", "🎸"], category: "music" },
+            { id: 83, objective: "Objectif : Daft Punk", solution: ["🤖", "🎧", "🇫🇷"], category: "music" },
+            { id: 84, objective: "Objectif : Beatles", solution: ["🐞", "🎸", "🇬🇧"], category: "music" },
+            { id: 85, objective: "Objectif : Nirvana", solution: ["🎸", "👶", "💵"], category: "music" },
+            { id: 86, objective: "Objectif : Eminem", solution: ["🎤", "🍝", "🐰"], category: "music" },
+            { id: 87, objective: "Objectif : Lady Gaga", solution: ["🥩", "👗", "🎤"], category: "music" },
+            { id: 88, objective: "Objectif : Elton John", solution: ["🎹", "👓", "🚀"], category: "music" },
+            { id: 89, objective: "Objectif : Bob Marley", solution: ["🌿", "🎸", "🇯🇲"], category: "music" },
+            { id: 90, objective: "Objectif : Pink Floyd", solution: ["🌈", "🔺", "🎸"], category: "music" }
         ];
 
         // --- Game Logic ---
@@ -984,13 +1225,26 @@
             timerInterval: null,
             isDaily: false,
             achievements: [],
+            coins: parseInt(localStorage.getItem('popcorn_coins')) || 0,
+            hints: parseInt(localStorage.getItem('popcorn_hints')) || 3,
+            currentCategory: 'all',
+            currentMode: 'classic',
+            timeLimit: 60,
+            timeLeft: 60,
+            modeTimerInterval: null,
+            currentTheme: localStorage.getItem('popcorn_theme') || 'default',
 
             async init() {
-                // Load high score and streak
+                // Load high score, streak, coins, theme, hints
                 this.highScore = parseFloat(localStorage.getItem('popcorn_alchemy_highscore')) || 0;
                 this.dailyStreak = parseInt(localStorage.getItem('popcorn_alchemy_streak')) || 0;
                 this.lastDailyDate = localStorage.getItem('popcorn_alchemy_last_daily');
                 this.achievements = JSON.parse(localStorage.getItem('popcorn_alchemy_achievements')) || [];
+                this.coins = parseInt(localStorage.getItem('popcorn_coins')) || 0;
+                this.hints = parseInt(localStorage.getItem('popcorn_hints')) || 3;
+                this.currentTheme = localStorage.getItem('popcorn_theme') || 'default';
+
+                this.applyTheme(this.currentTheme);
 
                 // Check if streak is broken
                 if (this.lastDailyDate) {
@@ -1006,11 +1260,13 @@
 
                 // Display streak on start screen
                 const streakEl = document.getElementById('daily-streak-display');
-                if (this.dailyStreak > 0) {
-                    streakEl.innerText = `🔥 Série : ${this.dailyStreak} jours`;
-                    streakEl.style.display = 'block';
-                } else {
-                    streakEl.style.display = 'none';
+                if (streakEl) {
+                    if (this.dailyStreak > 0) {
+                        streakEl.innerText = `🔥 Série : ${this.dailyStreak} jours`;
+                        streakEl.style.display = 'block';
+                    } else {
+                        streakEl.style.display = 'none';
+                    }
                 }
 
                 // Check if daily is done
@@ -1027,12 +1283,10 @@
                 
                 // Increment view counter on load
                 this.incrementViews();
-                // Setup Buttons
-                document.getElementById('hint-btn').onclick = () => this.useHint();
-                document.getElementById('fusion-btn').onclick = () => this.checkFusion();
-
+                
                 // Reset Resume Button state
-                document.getElementById('btn-resume').style.display = 'none';
+                const btnResume = document.getElementById('btn-resume');
+                if (btnResume) btnResume.style.display = 'none';
 
                 // Check for /COMPTEUR path
                 if (window.location.pathname === '/COMPTEUR') {
@@ -1050,8 +1304,10 @@
                         this.lives = data.lives;
                         this.score = data.score || 0;
                         this.combo = data.combo || 0;
-                        document.getElementById('btn-resume').style.display = 'block';
-                        document.getElementById('btn-resume').innerText = `REPRENDRE (Niv. ${this.currentLevelIndex + 1})`;
+                        if (btnResume) {
+                            btnResume.style.display = 'block';
+                            btnResume.innerText = `REPRENDRE (Niv. ${this.currentLevelIndex + 1})`;
+                        }
                     } catch (e) {
                         console.error("Failed to load save", e);
                         this.createNewSession();
@@ -1064,12 +1320,64 @@
                 this.isProcessing = false;
                 this.isPaused = false;
                 document.body.classList.remove('game-active');
+                
+                // Check for challenge in URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const challengeId = urlParams.get('challenge');
+                if (challengeId) {
+                    this.startChallenge(challengeId);
+                    // Clear URL parameter without reloading
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                } else {
+                    this.hideAllScreens();
+                    document.getElementById('start-screen').classList.add('active');
+                }
+            },
+
+            showStart() {
+                this.hideAllScreens();
                 document.getElementById('start-screen').classList.add('active');
-                document.getElementById('game-over-screen').classList.remove('active');
-                document.getElementById('victory-screen').classList.remove('active');
-                document.getElementById('tier-screen').classList.remove('active');
-                document.getElementById('counter-screen').classList.remove('active');
-                document.getElementById('pause-screen').classList.remove('active');
+            },
+
+            showCategorySelect() {
+                this.hideAllScreens();
+                document.getElementById('category-screen').classList.add('active');
+            },
+
+            showModes() {
+                this.hideAllScreens();
+                document.getElementById('modes-screen').classList.add('active');
+            },
+
+            showSkins() {
+                this.hideAllScreens();
+                document.getElementById('skins-screen').classList.add('active');
+                document.getElementById('user-coins').innerText = this.coins;
+            },
+
+            showDailyWheel() {
+                this.hideAllScreens();
+                document.getElementById('wheel-screen').classList.add('active');
+                
+                const lastSpin = localStorage.getItem('popcorn_last_spin');
+                const today = new Date().toISOString().slice(0, 10);
+                if (lastSpin === today) {
+                    const spinBtn = document.getElementById('spin-btn');
+                    spinBtn.disabled = true;
+                    spinBtn.innerText = "DÉJÀ UTILISÉ AUJOURD'HUI";
+                    spinBtn.style.opacity = "0.5";
+                }
+            },
+
+            showLeaderboard() {
+                this.hideAllScreens();
+                document.getElementById('leaderboard-screen').classList.add('active');
+                this.loadLeaderboard();
+            },
+
+            hideAllScreens() {
+                const screens = document.querySelectorAll('.screen');
+                screens.forEach(s => s.classList.remove('active'));
             },
 
             async incrementViews() {
@@ -1113,11 +1421,11 @@
                     this.sessionLevels = allLevels;
                 } else {
                     // Normal Mode: Shuffle within tiers to ensure progression
-                    const tier1 = LEVELS.slice(0, 20).sort(() => Math.random() - 0.5);
-                    const tier2 = LEVELS.slice(20, 40).sort(() => Math.random() - 0.5);
-                    const tier3 = LEVELS.slice(40, 60).sort(() => Math.random() - 0.5);
-                    const tier4 = LEVELS.slice(60, 80).sort(() => Math.random() - 0.5);
-                    this.sessionLevels = [...tier1, ...tier2, ...tier3, ...tier4];
+                    const tiers = [];
+                    for (let i = 0; i < LEVELS.length; i += 20) {
+                        tiers.push(LEVELS.slice(i, i + 20).sort(() => Math.random() - 0.5));
+                    }
+                    this.sessionLevels = [].concat(...tiers);
                 }
                 
                 this.currentLevelIndex = 0;
@@ -1132,18 +1440,244 @@
                     lives: this.lives,
                     score: this.score,
                     combo: this.combo,
-                    isDaily: this.isDaily
+                    isDaily: this.isDaily,
+                    currentMode: this.currentMode,
+                    currentCategory: this.currentCategory
                 };
                 localStorage.setItem('popcorn_alchemy_save', JSON.stringify(data));
             },
 
-            start() {
-                this.isDaily = false;
+            startGame(category = 'all', mode = 'classic') {
+                this.currentCategory = category;
+                this.currentMode = mode;
+                this.currentLevelIndex = 0;
+                this.lives = (mode === 'hardcore') ? 1 : 4;
+                this.selected = [];
+                this.isPaused = false;
                 this.score = 0;
                 this.combo = 0;
-                this.createNewSession();
-                document.getElementById('start-screen').classList.remove('active');
+                
+                // Filter levels
+                if (category === 'all') {
+                    this.sessionLevels = [...LEVELS].sort(() => Math.random() - 0.5);
+                } else {
+                    this.sessionLevels = LEVELS.filter(l => l.category === category).sort(() => Math.random() - 0.5);
+                }
+
+                if (this.sessionLevels.length === 0) {
+                    alert("Aucun niveau dans cette catégorie pour le moment !");
+                    this.showStart();
+                    return;
+                }
+                
+                this.hideAllScreens();
                 this.loadLevel();
+
+                if (mode === 'timeattack') {
+                    this.startTimeAttack();
+                } else {
+                    const timerEl = document.getElementById('timer-display');
+                    if (timerEl) timerEl.style.display = 'none';
+                    if (this.modeTimerInterval) clearInterval(this.modeTimerInterval);
+                }
+            },
+
+            startTimeAttack() {
+                this.timeLeft = 60;
+                const timerEl = document.getElementById('timer-display');
+                if (timerEl) {
+                    timerEl.style.display = 'block';
+                    this.updateTimerUI();
+                }
+                
+                if (this.modeTimerInterval) clearInterval(this.modeTimerInterval);
+                this.modeTimerInterval = setInterval(() => {
+                    if (this.isPaused) return;
+                    this.timeLeft--;
+                    this.updateTimerUI();
+                    if (this.timeLeft <= 0) {
+                        this.gameOver("TEMPS ÉCOULÉ !");
+                    }
+                }, 1000);
+            },
+
+            updateTimerUI() {
+                const timerEl = document.getElementById('timer-display');
+                if (timerEl) {
+                    timerEl.innerText = `⏱️ ${this.timeLeft}s`;
+                    if (this.timeLeft <= 10) timerEl.style.color = 'var(--retro-pink)';
+                    else timerEl.style.color = 'var(--text)';
+                }
+            },
+
+            setTheme(theme) {
+                this.currentTheme = theme;
+                localStorage.setItem('popcorn_theme', theme);
+                this.applyTheme(theme);
+                
+                // Update UI selection
+                document.querySelectorAll('.skin-card').forEach(c => c.classList.remove('active'));
+                const selectedCard = Array.from(document.querySelectorAll('.skin-card')).find(c => c.innerText.includes(theme.toUpperCase()));
+                if (selectedCard) selectedCard.classList.add('active');
+            },
+
+            applyTheme(theme) {
+                const root = document.documentElement;
+                const body = document.body;
+                
+                // Reset to vibrant original colors (Default)
+                body.style.background = "#fdf6e3";
+                root.style.setProperty('--bg', '#fdf6e3');
+                root.style.setProperty('--card-bg', '#ffffff');
+                root.style.setProperty('--text', '#2d2d2d');
+                root.style.setProperty('--retro-cyan', '#00bcd4');
+                root.style.setProperty('--retro-pink', '#e91e63');
+                root.style.setProperty('--retro-yellow', '#ffc107');
+                root.style.setProperty('--objective-bg', '#2c3e50');
+                root.style.setProperty('--objective-text', '#ffffff');
+                root.style.setProperty('--slot-bg', '#ffffff');
+                
+                if (theme === 'dark') {
+                    body.style.background = "#1a1a1a";
+                    root.style.setProperty('--bg', '#1a1a1a');
+                    root.style.setProperty('--card-bg', '#2d2d2d');
+                    root.style.setProperty('--text', '#fdf6e3');
+                    root.style.setProperty('--objective-bg', '#000000');
+                    root.style.setProperty('--slot-bg', '#3d3d3d');
+                } else if (theme === 'neon') {
+                    body.style.background = "#000";
+                    root.style.setProperty('--bg', '#000');
+                    root.style.setProperty('--card-bg', '#111');
+                    root.style.setProperty('--text', '#fff');
+                    root.style.setProperty('--retro-cyan', '#00ffff');
+                    root.style.setProperty('--retro-pink', '#ff00ff');
+                    root.style.setProperty('--objective-bg', '#111');
+                    root.style.setProperty('--objective-text', '#00ffff');
+                    root.style.setProperty('--slot-bg', '#222');
+                } else if (theme === 'retro') {
+                    body.style.background = "#ffcc33";
+                    root.style.setProperty('--bg', '#ffcc33');
+                    root.style.setProperty('--card-bg', '#fff9e6');
+                    root.style.setProperty('--text', '#000');
+                    root.style.setProperty('--retro-cyan', '#0000ff');
+                    root.style.setProperty('--objective-bg', '#000');
+                    root.style.setProperty('--slot-bg', '#fff');
+                } else if (theme === 'cyber') {
+                    body.style.background = "#2b0054";
+                    root.style.setProperty('--bg', '#2b0054');
+                    root.style.setProperty('--card-bg', '#1a0033');
+                    root.style.setProperty('--text', '#00ff9f');
+                    root.style.setProperty('--retro-cyan', '#00f3ff');
+                    root.style.setProperty('--retro-pink', '#ff0055');
+                    root.style.setProperty('--retro-yellow', '#f3ff00');
+                    root.style.setProperty('--objective-bg', '#1a0033');
+                    root.style.setProperty('--objective-text', '#ff0055');
+                    root.style.setProperty('--slot-bg', '#3d0066');
+                }
+            },
+
+            spinWheel() {
+                const wheel = document.getElementById('wheel');
+                const spinBtn = document.getElementById('spin-btn');
+                
+                const randomDeg = 1800 + Math.floor(Math.random() * 360);
+                wheel.style.transform = `rotate(${randomDeg}deg)`;
+                spinBtn.disabled = true;
+                
+                setTimeout(() => {
+                    const actualDeg = randomDeg % 360;
+                    let prize = "";
+                    
+                    if (actualDeg >= 0 && actualDeg < 60) { prize = "CADEAU SURPRISE !"; this.addCoins(50); }
+                    else if (actualDeg >= 60 && actualDeg < 120) { prize = "50 PIÈCES !"; this.addCoins(50); }
+                    else if (actualDeg >= 120 && actualDeg < 180) { prize = "2 INDICES !"; this.addHints(2); }
+                    else if (actualDeg >= 180 && actualDeg < 240) { prize = "DOMMAGE... RIEN !"; }
+                    else if (actualDeg >= 240 && actualDeg < 300) { prize = "20 PIÈCES !"; this.addCoins(20); }
+                    else { prize = "1 INDICE !"; this.addHints(1); }
+                    
+                    alert(`RÉSULTAT : ${prize}`);
+                    localStorage.setItem('popcorn_last_spin', new Date().toISOString().slice(0, 10));
+                    spinBtn.innerText = "DÉJÀ UTILISÉ AUJOURD'HUI";
+                    spinBtn.style.opacity = "0.5";
+                }, 3500);
+            },
+
+            addCoins(amount) {
+                this.coins += amount;
+                localStorage.setItem('popcorn_coins', this.coins);
+                const coinsEl = document.getElementById('user-coins');
+                if (coinsEl) coinsEl.innerText = this.coins;
+            },
+
+            addHints(amount) {
+                this.hints += amount;
+                localStorage.setItem('popcorn_hints', this.hints);
+                this.updateUI();
+            },
+
+            loadLeaderboard() {
+                const list = document.getElementById('leaderboard-list');
+                let leaderboard = JSON.parse(localStorage.getItem('popcorn_leaderboard')) || [
+                    { name: "PopcornMaster", score: 15000 },
+                    { name: "EmojiKing", score: 12400 },
+                    { name: "MovieBuff", score: 11000 },
+                    { name: "GamerPro", score: 9500 },
+                    { name: "Newbie", score: 1200 }
+                ];
+                
+                // Sort by score
+                leaderboard.sort((a, b) => b.score - a.score);
+                
+                list.innerHTML = leaderboard.map((item, index) => `
+                    <div class="leader-item">
+                        <span>${index + 1}. ${item.name}</span>
+                        <span style="color: var(--retro-pink);">${item.score} pts</span>
+                    </div>
+                `).join('');
+            },
+
+            saveToLeaderboard() {
+                if (this.score <= 0) return;
+                
+                let leaderboard = JSON.parse(localStorage.getItem('popcorn_leaderboard')) || [
+                    { name: "PopcornMaster", score: 15000 },
+                    { name: "EmojiKing", score: 12400 },
+                    { name: "MovieBuff", score: 11000 },
+                    { name: "GamerPro", score: 9500 },
+                    { name: "Newbie", score: 1200 }
+                ];
+                
+                const name = prompt("NOUVEAU SCORE ! Entre ton pseudo :", "Alchimiste") || "Alchimiste";
+                leaderboard.push({ name, score: Math.floor(this.score) });
+                leaderboard.sort((a, b) => b.score - a.score);
+                leaderboard = leaderboard.slice(0, 10); // Keep top 10
+                
+                localStorage.setItem('popcorn_leaderboard', JSON.stringify(leaderboard));
+            },
+
+            startChallenge(levelIds) {
+                const ids = levelIds.split(',').map(id => parseInt(id));
+                this.sessionLevels = LEVELS.filter(l => ids.includes(l.id));
+                this.currentLevelIndex = 0;
+                this.lives = 4;
+                this.currentMode = 'classic';
+                this.score = 0;
+                this.combo = 0;
+                this.hideAllScreens();
+                this.loadLevel();
+                alert("DÉFI REÇU ! Bonne chance !");
+            },
+
+            shareChallenge() {
+                const currentId = this.sessionLevels[this.currentLevelIndex].id;
+                const url = `${window.location.origin}${window.location.pathname}?challenge=${currentId}`;
+                navigator.clipboard.writeText(url).then(() => {
+                    alert("Lien de défi copié ! Envoie-le à un ami.");
+                });
+            },
+
+            start() {
+                this.startGame('all', 'classic');
             },
 
             startDaily() {
@@ -1170,19 +1704,21 @@
                     
                     // Update display
                     const streakEl = document.getElementById('daily-streak-display');
-                    streakEl.innerText = `🔥 Série : ${this.dailyStreak} jours`;
-                    streakEl.style.display = 'block';
+                    if (streakEl) {
+                        streakEl.innerText = `🔥 Série : ${this.dailyStreak} jours`;
+                        streakEl.style.display = 'block';
+                    }
                 }
-
+                
                 this.isDaily = true;
                 this.score = 0;
                 this.combo = 0;
                 this.createNewSession(seed);
-                document.getElementById('start-screen').classList.remove('active');
+                this.hideAllScreens();
                 this.loadLevel();
             },
 
-            resume() {
+            resumeSavedGame() {
                 const saved = localStorage.getItem('popcorn_alchemy_save');
                 if (saved) {
                     const data = JSON.parse(saved);
@@ -1192,9 +1728,15 @@
                     this.score = data.score || 0;
                     this.combo = data.combo || 0;
                     this.isDaily = data.isDaily || false;
+                    this.currentMode = data.currentMode || 'classic';
+                    this.currentCategory = data.currentCategory || 'all';
                 }
-                document.getElementById('start-screen').classList.remove('active');
+                this.hideAllScreens();
                 this.loadLevel();
+                
+                if (this.currentMode === 'timeattack') {
+                    this.startTimeAttack();
+                }
             },
 
             mulberry32(a) {
@@ -1398,6 +1940,13 @@
                 document.getElementById('score-display').innerText = `SCORE: ${Math.floor(this.score)}`;
                 document.getElementById('high-score-display').innerText = `BEST: ${Math.floor(this.highScore)}`;
                 
+                const hintBtn = document.getElementById('hint-btn');
+                if (hintBtn) {
+                    hintBtn.innerText = `💡 ${this.hints}`;
+                    if (this.hints <= 0) hintBtn.classList.add('disabled');
+                    else if (!this.hintsUsedInLevel) hintBtn.classList.remove('disabled');
+                }
+
                 const comboEl = document.getElementById('combo-display');
                 if (this.combo > 1) {
                     const oldCombo = comboEl.innerText;
@@ -1459,6 +2008,10 @@
 
             useHint() {
                 if (this.hintsUsedInLevel || this.isProcessing || this.isPaused) return;
+                if (this.hints <= 0) {
+                    alert("Plus d'indices ! Gagne-en à la roue de la chance.");
+                    return;
+                }
                 
                 const level = this.sessionLevels[this.currentLevelIndex];
                 // Find a correct emoji that isn't already selected
@@ -1468,6 +2021,8 @@
                 const emojiToHint = correctEmojis.find(e => !selectedEmojis.includes(e));
                 
                 if (emojiToHint) {
+                    this.hints--;
+                    localStorage.setItem('popcorn_hints', this.hints);
                     playSound('pop');
                     this.showFeedback('INDICE!', 'var(--retro-yellow)');
                     const gridBtns = document.querySelectorAll('.emoji-btn');
@@ -1484,6 +2039,7 @@
                             this.hintsUsedInLevel = true;
                             document.getElementById('hint-btn').classList.add('disabled');
                             this.vibrate(50);
+                            this.updateUI();
                             break;
                         }
                     }
@@ -1633,23 +2189,66 @@
                 }
             },
 
-            showGameOver() {
+            gameOver(msg = "Ton alchimie a échoué...") {
+                if (this.modeTimerInterval) clearInterval(this.modeTimerInterval);
                 playSound('gameover');
                 document.body.classList.remove('game-active');
                 localStorage.removeItem('popcorn_alchemy_save');
+                this.hideAllScreens();
+                const gameOverEl = document.getElementById('game-over-screen');
+                gameOverEl.querySelector('p').innerText = msg;
                 document.getElementById('final-score-gameover').innerText = `SCORE: ${Math.floor(this.score)}`;
-                document.getElementById('game-over-screen').classList.add('active');
+                gameOverEl.classList.add('active');
+                this.vibrate([100, 50, 100]);
+                
+                // Save to leaderboard if it's a decent score
+                setTimeout(() => {
+                    this.saveToLeaderboard();
+                }, 1000);
+            },
+
+            showGameOver() {
+                this.gameOver();
+            },
+
+            showVictory() {
+                if (this.modeTimerInterval) clearInterval(this.modeTimerInterval);
+                playSound('victory');
+                document.body.classList.remove('game-active');
+                localStorage.removeItem('popcorn_alchemy_save');
+                this.hideAllScreens();
+                document.getElementById('final-score-victory').innerText = `SCORE: ${Math.floor(this.score)}`;
+                document.getElementById('victory-screen').classList.add('active');
+                
+                // Bonus coins for victory
+                this.addCoins(100);
+
+                confetti({
+                    particleCount: 200,
+                    spread: 100,
+                    origin: { y: 0.6 }
+                });
+
+                // Save to leaderboard
+                setTimeout(() => {
+                    this.saveToLeaderboard();
+                }, 1500);
             },
 
             showTierTransition() {
+                if (this.modeTimerInterval) clearInterval(this.modeTimerInterval);
                 playSound('victory');
                 document.body.classList.remove('game-active');
+                this.hideAllScreens();
                 const tier = Math.ceil((this.currentLevelIndex + 1) / 20);
                 document.getElementById('tier-title').innerText = `PALIER ${tier} TERMINÉ !`;
                 document.getElementById('tier-screen').classList.add('active');
-                this.lives = 4; // Refill lives
-                this.combo = 0; // Reset combo on tier change? Maybe not, but let's keep it for balance
+                this.lives = (this.currentMode === 'hardcore') ? 1 : 4; // Refill lives based on mode
+                this.combo = 0;
                 this.updateUI();
+                
+                // Bonus coins for tier
+                this.addCoins(20);
             },
 
             nextTier() {
@@ -1657,19 +2256,6 @@
                 this.currentLevelIndex++;
                 this.isProcessing = false;
                 this.loadLevel();
-            },
-
-            showVictory() {
-                playSound('victory');
-                document.body.classList.remove('game-active');
-                document.getElementById('final-score-victory').innerText = `SCORE: ${Math.floor(this.score)}`;
-                localStorage.removeItem('popcorn_alchemy_save');
-                confetti({
-                    particleCount: 500,
-                    spread: 160,
-                    origin: { y: 0.5 }
-                });
-                document.getElementById('victory-screen').classList.add('active');
             },
 
             toggleRules() {
@@ -1704,21 +2290,24 @@
             },
 
             goToHome() {
+                if (this.modeTimerInterval) clearInterval(this.modeTimerInterval);
                 this.isPaused = false;
-                document.getElementById('pause-screen').classList.remove('active');
+                this.hideAllScreens();
+                document.getElementById('start-screen').classList.add('active');
                 this.init();
             }
         };
 
         // Event Listeners
         document.getElementById('fusion-btn').onclick = () => game.checkFusion();
+        document.getElementById('hint-btn').onclick = () => game.useHint();
 
         // Keyboard Shortcuts
         window.addEventListener('keydown', (e) => {
             if (game.isProcessing) return;
 
             // Pause
-            if (e.key.toLowerCase() === 'p') {
+            if (e.key.toLowerCase() === 'p' || e.key === 'Escape') {
                 if (game.isPaused) game.resumeGame();
                 else game.pauseGame();
                 return;
@@ -1768,18 +2357,9 @@
                 }
                 return;
             }
-
-            // Numbers 1-9 for emojis
-            if (e.key >= '1' && e.key <= '9') {
-                const index = parseInt(e.key) - 1;
-                const btns = document.querySelectorAll('.emoji-btn');
-                if (btns[index] && !btns[index].classList.contains('selected')) {
-                    btns[index].click();
-                }
-            }
         });
 
-        // Start Game
+        // Initialize game
         game.init();
     </script>
 </body>
