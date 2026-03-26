@@ -51,30 +51,17 @@
             z-index: 10;
         }
 
-        /* Animated Popcorn Background */
-        .popcorn-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
-        }
-
-        .popcorn-particle {
+        .explosion-particle {
             position: absolute;
+            pointer-events: none;
+            z-index: 1000;
             font-size: 20px;
-            animation: pop-up 3s linear infinite;
-            opacity: 0.2;
+            animation: explode 0.8s ease-out forwards;
         }
 
-        @keyframes pop-up {
-            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.2; }
-            90% { opacity: 0.2; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        @keyframes explode {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0) rotate(var(--tr)); opacity: 0; }
         }
 
         /* Logo & Subtitle */
@@ -678,12 +665,10 @@
 </head>
 <body>
 
-    <div class="popcorn-bg" id="popcorn-bg"></div>
-
     <div id="game-container">
         <div id="fever-overlay">FEVER!</div>
         <div id="logo-container">
-            <img id="game-logo" src="input_file_0.png" alt="Pop-Corn Alchemy Logo" onerror="this.src='https://picsum.photos/seed/popcorn/200/200'" referrerPolicy="no-referrer">
+            <img id="game-logo" src="input_file_1.png" alt="Pop-Corn Alchemy Logo" onerror="this.src='input_file_0.png'; this.onerror=function(){this.src='https://images.unsplash.com/photo-1585647347483-22b66260dfff?q=80&w=200&h=200&auto=format&fit=crop'}" referrerPolicy="no-referrer">
             <div id="game-subtitle">Combine les émojis pour trouver le film</div>
         </div>
 
@@ -750,7 +735,7 @@
 
     <!-- Start Screen -->
     <div id="start-screen" class="screen active">
-        <img src="input_file_0.png" onerror="this.src='https://picsum.photos/seed/popcorn/200/200'" style="width: 150px; border-radius: 20px; margin-bottom: 20px; border: 4px solid var(--text); box-shadow: var(--chunky-shadow);" alt="Logo">
+        <img src="input_file_1.png" onerror="this.src='input_file_0.png'; this.onerror=function(){this.src='https://images.unsplash.com/photo-1585647347483-22b66260dfff?q=80&w=200&h=200&auto=format&fit=crop'}" style="width: 150px; border-radius: 20px; margin-bottom: 20px; border: 4px solid var(--text); box-shadow: var(--chunky-shadow);" alt="Logo">
         <h1 style="color: var(--retro-pink); font-size: 18px;">POP-CORN ALCHEMY</h1>
         <div style="font-size: 9px; line-height: 1.8; margin: 20px 0; color: var(--text); text-align: left; background: rgba(0,0,0,0.05); padding: 15px; border-radius: 10px; border: 2px solid var(--text);">
             <p>🧪 <span style="color: var(--retro-green);">RÈGLES :</span></p>
@@ -810,6 +795,7 @@
         <h1 style="color: var(--retro-cyan);">PAUSE</h1>
         <p style="margin-bottom: 30px; font-size: 10px;">Le jeu est en pause.</p>
         <button class="btn-restart" onclick="game.resumeGame()">REPRENDRE</button>
+        <button class="btn-restart" style="margin-top: 15px; background: var(--retro-pink); color: white;" onclick="game.goToHome()">ACCUEIL</button>
     </div>
 
     <div id="achievement-toast">SUCCÈS DÉVERROUILLÉ !</div>
@@ -1041,8 +1027,6 @@
                 
                 // Increment view counter on load
                 this.incrementViews();
-                this.createPopcornBg();
-
                 // Setup Buttons
                 document.getElementById('hint-btn').onclick = () => this.useHint();
                 document.getElementById('fusion-btn').onclick = () => this.checkFusion();
@@ -1223,21 +1207,22 @@
             },
 
             spawnPopcorn(x, y) {
-                const count = 15;
+                const count = 25;
+                const emojis = ['🍿', '✨', '💥', '🧪'];
                 for (let i = 0; i < count; i++) {
                     const p = document.createElement('div');
-                    p.className = 'popcorn-particle';
-                    p.innerText = '🍿';
-                    const tx = (Math.random() - 0.5) * 400;
-                    const ty = (Math.random() - 0.5) * 400 - 100;
-                    const tr = (Math.random() - 0.5) * 720;
+                    p.className = 'explosion-particle';
+                    p.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                    const tx = (Math.random() - 0.5) * 600;
+                    const ty = (Math.random() - 0.5) * 600 - 150;
+                    const tr = (Math.random() - 0.5) * 1080;
                     p.style.setProperty('--tx', `${tx}px`);
                     p.style.setProperty('--ty', `${ty}px`);
                     p.style.setProperty('--tr', `${tr}deg`);
                     p.style.left = `${x}px`;
                     p.style.top = `${y}px`;
                     document.body.appendChild(p);
-                    setTimeout(() => p.remove(), 1000);
+                    setTimeout(() => p.remove(), 800);
                 }
             },
 
@@ -1352,20 +1337,6 @@
                 for (let i = array.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
                     [array[i], array[j]] = [array[j], array[i]];
-                }
-            },
-
-            createPopcornBg() {
-                const bg = document.getElementById('popcorn-bg');
-                const emojis = ['🍿', '🧪', '✨', '🎬'];
-                for (let i = 0; i < 15; i++) {
-                    const p = document.createElement('div');
-                    p.className = 'popcorn-particle';
-                    p.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                    p.style.left = Math.random() * 100 + 'vw';
-                    p.style.animationDelay = Math.random() * 5 + 's';
-                    p.style.fontSize = (Math.random() * 20 + 10) + 'px';
-                    bg.appendChild(p);
                 }
             },
 
@@ -1730,6 +1701,12 @@
             resumeGame() {
                 this.isPaused = false;
                 document.getElementById('pause-screen').classList.remove('active');
+            },
+
+            goToHome() {
+                this.isPaused = false;
+                document.getElementById('pause-screen').classList.remove('active');
+                this.init();
             }
         };
 
