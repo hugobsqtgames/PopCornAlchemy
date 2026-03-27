@@ -36,23 +36,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh;
-            height: 100dvh; /* Support for dynamic viewport height on mobile */
-            overflow: hidden;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            overflow-y: auto;
             touch-action: manipulation;
         }
 
         #game-container {
             width: 100%;
             max-width: 450px;
-            height: 100%;
             display: flex;
             flex-direction: column;
             padding: 10px;
-            padding-bottom: 180px; /* Space for social links and controls */
             gap: 5px;
             position: relative;
             z-index: 10;
+            flex: 1;
         }
 
         .explosion-particle {
@@ -156,7 +156,9 @@
             color: var(--text);
         }
 
-        .skin-card.active { border-color: var(--retro-pink); }
+        .skin-card.active { border-color: var(--retro-pink); transform: scale(1.05); }
+        .skin-card.locked { opacity: 0.8; filter: grayscale(0.5); }
+        .skin-card.locked:hover { filter: grayscale(0); opacity: 1; }
         .skin-preview { height: 40px; border-radius: 8px; margin-bottom: 5px; border: 1px solid #ddd; }
         .skin-name { font-size: 9px; font-weight: bold; }
 
@@ -350,7 +352,7 @@
         /* Fever Overlay */
         #fever-overlay {
             position: absolute;
-            top: 20px;
+            top: 60px;
             left: 50%;
             transform: translateX(-50%);
             font-family: 'Press Start 2P', cursive;
@@ -375,7 +377,7 @@
         /* Achievement Notification */
         #achievement-toast {
             position: fixed;
-            top: 20px;
+            top: 60px;
             left: 50%;
             transform: translateX(-50%) translateY(-100px);
             background: var(--text);
@@ -597,10 +599,11 @@
         .control-btns {
             display: none;
             flex-direction: row;
-            gap: 12px;
+            gap: 15px;
             pointer-events: auto;
-            margin-bottom: 10px;
+            margin: 15px 0;
             justify-content: center;
+            width: 100%;
         }
 
         body.game-active .control-btns {
@@ -608,17 +611,17 @@
         }
 
         .ctrl-btn {
-            width: 35px;
-            height: 35px;
+            width: 30px;
+            height: 30px;
             background: var(--retro-cyan);
             color: white;
-            border: 3px solid var(--text);
+            border: 2px solid var(--text);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Press Start 2P', cursive;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
             box-shadow: 2px 2px 0px #000;
             transition: transform 0.1s;
@@ -667,34 +670,32 @@
 
         /* Social Links */
         .social-links-container {
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
-            z-index: 150; /* Above screens */
+            gap: 12px;
             width: 100%;
-            pointer-events: none;
+            padding: 30px 10px;
+            background: rgba(0, 0, 0, 0.08);
+            border-top: 3px solid var(--text);
+            margin-top: auto;
         }
 
         .social-links {
             display: flex;
-            gap: 15px;
-            background: rgba(253, 246, 227, 0.9);
-            padding: 5px 12px;
-            border-radius: 15px;
-            border: 2px solid var(--text);
-            box-shadow: 2px 2px 0px #000;
+            gap: 20px;
+            background: var(--card-bg);
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 3px solid var(--text);
+            box-shadow: 4px 4px 0px #000;
             pointer-events: auto;
         }
 
         .social-links a {
             display: block;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             transition: transform 0.2s;
         }
 
@@ -794,9 +795,100 @@
             margin-top: 5px;
             font-weight: bold;
         }
+        .shop-tab {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        .shop-tab.active {
+            background: var(--retro-yellow);
+            color: #000;
+            border-color: var(--retro-yellow);
+            font-weight: bold;
+        }
+        .skin-card.locked {
+            filter: grayscale(1) opacity(0.5);
+        }
+        .powerup-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+        .powerup-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .powerup-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .lang-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+        .lang-card {
+            background: var(--card-bg);
+            border: 3px solid var(--text);
+            box-shadow: var(--chunky-shadow);
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            transition: transform 0.2s;
+        }
+        .lang-card:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000;
+        }
+        .lang-flag {
+            font-size: 40px;
+        }
+        .lang-name {
+            font-size: 14px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
+
+    <div id="language-screen" class="screen">
+        <h1 id="lang-select-title" style="font-size: 20px; margin-bottom: 30px; text-align: center;">CHOISIS TA LANGUE</h1>
+        <div class="lang-grid">
+            <div class="lang-card" onclick="game.setLanguage('fr')">
+                <span class="lang-flag">🇫🇷</span>
+                <span class="lang-name">FRANÇAIS</span>
+            </div>
+            <div class="lang-card" onclick="game.setLanguage('en')">
+                <span class="lang-flag">🇬🇧</span>
+                <span class="lang-name">ENGLISH</span>
+            </div>
+            <div class="lang-card" onclick="game.setLanguage('es')">
+                <span class="lang-flag">🇪🇸</span>
+                <span class="lang-name">ESPAÑOL</span>
+            </div>
+        </div>
+    </div>
 
     <div id="game-container">
         <div id="fever-overlay">FEVER!</div>
@@ -824,32 +916,22 @@
         </div>
 
         <div id="fusion-area">
+            <div class="powerup-bar" style="margin-bottom: 10px;">
+                <button id="shield-btn" class="powerup-btn" title="Bouclier Alchimique">🛡️ <span id="shield-count">0</span></button>
+                <button id="skip-btn" class="powerup-btn" onclick="game.skipLevel()" title="Passer le niveau">⏭️ <span id="skip-count">0</span></button>
+            </div>
             <div id="fusion-bar"></div>
             <button id="fusion-btn">FUSIONNER</button>
             <div id="hint-btn" title="Indice">💡</div>
         </div>
 
         <div id="emoji-grid"></div>
-    </div>
 
-    <div class="social-links-container">
         <div class="control-btns">
             <div id="pause-btn" class="ctrl-btn" onclick="game.pauseGame()" style="background: var(--retro-yellow);">⏸</div>
             <div id="mute-btn" class="ctrl-btn" onclick="game.toggleMute()">🔊</div>
             <div id="info-btn" class="ctrl-btn" onclick="game.toggleRules()">i</div>
         </div>
-        <div class="social-links">
-            <a href="https://www.tiktok.com/@hugo_bsqt" target="_blank" rel="noopener noreferrer">
-                <img src="https://cdn.simpleicons.org/tiktok/2d2d2d" alt="TikTok" referrerPolicy="no-referrer">
-            </a>
-            <a href="https://www.instagram.com/hugo_bsqt/" target="_blank" rel="noopener noreferrer">
-                <img src="https://cdn.simpleicons.org/instagram/2d2d2d" alt="Instagram" referrerPolicy="no-referrer">
-            </a>
-            <a href="https://www.youtube.com/channel/UCUAfM0_WdPb1o-gRWAP8xWg" target="_blank" rel="noopener noreferrer">
-                <img src="https://cdn.simpleicons.org/youtube/2d2d2d" alt="YouTube" referrerPolicy="no-referrer">
-            </a>
-        </div>
-        <div class="copyright">Hugo_BSQT 2026 tous droits réservés</div>
     </div>
 
     <div id="rules-overlay" onclick="game.toggleRules()">
@@ -869,12 +951,23 @@
 
     <!-- Start Screen -->
     <div id="start-screen" class="screen active">
+        <div style="position: absolute; top: 10px; right: 10px;">
+            <button class="btn-restart" style="padding: 5px 10px; font-size: 14px; width: auto; background: var(--retro-cyan);" onclick="game.showLanguageSelect()">🌐</button>
+        </div>
         <div id="logo-container-start">
             <img src="input_file_1.png" alt="Pop-Corn Alchemy Logo" style="width: 150px; height: 150px; border-radius: 20px; border: 4px solid var(--text); box-shadow: 4px 4px 0px #000; margin-bottom: 20px;" onerror="this.src='input_file_0.png'; this.onerror=function(){this.src='https://images.unsplash.com/photo-1585647347483-22b66260dfff?q=80&w=200&h=200&auto=format&fit=crop'}" referrerPolicy="no-referrer">
         </div>
         <h1 style="font-size: 28px; margin-bottom: 10px;">POP-CORN ALCHEMY</h1>
         <p style="margin-bottom: 30px; font-size: 10px; opacity: 0.8;">L'art de la fusion d'émojis</p>
         
+        <div id="user-profile" style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; justify-content: center; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 15px; border: 2px solid var(--text);">
+            <div id="user-avatar" style="font-size: 30px;">🍿</div>
+            <div style="text-align: left;">
+                <div id="user-coins-start" style="color: var(--retro-yellow); font-weight: bold; font-size: 14px;">💰 0</div>
+                <div id="user-hints-start" style="color: var(--retro-cyan); font-size: 10px;">💡 3</div>
+            </div>
+        </div>
+
         <div id="daily-streak-display" style="margin-bottom: 20px; color: var(--retro-pink); font-size: 12px; display: none;">🔥 Série : 0 jours</div>
 
         <div class="menu-buttons">
@@ -885,6 +978,23 @@
             <button class="btn-restart" style="background: var(--retro-yellow); color: #000;" onclick="game.showSkins()">BOUTIQUE / SKINS</button>
             <button class="btn-restart" style="background: var(--retro-pink);" onclick="game.showDailyWheel()">ROUE DE LA CHANCE</button>
             <button class="btn-restart" style="background: #fff; color: #000;" onclick="game.showLeaderboard()">CLASSEMENT</button>
+            <button class="btn-restart" style="background: var(--retro-cyan);" onclick="game.showStats()">STATISTIQUES</button>
+        </div>
+
+        <!-- Social Footer for Start Screen -->
+        <div class="social-links-container" style="margin-top: 40px; background: transparent; border-top: none; padding: 0;">
+            <div class="social-links">
+                <a href="https://www.tiktok.com/@hugo_bsqt" target="_blank" rel="noopener noreferrer">
+                    <img src="https://cdn.simpleicons.org/tiktok/2d2d2d" alt="TikTok" referrerPolicy="no-referrer">
+                </a>
+                <a href="https://www.instagram.com/hugo_bsqt/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://cdn.simpleicons.org/instagram/2d2d2d" alt="Instagram" referrerPolicy="no-referrer">
+                </a>
+                <a href="https://www.youtube.com/channel/UCUAfM0_WdPb1o-gRWAP8xWg" target="_blank" rel="noopener noreferrer">
+                    <img src="https://cdn.simpleicons.org/youtube/2d2d2d" alt="YouTube" referrerPolicy="no-referrer">
+                </a>
+            </div>
+            <div class="copyright">Hugo_BSQT 2026 tous droits réservés</div>
         </div>
     </div>
 
@@ -912,6 +1022,14 @@
                 <span class="cat-icon">🎵</span>
                 <span class="cat-name">MUSIQUE</span>
             </button>
+            <button class="cat-card" onclick="game.startGame('geo')">
+                <span class="cat-icon">🌍</span>
+                <span class="cat-name">GÉOGRAPHIE</span>
+            </button>
+            <button class="cat-card" onclick="game.startGame('brand')">
+                <span class="cat-icon">🏷️</span>
+                <span class="cat-name">MARQUES</span>
+            </button>
         </div>
         <button class="btn-restart" style="margin-top: 20px;" onclick="game.showStart()">RETOUR</button>
     </div>
@@ -927,32 +1045,104 @@
         <button class="btn-restart" style="margin-top: 20px;" onclick="game.showStart()">RETOUR</button>
     </div>
 
-    <!-- Skins / Themes -->
-    <div id="skins-screen" class="screen">
-        <h1 style="font-size: 24px; margin-bottom: 20px;">BOUTIQUE</h1>
-        <div id="coins-display" style="margin-bottom: 20px; font-size: 14px; color: var(--retro-yellow);">💰 <span id="user-coins">0</span> PIÈCES</div>
-        <div class="skins-grid">
-            <div class="skin-card active" onclick="game.setTheme('default')">
-                <div class="skin-preview" style="background: #fdf6e3;"></div>
-                <div class="skin-name">CLASSIQUE</div>
+    <!-- Stats Screen -->
+    <div id="stats-screen" class="screen">
+        <h1 style="font-size: 24px; margin-bottom: 20px;">STATISTIQUES</h1>
+        <div style="width: 100%; max-width: 300px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; border: 3px solid var(--text); text-align: left; margin-bottom: 20px;">
+            <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
+                <span style="font-size: 10px; opacity: 0.8;" id="label-stat-levels">Niveaux réussis</span>
+                <span style="font-size: 12px; color: var(--retro-green); font-weight: bold;" id="stat-levels">0</span>
             </div>
-            <div class="skin-card" onclick="game.setTheme('dark')">
-                <div class="skin-preview" style="background: #1a1a1a;"></div>
-                <div class="skin-name">DARK MODE</div>
+            <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
+                <span style="font-size: 10px; opacity: 0.8;" id="label-stat-coins">Pièces gagnées</span>
+                <span style="font-size: 12px; color: var(--retro-yellow); font-weight: bold;" id="stat-coins">0</span>
             </div>
-            <div class="skin-card" onclick="game.setTheme('neon')">
-                <div class="skin-preview" style="background: #000; border: 1px solid var(--retro-cyan);"></div>
-                <div class="skin-name">NEON NIGHT</div>
+            <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
+                <span style="font-size: 10px; opacity: 0.8;" id="label-stat-fusions">Fusions totales</span>
+                <span style="font-size: 12px; color: var(--retro-cyan); font-weight: bold;" id="stat-fusions">0</span>
             </div>
-            <div class="skin-card" onclick="game.setTheme('retro')">
-                <div class="skin-preview" style="background: #ffcc33;"></div>
-                <div class="skin-name">RETRO GOLD</div>
-            </div>
-            <div class="skin-card" onclick="game.setTheme('cyber')">
-                <div class="skin-preview" style="background: #2b0054; border: 1px solid #ff0055;"></div>
-                <div class="skin-name">CYBERPUNK</div>
+            <div style="margin-bottom: 0; display: flex; justify-content: space-between;">
+                <span style="font-size: 10px; opacity: 0.8;" id="label-stat-daily">Défis quotidiens</span>
+                <span style="font-size: 12px; color: var(--retro-pink); font-weight: bold;" id="stat-daily">0</span>
             </div>
         </div>
+        <button class="btn-restart" style="background: var(--retro-pink); font-size: 10px; padding: 10px; margin-bottom: 20px;" onclick="game.resetProgress()">RÉINITIALISER TOUT</button>
+        <button class="btn-restart" onclick="game.showStart()">RETOUR</button>
+    </div>
+
+    <!-- Boutique / Shop -->
+    <div id="skins-screen" class="screen">
+        <h1 style="font-size: 24px; margin-bottom: 15px;">BOUTIQUE</h1>
+        <div id="coins-display" style="margin-bottom: 15px; font-size: 16px; color: var(--retro-yellow); font-weight: bold;">💰 <span id="user-coins">0</span> PIÈCES</div>
+        
+        <div class="shop-tabs" style="display: flex; gap: 10px; margin-bottom: 20px; width: 100%; justify-content: center; flex-wrap: wrap;">
+            <button class="shop-tab active" onclick="game.switchShopTab('skins')">SKINS</button>
+            <button class="shop-tab" onclick="game.switchShopTab('powerups')">POWER-UPS</button>
+            <button class="shop-tab" onclick="game.switchShopTab('styles')">STYLES</button>
+            <button class="shop-tab" onclick="game.switchShopTab('avatars')">AVATARS</button>
+        </div>
+
+        <!-- Skins Tab -->
+        <div id="shop-skins" class="shop-content">
+            <div class="skins-grid">
+                <div class="skin-card active" onclick="game.setTheme('default')">
+                    <div class="skin-preview" style="background: #fdf6e3;"></div>
+                    <div class="skin-name">CLASSIQUE</div>
+                </div>
+                <div class="skin-card" onclick="game.setTheme('dark')">
+                    <div class="skin-preview" style="background: #1a1a1a;"></div>
+                    <div class="skin-name">DARK MODE</div>
+                </div>
+                <div class="skin-card" onclick="game.setTheme('neon')">
+                    <div class="skin-preview" style="background: #000; border: 1px solid var(--retro-cyan);"></div>
+                    <div class="skin-name">NEON NIGHT</div>
+                </div>
+                <div class="skin-card" onclick="game.setTheme('retro')">
+                    <div class="skin-preview" style="background: #ffcc33;"></div>
+                    <div class="skin-name">RETRO GOLD</div>
+                </div>
+                <div class="skin-card" onclick="game.setTheme('cyber')">
+                    <div class="skin-preview" style="background: #2b0054; border: 1px solid #ff0055;"></div>
+                    <div class="skin-name">CYBERPUNK</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Power-ups Tab -->
+        <div id="shop-powerups" class="shop-content" style="display: none;">
+            <div class="skins-grid">
+                <div class="skin-card" onclick="game.buyHints()">
+                    <div style="font-size: 30px; margin-bottom: 5px;">💡</div>
+                    <div class="skin-name">5 INDICES</div>
+                    <div style="font-size: 10px; color: var(--retro-yellow);">50 💰</div>
+                </div>
+                <div class="skin-card" onclick="game.buyShield()">
+                    <div style="font-size: 30px; margin-bottom: 5px;">🛡️</div>
+                    <div class="skin-name">BOUCLIER</div>
+                    <div style="font-size: 10px; color: var(--retro-yellow);">80 💰</div>
+                </div>
+                <div class="skin-card" onclick="game.buySkip()">
+                    <div style="font-size: 30px; margin-bottom: 5px;">⏭️</div>
+                    <div class="skin-name">PASSAGE</div>
+                    <div style="font-size: 10px; color: var(--retro-yellow);">120 💰</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Styles Tab -->
+        <div id="shop-styles" class="shop-content" style="display: none;">
+            <div id="styles-grid" class="skins-grid">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+
+        <!-- Avatars Tab -->
+        <div id="shop-avatars" class="shop-content" style="display: none;">
+            <div id="avatars-grid" class="skins-grid">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+
         <button class="btn-restart" style="margin-top: 20px;" onclick="game.showStart()">RETOUR</button>
     </div>
 
@@ -1025,6 +1215,14 @@
         <button class="btn-restart" onclick="game.resumeGame()">REPRENDRE</button>
         <button class="btn-restart" style="margin-top: 10px; background: var(--retro-cyan); font-size: 8px;" onclick="game.shareChallenge()">DÉFIER UN AMI</button>
         <button class="btn-restart" style="margin-top: 15px; background: var(--retro-pink); color: white;" onclick="game.goToHome()">ACCUEIL</button>
+    </div>
+
+    <!-- Custom Modal Screen -->
+    <div id="modal-screen" class="screen" style="background: rgba(0,0,0,0.8); z-index: 1000; display: none; align-items: center; justify-content: center;">
+        <div class="card" style="width: 80%; max-width: 300px; text-align: center; padding: 20px; background: white; border: 3px solid black; border-radius: 15px; box-shadow: 4px 4px 0px #000;">
+            <p id="modal-text" style="font-size: 10px; line-height: 1.5; margin-bottom: 20px;"></p>
+            <button class="btn-restart" onclick="game.closeModal()" id="modal-btn">OK</button>
+        </div>
     </div>
 
     <div id="achievement-toast">SUCCÈS DÉVERROUILLÉ !</div>
@@ -1106,104 +1304,138 @@
 
         const LEVELS = [
             // Palier 1 (1-20) : 2 emojis
-            { id: 1, objective: "Objectif : Titanic", solution: ["🚢", "🧊"], category: "movie" },
-            { id: 2, objective: "Objectif : Spider-Man", solution: ["🕷️", "👦"], category: "movie" },
-            { id: 3, objective: "Objectif : Harry Potter", solution: ["⚡", "👓"], category: "movie" },
-            { id: 4, objective: "Objectif : Batman", solution: ["🦇", "👨"], category: "movie" },
-            { id: 5, objective: "Objectif : Le Roi Lion", solution: ["🦁", "👑"], category: "movie" },
-            { id: 6, objective: "Objectif : Les Dents de la Mer", solution: ["🦈", "🌊"], category: "movie" },
-            { id: 7, objective: "Objectif : Là-Haut", solution: ["🎈", "🏠"], category: "movie" },
-            { id: 8, objective: "Objectif : La Reine des Neiges", solution: ["❄️", "👸"], category: "movie" },
-            { id: 9, objective: "Objectif : Joker", solution: ["🤡", "🃏"], category: "movie" },
-            { id: 10, objective: "Objectif : Shrek", solution: ["👹", "🧅"], category: "movie" },
-            { id: 11, objective: "Objectif : Toy Story", solution: ["🤠", "🚀"], category: "movie" },
-            { id: 12, objective: "Objectif : Le Monde de Nemo", solution: ["🤡", "🐟"], category: "movie" },
-            { id: 13, objective: "Objectif : King Kong", solution: ["🦍", "🏢"], category: "movie" },
-            { id: 14, objective: "Objectif : Cendrillon", solution: ["👠", "🎃"], category: "movie" },
-            { id: 15, objective: "Objectif : Aladdin", solution: ["🧞", "🏮"], category: "movie" },
-            { id: 16, objective: "Objectif : Pinocchio", solution: ["🤥", "🪵"], category: "movie" },
-            { id: 17, objective: "Objectif : Blanche-Neige", solution: ["🍎", "👸"], category: "movie" },
-            { id: 18, objective: "Objectif : Ratatouille", solution: ["🐀", "👨‍🍳"], category: "movie" },
-            { id: 19, objective: "Objectif : Wall-E", solution: ["🤖", "🌱"], category: "movie" },
-            { id: 20, objective: "Objectif : Cars", solution: ["🏎️", "⚡"], category: "movie" },
+            { id: 1, objective: "Titanic", solution: ["🚢", "🧊"], category: "movie" },
+            { id: 2, objective: "Spider-Man", solution: ["🕷️", "👦"], category: "movie" },
+            { id: 3, objective: "Harry Potter", solution: ["⚡", "👓"], category: "movie" },
+            { id: 4, objective: "Batman", solution: ["🦇", "👨"], category: "movie" },
+            { id: 5, objective: "Le Roi Lion", solution: ["🦁", "👑"], category: "movie" },
+            { id: 6, objective: "Les Dents de la Mer", solution: ["🦈", "🌊"], category: "movie" },
+            { id: 7, objective: "Là-Haut", solution: ["🎈", "🏠"], category: "movie" },
+            { id: 8, objective: "La Reine des Neiges", solution: ["❄️", "👸"], category: "movie" },
+            { id: 9, objective: "Joker", solution: ["🤡", "🃏"], category: "movie" },
+            { id: 10, objective: "Shrek", solution: ["👹", "🧅"], category: "movie" },
+            { id: 11, objective: "Toy Story", solution: ["🤠", "🚀"], category: "movie" },
+            { id: 12, objective: "Le Monde de Nemo", solution: ["🤡", "🐟"], category: "movie" },
+            { id: 13, objective: "King Kong", solution: ["🦍", "🏢"], category: "movie" },
+            { id: 14, objective: "Cendrillon", solution: ["👠", "🎃"], category: "movie" },
+            { id: 15, objective: "Aladdin", solution: ["🧞", "🏮"], category: "movie" },
+            { id: 16, objective: "Pinocchio", solution: ["🤥", "🪵"], category: "movie" },
+            { id: 17, objective: "Blanche-Neige", solution: ["🍎", "👸"], category: "movie" },
+            { id: 18, objective: "Ratatouille", solution: ["🐀", "👨‍🍳"], category: "movie" },
+            { id: 19, objective: "Wall-E", solution: ["🤖", "🌱"], category: "movie" },
+            { id: 20, objective: "Cars", solution: ["🏎️", "⚡"], category: "movie" },
 
             // Palier 2 (21-40) : 3 emojis
-            { id: 21, objective: "Objectif : Star Wars", solution: ["⚔️", "🌌", "🤖"], category: "movie" },
-            { id: 22, objective: "Objectif : Jurassic Park", solution: ["🦖", "🦟", "🧬"], category: "movie" },
-            { id: 23, objective: "Objectif : Matrix", solution: ["💊", "🕶️", "💻"], category: "movie" },
-            { id: 24, objective: "Objectif : Retour vers le Futur", solution: ["🚗", "⚡", "🕰️"], category: "movie" },
-            { id: 25, objective: "Objectif : Pirates des Caraïbes", solution: ["🏴‍☠️", "⚓", "🦜"], category: "movie" },
-            { id: 26, objective: "Objectif : SOS Fantômes", solution: ["👻", "🚫", "🔫"], category: "movie" },
-            { id: 27, objective: "Objectif : Indiana Jones", solution: ["🤠", "🐍", "💎"], category: "movie" },
-            { id: 28, objective: "Objectif : E.T. l'extra-terrestre", solution: ["👽", "🚲", "🌕"], category: "movie" },
-            { id: 29, objective: "Objectif : Men in Black", solution: ["🕶️", "👽", "🔫"], category: "movie" },
-            { id: 30, objective: "Objectif : Terminator", solution: ["🤖", "🕶️", "🏍️"], category: "movie" },
-            { id: 31, objective: "Objectif : Gladiator", solution: ["⚔️", "🏟️", "🛡️"], category: "movie" },
-            { id: 32, objective: "Objectif : Forrest Gump", solution: ["🏃", "🍫", "👟"], category: "movie" },
-            { id: 33, objective: "Objectif : Seul au Monde", solution: ["🏝️", "🏐", "📦"], category: "movie" },
-            { id: 34, objective: "Objectif : Maman j'ai raté l'avion", solution: ["🏠", "👦", "❄️"], category: "movie" },
-            { id: 35, objective: "Objectif : L'Exorciste", solution: ["👧", "🤮", "⛪"], category: "movie" },
-            { id: 36, objective: "Objectif : Psychose", solution: ["🚿", "🔪", "🏨"], category: "movie" },
-            { id: 37, objective: "Objectif : Scream", solution: ["😱", "🔪", "📞"], category: "movie" },
-            { id: 38, objective: "Objectif : Saw", solution: ["🤡", "🚲", "🪚"], category: "movie" },
-            { id: 39, objective: "Objectif : Ça (IT)", solution: ["🤡", "🎈", "⛵"], category: "movie" },
-            { id: 40, objective: "Objectif : Shining", solution: ["🪓", "🏨", "❄️"], category: "movie" },
+            { id: 21, objective: "Star Wars", solution: ["⚔️", "🌌", "🤖"], category: "movie" },
+            { id: 22, objective: "Jurassic Park", solution: ["🦖", "🦟", "🧬"], category: "movie" },
+            { id: 23, objective: "Matrix", solution: ["💊", "🕶️", "💻"], category: "movie" },
+            { id: 24, objective: "Retour vers le Futur", solution: ["🚗", "⚡", "🕰️"], category: "movie" },
+            { id: 25, objective: "Pirates des Caraïbes", solution: ["🏴‍☠️", "⚓", "🦜"], category: "movie" },
+            { id: 26, objective: "SOS Fantômes", solution: ["👻", "🚫", "🔫"], category: "movie" },
+            { id: 27, objective: "Indiana Jones", solution: ["🤠", "🐍", "💎"], category: "movie" },
+            { id: 28, objective: "E.T. l'extra-terrestre", solution: ["👽", "🚲", "🌕"], category: "movie" },
+            { id: 29, objective: "Men in Black", solution: ["🕶️", "👽", "🔫"], category: "movie" },
+            { id: 30, objective: "Terminator", solution: ["🤖", "🕶️", "🏍️"], category: "movie" },
+            { id: 31, objective: "Gladiator", solution: ["⚔️", "🏟️", "🛡️"], category: "movie" },
+            { id: 32, objective: "Forrest Gump", solution: ["🏃", "🍫", "👟"], category: "movie" },
+            { id: 33, objective: "Seul au Monde", solution: ["🏝️", "🏐", "📦"], category: "movie" },
+            { id: 34, objective: "Maman j'ai raté l'avion", solution: ["🏠", "👦", "❄️"], category: "movie" },
+            { id: 35, objective: "L'Exorciste", solution: ["👧", "🤮", "⛪"], category: "movie" },
+            { id: 36, objective: "Psychose", solution: ["🚿", "🔪", "🏨"], category: "movie" },
+            { id: 37, objective: "Scream", solution: ["😱", "🔪", "📞"], category: "movie" },
+            { id: 38, objective: "Saw", solution: ["🤡", "🚲", "🪚"], category: "movie" },
+            { id: 39, objective: "Ça (IT)", solution: ["🤡", "🎈", "⛵"], category: "movie" },
+            { id: 40, objective: "Shining", solution: ["🪓", "🏨", "❄️"], category: "movie" },
 
             // Palier 3 (41-60) : 4 emojis
-            { id: 41, objective: "Objectif : Avengers", solution: ["🛡️", "🔨", "🏹", "🦾"], category: "movie" },
-            { id: 42, objective: "Objectif : Stranger Things", solution: ["🧇", "🚲", "🔦", "👾"], category: "series" },
-            { id: 43, objective: "Objectif : Super Mario", solution: ["🍄", "🐢", "🏰", "👨‍🔧"], category: "game" },
-            { id: 44, objective: "Objectif : Pokémon", solution: ["🐭", "⚡", "🔴", "⚪"], category: "game" },
-            { id: 45, objective: "Objectif : Zelda", solution: ["🗡️", "🛡️", "🧚", "👑"], category: "game" },
-            { id: 46, objective: "Objectif : Minecraft", solution: ["🟩", "⛏️", "🧱", "🧟"], category: "game" },
-            { id: 47, objective: "Objectif : Fortnite", solution: ["🔫", "🧱", "🕺", "🚌"], category: "game" },
-            { id: 48, objective: "Objectif : GTA", solution: ["🚗", "🔫", "💰", "🚁"], category: "game" },
-            { id: 49, objective: "Objectif : Pac-Man", solution: ["🟡", "👻", "🍒", "🕹️"], category: "game" },
-            { id: 50, objective: "Objectif : Tetris", solution: ["🧱", "🟦", "🟥", "🟨"], category: "game" },
-            { id: 51, objective: "Objectif : Sonic", solution: ["🦔", "💨", "🔵", "💍"], category: "game" },
-            { id: 52, objective: "Objectif : Street Fighter", solution: ["🥋", "🥊", "👊", "💥"], category: "game" },
-            { id: 53, objective: "Objectif : Mortal Kombat", solution: ["🐉", "🩸", "💀", "❄️"], category: "game" },
-            { id: 54, objective: "Objectif : Resident Evil", solution: ["🧟", "🔫", "💊", "🏢"], category: "game" },
-            { id: 55, objective: "Objectif : Tomb Raider", solution: ["🏹", "🏺", "🧗", "🔫"], category: "game" },
-            { id: 56, objective: "Objectif : God of War", solution: ["🪓", "🧔", "🏹", "❄️"], category: "game" },
-            { id: 57, objective: "Objectif : Halo", solution: ["🔫", "🛸", "🪐", "🦾"], category: "game" },
-            { id: 58, objective: "Objectif : Call of Duty", solution: ["🔫", "🚁", "💣", "🪖"], category: "game" },
-            { id: 59, objective: "Objectif : Assassin's Creed", solution: ["🦅", "🗡️", "⛪", "🕰️"], category: "game" },
-            { id: 60, objective: "Objectif : The Witcher", solution: ["🐺", "⚔️", "🧙‍♀️", "🐎"], category: "game" },
+            { id: 41, objective: "Avengers", solution: ["🛡️", "🔨", "🏹", "🦾"], category: "movie" },
+            { id: 42, objective: "Stranger Things", solution: ["🧇", "🚲", "🔦", "👾"], category: "series" },
+            { id: 43, objective: "Super Mario", solution: ["🍄", "🐢", "🏰", "👨‍🔧"], category: "game" },
+            { id: 44, objective: "Pokémon", solution: ["🐭", "⚡", "🔴", "⚪"], category: "game" },
+            { id: 45, objective: "Zelda", solution: ["🗡️", "🛡️", "🧚", "👑"], category: "game" },
+            { id: 46, objective: "Minecraft", solution: ["🟩", "⛏️", "🧱", "🧟"], category: "game" },
+            { id: 47, objective: "Fortnite", solution: ["🔫", "🧱", "🕺", "🚌"], category: "game" },
+            { id: 48, objective: "GTA", solution: ["🚗", "🔫", "💰", "🚁"], category: "game" },
+            { id: 49, objective: "Pac-Man", solution: ["🟡", "👻", "🍒", "🕹️"], category: "game" },
+            { id: 50, objective: "Tetris", solution: ["🧱", "🟦", "🟥", "🟨"], category: "game" },
+            { id: 51, objective: "Sonic", solution: ["🦔", "💨", "🔵", "💍"], category: "game" },
+            { id: 52, objective: "Street Fighter", solution: ["🥋", "🥊", "👊", "💥"], category: "game" },
+            { id: 53, objective: "Mortal Kombat", solution: ["🐉", "🩸", "💀", "❄️"], category: "game" },
+            { id: 54, objective: "Resident Evil", solution: ["🧟", "🔫", "💊", "🏢"], category: "game" },
+            { id: 55, objective: "Tomb Raider", solution: ["🏹", "🏺", "🧗", "🔫"], category: "game" },
+            { id: 56, objective: "God of War", solution: ["🪓", "🧔", "🏹", "❄️"], category: "game" },
+            { id: 57, objective: "Halo", solution: ["🔫", "🛸", "🪐", "🦾"], category: "game" },
+            { id: 58, objective: "Call of Duty", solution: ["🔫", "🚁", "💣", "🪖"], category: "game" },
+            { id: 59, objective: "Assassin's Creed", solution: ["🦅", "🗡️", "⛪", "🕰️"], category: "game" },
+            { id: 60, objective: "The Witcher", solution: ["🐺", "⚔️", "🧙‍♀️", "🐎"], category: "game" },
 
             // Palier 4 (61-80) : 5 emojis
-            { id: 61, objective: "Objectif : Inception", solution: ["🌀", "🏢", "🔫", "🛌", "⏳"], category: "movie" },
-            { id: 62, objective: "Objectif : Le Seigneur des Anneaux", solution: ["💍", "🌋", "🗡️", "🧙‍♂️", "👣"], category: "movie" },
-            { id: 63, objective: "Objectif : Squid Game", solution: ["🦑", "🔴", "🔺", "🟥", "🟢"], category: "series" },
-            { id: 64, objective: "Objectif : Game of Thrones", solution: ["🐉", "❄️", "🐺", "👑", "⚔️"], category: "series" },
-            { id: 65, objective: "Objectif : Breaking Bad", solution: ["🧪", "🚐", "💵", "🏜️", "👨‍🔬"], category: "series" },
-            { id: 66, objective: "Objectif : La Casa de Papel", solution: ["👺", "🏦", "💵", "🔫", "🇪🇸"], category: "series" },
-            { id: 67, objective: "Objectif : Peaky Blinders", solution: ["🎩", "🚬", "🐴", "🥃", "🇬🇧"], category: "series" },
-            { id: 68, objective: "Objectif : The Walking Dead", solution: ["🧟", "🏹", "🤠", "🏚️", "🧟‍♂️"], category: "series" },
-            { id: 69, objective: "Objectif : Sherlock Holmes", solution: ["🕵️‍♂️", "🎻", "🔍", "🎩", "🇬🇧"], category: "movie" },
-            { id: 70, objective: "Objectif : James Bond", solution: ["🔫", "🍸", "🚗", "🤵", "🇬🇧"], category: "movie" },
-            { id: 71, objective: "Objectif : Mission Impossible", solution: ["💣", "🚁", "🧗", "🕶️", "🏃"], category: "movie" },
-            { id: 72, objective: "Objectif : Fast & Furious", solution: ["🏎️", "🏁", "💥", "👨‍👩‍👧‍👦", "🚗"], category: "movie" },
-            { id: 73, objective: "Objectif : Mad Max: Fury Road", solution: ["🏜️", "🚗", "⛓️", "🎸", "💀"], category: "movie" },
-            { id: 74, objective: "Objectif : Blade Runner", solution: ["🤖", "🏙️", "🚗", "👁️", "☔"], category: "movie" },
-            { id: 75, objective: "Objectif : Interstellar", solution: ["🚀", "🪐", "⏳", "🌽", "🌌"], category: "movie" },
-            { id: 76, objective: "Objectif : Gravity", solution: ["🚀", "👩‍🚀", "🛰️", "🌍", "🌑"], category: "movie" },
-            { id: 77, objective: "Objectif : Seul sur Mars", solution: ["🚀", "🥔", "🏜️", "👨‍🚀", "🔴"], category: "movie" },
-            { id: 78, objective: "Objectif : Dune", solution: ["🏜️", "🐛", "👁️", "🗡️", "👑"], category: "movie" },
-            { id: 79, objective: "Objectif : Avatar", solution: ["🟦", "🏹", "🐉", "🌳", "🪐"], category: "movie" },
-            { id: 80, objective: "Objectif : Black Panther", solution: ["🐆", "🦾", "🟣", "👑", "🌍"], category: "movie" },
+            { id: 61, objective: "Inception", solution: ["🌀", "🏢", "🔫", "🛌", "⏳"], category: "movie" },
+            { id: 62, objective: "Le Seigneur des Anneaux", solution: ["💍", "🌋", "🗡️", "🧙‍♂️", "👣"], category: "movie" },
+            { id: 63, objective: "Squid Game", solution: ["🦑", "🔴", "🔺", "🟥", "🟢"], category: "series" },
+            { id: 64, objective: "Game of Thrones", solution: ["🐉", "❄️", "🐺", "👑", "⚔️"], category: "series" },
+            { id: 65, objective: "Breaking Bad", solution: ["🧪", "🚐", "💵", "🏜️", "👨‍🔬"], category: "series" },
+            { id: 66, objective: "La Casa de Papel", solution: ["👺", "🏦", "💵", "🔫", "🇪🇸"], category: "series" },
+            { id: 67, objective: "Peaky Blinders", solution: ["🎩", "🚬", "🐴", "🥃", "🇬🇧"], category: "series" },
+            { id: 68, objective: "The Walking Dead", solution: ["🧟", "🏹", "🤠", "🏚️", "🧟‍♂️"], category: "series" },
+            { id: 69, objective: "Sherlock Holmes", solution: ["🕵️‍♂️", "🎻", "🔍", "🎩", "🇬🇧"], category: "movie" },
+            { id: 70, objective: "James Bond", solution: ["🔫", "🍸", "🚗", "🤵", "🇬🇧"], category: "movie" },
+            { id: 71, objective: "Mission Impossible", solution: ["💣", "🚁", "🧗", "🕶️", "🏃"], category: "movie" },
+            { id: 72, objective: "Fast & Furious", solution: ["🏎️", "🏁", "💥", "👨‍👩‍👧‍👦", "🚗"], category: "movie" },
+            { id: 73, objective: "Mad Max: Fury Road", solution: ["🏜️", "🚗", "⛓️", "🎸", "💀"], category: "movie" },
+            { id: 74, objective: "Blade Runner", solution: ["🤖", "🏙️", "🚗", "👁️", "☔"], category: "movie" },
+            { id: 75, objective: "Interstellar", solution: ["🚀", "🪐", "⏳", "🌽", "🌌"], category: "movie" },
+            { id: 76, objective: "Gravity", solution: ["🚀", "👩‍🚀", "🛰️", "🌍", "🌑"], category: "movie" },
+            { id: 77, objective: "Seul sur Mars", solution: ["🚀", "🥔", "🏜️", "👨‍🚀", "🔴"], category: "movie" },
+            { id: 78, objective: "Dune", solution: ["🏜️", "🐛", "👁️", "🗡️", "👑"], category: "movie" },
+            { id: 79, objective: "Avatar", solution: ["🟦", "🏹", "🐉", "🌳", "🪐"], category: "movie" },
+            { id: 80, objective: "Black Panther", solution: ["🐆", "🦾", "🟣", "👑", "🌍"], category: "movie" },
 
             // Musique (81-100)
-            { id: 81, objective: "Objectif : Michael Jackson", solution: ["🎤", "🧤", "🧟"], category: "music" },
-            { id: 82, objective: "Objectif : Queen", solution: ["👑", "👨🏻‍🦱", "🎸"], category: "music" },
-            { id: 83, objective: "Objectif : Daft Punk", solution: ["🤖", "🎧", "🇫🇷"], category: "music" },
-            { id: 84, objective: "Objectif : Beatles", solution: ["🐞", "🎸", "🇬🇧"], category: "music" },
-            { id: 85, objective: "Objectif : Nirvana", solution: ["🎸", "👶", "💵"], category: "music" },
-            { id: 86, objective: "Objectif : Eminem", solution: ["🎤", "🍝", "🐰"], category: "music" },
-            { id: 87, objective: "Objectif : Lady Gaga", solution: ["🥩", "👗", "🎤"], category: "music" },
-            { id: 88, objective: "Objectif : Elton John", solution: ["🎹", "👓", "🚀"], category: "music" },
-            { id: 89, objective: "Objectif : Bob Marley", solution: ["🌿", "🎸", "🇯🇲"], category: "music" },
-            { id: 90, objective: "Objectif : Pink Floyd", solution: ["🌈", "🔺", "🎸"], category: "music" }
+            { id: 81, objective: "Michael Jackson", solution: ["🎤", "🧤", "🧟"], category: "music" },
+            { id: 82, objective: "Queen", solution: ["👑", "👨🏻‍🦱", "🎸"], category: "music" },
+            { id: 83, objective: "Daft Punk", solution: ["🤖", "🎧", "🇫🇷"], category: "music" },
+            { id: 84, objective: "Beatles", solution: ["🐞", "🎸", "🇬🇧"], category: "music" },
+            { id: 85, objective: "Nirvana", solution: ["🎸", "👶", "💵"], category: "music" },
+            { id: 86, objective: "Eminem", solution: ["🎤", "🍝", "🐰"], category: "music" },
+            { id: 87, objective: "Lady Gaga", solution: ["🥩", "👗", "🎤"], category: "music" },
+            { id: 88, objective: "Elton John", solution: ["🎹", "👓", "🚀"], category: "music" },
+            { id: 89, objective: "Bob Marley", solution: ["🌿", "🎸", "🇯🇲"], category: "music" },
+            { id: 90, objective: "Pink Floyd", solution: ["🌈", "🔺", "🎸"], category: "music" },
+            { id: 91, objective: "AC/DC", solution: ["⚡", "🎸", "🇦🇺"], category: "music" },
+            { id: 92, objective: "Rolling Stones", solution: ["👅", "🎸", "🇬🇧"], category: "music" },
+            { id: 93, objective: "ABBA", solution: ["🇸🇪", "💃", "🕺"], category: "music" },
+            { id: 94, objective: "Metallica", solution: ["🤘", "🎸", "🔥"], category: "music" },
+            { id: 95, objective: "Coldplay", solution: ["🌈", "🎹", "🌟"], category: "music" },
+            { id: 96, objective: "Gorillaz", solution: ["🦍", "🎧", "🤖"], category: "music" },
+            { id: 97, objective: "Red Hot Chili Peppers", solution: ["🌶️", "🎸", "🌴"], category: "music" },
+            { id: 98, objective: "Linkin Park", solution: ["⛓️", "🎤", "🌅"], category: "music" },
+            { id: 99, objective: "Radiohead", solution: ["📻", "👤", "🌈"], category: "music" },
+            { id: 100, objective: "Oasis", solution: ["🌵", "🎸", "🇬🇧"], category: "music" },
+
+            // Marques (101-110)
+            { id: 101, objective: "Apple", solution: ["🍎", "💻"], category: "brand" },
+            { id: 102, objective: "Nike", solution: ["👟", "✔️"], category: "brand" },
+            { id: 103, objective: "McDonald's", solution: ["🍔", "🍟"], category: "brand" },
+            { id: 104, objective: "Starbucks", solution: ["☕", "🧜‍♀️"], category: "brand" },
+            { id: 105, objective: "Netflix", solution: ["🎬", "📺"], category: "brand" },
+            { id: 106, objective: "Coca-Cola", solution: ["🥤", "🔴"], category: "brand" },
+            { id: 107, objective: "Amazon", solution: ["📦", "🚚"], category: "brand" },
+            { id: 108, objective: "Disney", solution: ["🐭", "🏰"], category: "brand" },
+            { id: 109, objective: "Tesla", solution: ["🚗", "⚡"], category: "brand" },
+            { id: 110, objective: "Google", solution: ["🔍", "🌈"], category: "brand" },
+
+            // Géographie (111-120)
+            { id: 111, objective: "France", solution: ["🇫🇷", "🥖"], category: "geo" },
+            { id: 112, objective: "USA", solution: ["🇺🇸", "🗽"], category: "geo" },
+            { id: 113, objective: "Japon", solution: ["🇯🇵", "🍣"], category: "geo" },
+            { id: 114, objective: "Italie", solution: ["🇮🇹", "🍕"], category: "geo" },
+            { id: 115, objective: "Égypte", solution: ["🇪🇬", "🏜️"], category: "geo" },
+            { id: 116, objective: "Brésil", solution: ["🇧🇷", "⚽"], category: "geo" },
+            { id: 117, objective: "Royaume-Uni", solution: ["🇬🇧", "☕"], category: "geo" },
+            { id: 118, objective: "Chine", solution: ["🇨🇳", "🐼"], category: "geo" },
+            { id: 119, objective: "Australie", solution: ["🇦🇺", "🦘"], category: "geo" },
+            { id: 120, objective: "Canada", solution: ["🇨🇦", "🍁"], category: "geo" }
         ];
 
         // --- Game Logic ---
@@ -1227,24 +1459,208 @@
             achievements: [],
             coins: parseInt(localStorage.getItem('popcorn_coins')) || 0,
             hints: parseInt(localStorage.getItem('popcorn_hints')) || 3,
+            shields: parseInt(localStorage.getItem('popcorn_shields')) || 0,
+            skips: parseInt(localStorage.getItem('popcorn_skips')) || 0,
+            language: localStorage.getItem('popcorn_lang') || null,
+            unlockedSkins: JSON.parse(localStorage.getItem('popcorn_unlocked_skins')) || ['default'],
+            unlockedStyles: JSON.parse(localStorage.getItem('popcorn_unlocked_styles')) || ['🍿'],
+            unlockedAvatars: JSON.parse(localStorage.getItem('popcorn_unlocked_avatars')) || ['🍿'],
+            currentStyle: localStorage.getItem('popcorn_style') || '🍿',
+            currentAvatar: localStorage.getItem('popcorn_avatar') || '🍿',
             currentCategory: 'all',
             currentMode: 'classic',
             timeLimit: 60,
             timeLeft: 60,
             modeTimerInterval: null,
             currentTheme: localStorage.getItem('popcorn_theme') || 'default',
+            // Stats
+            stats: {
+                levels: parseInt(localStorage.getItem('popcorn_stats_levels')) || 0,
+                coins: parseInt(localStorage.getItem('popcorn_stats_coins')) || 0,
+                fusions: parseInt(localStorage.getItem('popcorn_stats_fusions')) || 0,
+                daily: parseInt(localStorage.getItem('popcorn_stats_daily')) || 0
+            },
+            objectiveTranslations: {
+                "Titanic": { fr: "Titanic", en: "Titanic", es: "Titanic" },
+                "Spider-Man": { fr: "Spider-Man", en: "Spider-Man", es: "Spider-Man" },
+                "Harry Potter": { fr: "Harry Potter", en: "Harry Potter", es: "Harry Potter" },
+                "Batman": { fr: "Batman", en: "Batman", es: "Batman" },
+                "Le Roi Lion": { fr: "Le Roi Lion", en: "The Lion King", es: "El Rey León" },
+                "Les Dents de la Mer": { fr: "Les Dents de la Mer", en: "Jaws", es: "Tiburón" },
+                "Là-Haut": { fr: "Là-Haut", en: "Up", es: "Up" },
+                "La Reine des Neiges": { fr: "La Reine des Neiges", en: "Frozen", es: "Frozen" },
+                "Joker": { fr: "Joker", en: "Joker", es: "Joker" },
+                "Shrek": { fr: "Shrek", en: "Shrek", es: "Shrek" },
+                "Toy Story": { fr: "Toy Story", en: "Toy Story", es: "Toy Story" },
+                "Le Monde de Nemo": { fr: "Le Monde de Nemo", en: "Finding Nemo", es: "Buscando a Nemo" },
+                "King Kong": { fr: "King Kong", en: "King Kong", es: "King Kong" },
+                "Cendrillon": { fr: "Cendrillon", en: "Cinderella", es: "Cenicienta" },
+                "Aladdin": { fr: "Aladdin", en: "Aladdin", es: "Aladdin" },
+                "Pinocchio": { fr: "Pinocchio", en: "Pinocchio", es: "Pinocho" },
+                "Blanche-Neige": { fr: "Blanche-Neige", en: "Snow White", es: "Blancanieves" },
+                "Ratatouille": { fr: "Ratatouille", en: "Ratatouille", es: "Ratatouille" },
+                "Wall-E": { fr: "Wall-E", en: "Wall-E", es: "Wall-E" },
+                "Cars": { fr: "Cars", en: "Cars", es: "Cars" },
+                "Star Wars": { fr: "Star Wars", en: "Star Wars", es: "Star Wars" },
+                "Jurassic Park": { fr: "Jurassic Park", en: "Jurassic Park", es: "Jurassic Park" },
+                "Matrix": { fr: "Matrix", en: "Matrix", es: "Matrix" },
+                "Retour vers le Futur": { fr: "Retour vers le Futur", en: "Back to the Future", es: "Regreso al Futuro" },
+                "Pirates des Caraïbes": { fr: "Pirates des Caraïbes", en: "Pirates of the Caribbean", es: "Piratas del Caribe" },
+                "SOS Fantômes": { fr: "SOS Fantômes", en: "Ghostbusters", es: "Cazafantasmas" },
+                "Indiana Jones": { fr: "Indiana Jones", en: "Indiana Jones", es: "Indiana Jones" },
+                "E.T. l'extra-terrestre": { fr: "E.T. l'extra-terrestre", en: "E.T. the Extra-Terrestrial", es: "E.T., el extraterrestre" },
+                "Men in Black": { fr: "Men in Black", en: "Men in Black", es: "Hombres de Negro" },
+                "Terminator": { fr: "Terminator", en: "Terminator", es: "Terminator" },
+                "Gladiator": { fr: "Gladiator", en: "Gladiator", es: "Gladiator" },
+                "Forrest Gump": { fr: "Forrest Gump", en: "Forrest Gump", es: "Forrest Gump" },
+                "Seul au Monde": { fr: "Seul au Monde", en: "Cast Away", es: "Náufrago" },
+                "Maman j'ai raté l'avion": { fr: "Maman j'ai raté l'avion", en: "Home Alone", es: "Solo en Casa" },
+                "L'Exorciste": { fr: "L'Exorciste", en: "The Exorcist", es: "El Exorcista" },
+                "Psychose": { fr: "Psychose", en: "Psycho", es: "Psicosis" },
+                "Scream": { fr: "Scream", en: "Scream", es: "Scream" },
+                "Saw": { fr: "Saw", en: "Saw", es: "Saw" },
+                "Ça (IT)": { fr: "Ça (IT)", en: "IT", es: "It" },
+                "Shining": { fr: "Shining", en: "The Shining", es: "El Resplandor" },
+                "Avengers": { fr: "Avengers", en: "Avengers", es: "Avengers" },
+                "Stranger Things": { fr: "Stranger Things", en: "Stranger Things", es: "Stranger Things" },
+                "Super Mario": { fr: "Super Mario", en: "Super Mario", es: "Super Mario" },
+                "Pokémon": { fr: "Pokémon", en: "Pokémon", es: "Pokémon" },
+                "Zelda": { fr: "Zelda", en: "Zelda", es: "Zelda" },
+                "Minecraft": { fr: "Minecraft", en: "Minecraft", es: "Minecraft" },
+                "Fortnite": { fr: "Fortnite", en: "Fortnite", es: "Fortnite" },
+                "GTA": { fr: "GTA", en: "GTA", es: "GTA" },
+                "Pac-Man": { fr: "Pac-Man", en: "Pac-Man", es: "Pac-Man" },
+                "Tetris": { fr: "Tetris", en: "Tetris", es: "Tetris" },
+                "Sonic": { fr: "Sonic", en: "Sonic", es: "Sonic" },
+                "Street Fighter": { fr: "Street Fighter", en: "Street Fighter", es: "Street Fighter" },
+                "Mortal Kombat": { fr: "Mortal Kombat", en: "Mortal Kombat", es: "Mortal Kombat" },
+                "Resident Evil": { fr: "Resident Evil", en: "Resident Evil", es: "Resident Evil" },
+                "Tomb Raider": { fr: "Tomb Raider", en: "Tomb Raider", es: "Tomb Raider" },
+                "God of War": { fr: "God of War", en: "God of War", es: "God of War" },
+                "Halo": { fr: "Halo", en: "Halo", es: "Halo" },
+                "Call of Duty": { fr: "Call of Duty", en: "Call of Duty", es: "Call of Duty" },
+                "Assassin's Creed": { fr: "Assassin's Creed", en: "Assassin's Creed", es: "Assassin's Creed" },
+                "The Witcher": { fr: "The Witcher", en: "The Witcher", es: "The Witcher" },
+                "Inception": { fr: "Inception", en: "Inception", es: "Inception" },
+                "Le Seigneur des Anneaux": { fr: "Le Seigneur des Anneaux", en: "The Lord of the Rings", es: "El Señor de los Anillos" },
+                "Squid Game": { fr: "Squid Game", en: "Squid Game", es: "El Juego del Calamar" },
+                "Game of Thrones": { fr: "Game of Thrones", en: "Game of Thrones", es: "Juego de Tronos" },
+                "Breaking Bad": { fr: "Breaking Bad", en: "Breaking Bad", es: "Breaking Bad" },
+                "La Casa de Papel": { fr: "La Casa de Papel", en: "Money Heist", es: "La Casa de Papel" },
+                "Peaky Blinders": { fr: "Peaky Blinders", en: "Peaky Blinders", es: "Peaky Blinders" },
+                "The Walking Dead": { fr: "The Walking Dead", en: "The Walking Dead", es: "The Walking Dead" },
+                "Sherlock Holmes": { fr: "Sherlock Holmes", en: "Sherlock Holmes", es: "Sherlock Holmes" },
+                "James Bond": { fr: "James Bond", en: "James Bond", es: "James Bond" },
+                "Mission Impossible": { fr: "Mission Impossible", en: "Mission Impossible", es: "Misión Imposible" },
+                "Fast & Furious": { fr: "Fast & Furious", en: "Fast & Furious", es: "Rápido y Furioso" },
+                "Mad Max: Fury Road": { fr: "Mad Max: Fury Road", en: "Mad Max: Fury Road", es: "Mad Max: Furia en la Carretera" },
+                "Blade Runner": { fr: "Blade Runner", en: "Blade Runner", es: "Blade Runner" },
+                "Interstellar": { fr: "Interstellar", en: "Interstellar", es: "Interestelar" },
+                "Gravity": { fr: "Gravity", en: "Gravity", es: "Gravedad" },
+                "Seul sur Mars": { fr: "Seul sur Mars", en: "The Martian", es: "Marte" },
+                "Dune": { fr: "Dune", en: "Dune", es: "Dune" },
+                "Avatar": { fr: "Avatar", en: "Avatar", es: "Avatar" },
+                "Black Panther": { fr: "Black Panther", en: "Black Panther", es: "Black Panther" },
+                "Michael Jackson": { fr: "Michael Jackson", en: "Michael Jackson", es: "Michael Jackson" },
+                "Queen": { fr: "Queen", en: "Queen", es: "Queen" },
+                "Daft Punk": { fr: "Daft Punk", en: "Daft Punk", es: "Daft Punk" },
+                "Beatles": { fr: "Beatles", en: "Beatles", es: "Beatles" },
+                "Nirvana": { fr: "Nirvana", en: "Nirvana", es: "Nirvana" },
+                "Eminem": { fr: "Eminem", en: "Eminem", es: "Eminem" },
+                "Lady Gaga": { fr: "Lady Gaga", en: "Lady Gaga", es: "Lady Gaga" },
+                "Elton John": { fr: "Elton John", en: "Elton John", es: "Elton John" },
+                "Bob Marley": { fr: "Bob Marley", en: "Bob Marley", es: "Bob Marley" },
+                "Pink Floyd": { fr: "Pink Floyd", en: "Pink Floyd", es: "Pink Floyd" },
+                "AC/DC": { fr: "AC/DC", en: "AC/DC", es: "AC/DC" },
+                "Rolling Stones": { fr: "Rolling Stones", en: "Rolling Stones", es: "Rolling Stones" },
+                "ABBA": { fr: "ABBA", en: "ABBA", es: "ABBA" },
+                "Metallica": { fr: "Metallica", en: "Metallica", es: "Metallica" },
+                "Coldplay": { fr: "Coldplay", en: "Coldplay", es: "Coldplay" },
+                "Gorillaz": { fr: "Gorillaz", en: "Gorillaz", es: "Gorillaz" },
+                "Red Hot Chili Peppers": { fr: "Red Hot Chili Peppers", en: "Red Hot Chili Peppers", es: "Red Hot Chili Peppers" },
+                "Linkin Park": { fr: "Linkin Park", en: "Linkin Park", es: "Linkin Park" },
+                "Radiohead": { fr: "Radiohead", en: "Radiohead", es: "Radiohead" },
+                "Oasis": { fr: "Oasis", en: "Oasis", es: "Oasis" },
+                "Apple": { fr: "Apple", en: "Apple", es: "Apple" },
+                "Nike": { fr: "Nike", en: "Nike", es: "Nike" },
+                "McDonald's": { fr: "McDonald's", en: "McDonald's", es: "McDonald's" },
+                "Starbucks": { fr: "Starbucks", en: "Starbucks", es: "Starbucks" },
+                "Netflix": { fr: "Netflix", en: "Netflix", es: "Netflix" },
+                "Coca-Cola": { fr: "Coca-Cola", en: "Coca-Cola", es: "Coca-Cola" },
+                "Amazon": { fr: "Amazon", en: "Amazon", es: "Amazon" },
+                "Disney": { fr: "Disney", en: "Disney", es: "Disney" },
+                "Tesla": { fr: "Tesla", en: "Tesla", es: "Tesla" },
+                "Google": { fr: "Google", en: "Google", es: "Google" },
+                "France": { fr: "France", en: "France", es: "Francia" },
+                "USA": { fr: "USA", en: "USA", es: "EE. UU." },
+                "Japon": { fr: "Japon", en: "Japan", es: "Japón" },
+                "Italie": { fr: "Italie", en: "Italy", es: "Italia" },
+                "Égypte": { fr: "Égypte", en: "Egypt", es: "Egipto" },
+                "Brésil": { fr: "Brésil", en: "Brazil", es: "Brasil" },
+                "Royaume-Uni": { fr: "Royaume-Uni", en: "United Kingdom", es: "Reino Unido" },
+                "Chine": { fr: "Chine", en: "China", es: "China" },
+                "Australie": { fr: "Australie", en: "Australia", es: "Australia" },
+                "Canada": { fr: "Canada", en: "Canada", es: "Canadá" }
+            },
+
+            updateStats(key, value = 1) {
+                this.stats[key] += value;
+                localStorage.setItem(`popcorn_stats_${key}`, this.stats[key]);
+            },
+
+            showStats() {
+                this.hideAllScreens();
+                document.getElementById('stats-screen').classList.add('active');
+                document.getElementById('stat-levels').innerText = this.stats.levels;
+                document.getElementById('stat-coins').innerText = this.stats.coins;
+                document.getElementById('stat-fusions').innerText = this.stats.fusions;
+                document.getElementById('stat-daily').innerText = this.stats.daily;
+            },
+
+            resetProgress() {
+                this.showAlert(`
+                    <div style="text-align: center;">
+                        <p style="color: var(--retro-pink); margin-bottom: 20px;">${this.t('reset_confirm')}</p>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <button class="btn-restart" style="font-size: 10px; padding: 10px;" onclick="game.confirmReset()">${this.t('yes')}</button>
+                            <button class="btn-restart" style="font-size: 10px; padding: 10px; background: #ccc;" onclick="game.closeModal()">${this.t('no')}</button>
+                        </div>
+                    </div>
+                `);
+            },
+
+            confirmReset() {
+                localStorage.clear();
+                window.location.reload();
+            },
 
             async init() {
-                // Load high score, streak, coins, theme, hints
+                // Load high score, streak, coins, theme, hints, skins
                 this.highScore = parseFloat(localStorage.getItem('popcorn_alchemy_highscore')) || 0;
                 this.dailyStreak = parseInt(localStorage.getItem('popcorn_alchemy_streak')) || 0;
                 this.lastDailyDate = localStorage.getItem('popcorn_alchemy_last_daily');
                 this.achievements = JSON.parse(localStorage.getItem('popcorn_alchemy_achievements')) || [];
                 this.coins = parseInt(localStorage.getItem('popcorn_coins')) || 0;
                 this.hints = parseInt(localStorage.getItem('popcorn_hints')) || 3;
+                this.shields = parseInt(localStorage.getItem('popcorn_shields')) || 0;
+                this.skips = parseInt(localStorage.getItem('popcorn_skips')) || 0;
+                this.language = localStorage.getItem('popcorn_lang') || null;
+                this.unlockedSkins = JSON.parse(localStorage.getItem('popcorn_unlocked_skins')) || ['default'];
+                this.unlockedStyles = JSON.parse(localStorage.getItem('popcorn_unlocked_styles')) || ['🍿'];
+                this.currentStyle = localStorage.getItem('popcorn_style') || '🍿';
                 this.currentTheme = localStorage.getItem('popcorn_theme') || 'default';
 
                 this.applyTheme(this.currentTheme);
+                this.updateSkinsUI();
+
+                // Check if language is set
+                if (!this.language) {
+                    this.hideAllScreens();
+                    document.getElementById('language-screen').classList.add('active');
+                    return;
+                }
+
+                this.translateUI();
 
                 // Check if streak is broken
                 if (this.lastDailyDate) {
@@ -1262,7 +1678,7 @@
                 const streakEl = document.getElementById('daily-streak-display');
                 if (streakEl) {
                     if (this.dailyStreak > 0) {
-                        streakEl.innerText = `🔥 Série : ${this.dailyStreak} jours`;
+                        streakEl.innerText = `🔥 ${this.t('streak').replace('%d', this.dailyStreak)}`;
                         streakEl.style.display = 'block';
                     } else {
                         streakEl.style.display = 'none';
@@ -1306,7 +1722,7 @@
                         this.combo = data.combo || 0;
                         if (btnResume) {
                             btnResume.style.display = 'block';
-                            btnResume.innerText = `REPRENDRE (Niv. ${this.currentLevelIndex + 1})`;
+                            btnResume.innerText = `${this.t('resume')} (${this.t('level')} ${this.currentLevelIndex + 1})`;
                         }
                     } catch (e) {
                         console.error("Failed to load save", e);
@@ -1334,9 +1750,24 @@
                 }
             },
 
+            closeModal() {
+                document.getElementById('modal-screen').style.display = 'none';
+            },
+
+            showAlert(text) {
+                document.getElementById('modal-text').innerHTML = text;
+                document.getElementById('modal-screen').style.display = 'flex';
+                document.getElementById('modal-screen').classList.add('active');
+            },
+
             showStart() {
                 this.hideAllScreens();
                 document.getElementById('start-screen').classList.add('active');
+            },
+
+            showLanguageSelect() {
+                this.hideAllScreens();
+                document.getElementById('language-screen').classList.add('active');
             },
 
             showCategorySelect() {
@@ -1352,7 +1783,8 @@
             showSkins() {
                 this.hideAllScreens();
                 document.getElementById('skins-screen').classList.add('active');
-                document.getElementById('user-coins').innerText = this.coins;
+                this.switchShopTab('skins');
+                this.updateUI();
             },
 
             showDailyWheel() {
@@ -1399,10 +1831,10 @@
                         // Hide other screens
                         document.getElementById('start-screen').classList.remove('active');
                     } catch (e) {
-                        alert("Erreur lors de la récupération des vues");
+                        this.showAlert(this.t('err_views'));
                     }
                 } else {
-                    alert("Accès refusé");
+                    this.showAlert(this.t('access_denied'));
                     window.location.href = "/";
                 }
             },
@@ -1456,16 +1888,25 @@
                 this.isPaused = false;
                 this.score = 0;
                 this.combo = 0;
+                this.isDaily = false;
                 
                 // Filter levels
-                if (category === 'all') {
-                    this.sessionLevels = [...LEVELS].sort(() => Math.random() - 0.5);
+                let filtered = category === 'all' ? [...LEVELS] : LEVELS.filter(l => l.category === category);
+                
+                if (mode === 'timeattack' || mode === 'hardcore') {
+                    // Random shuffle for these modes
+                    this.sessionLevels = filtered.sort(() => Math.random() - 0.5);
                 } else {
-                    this.sessionLevels = LEVELS.filter(l => l.category === category).sort(() => Math.random() - 0.5);
+                    // Tier-by-tier for Classic and other modes
+                    const tiers = [];
+                    for (let i = 0; i < filtered.length; i += 20) {
+                        tiers.push(filtered.slice(i, i + 20).sort(() => Math.random() - 0.5));
+                    }
+                    this.sessionLevels = [].concat(...tiers);
                 }
 
                 if (this.sessionLevels.length === 0) {
-                    alert("Aucun niveau dans cette catégorie pour le moment !");
+                    this.showAlert(this.t('no_levels'));
                     this.showStart();
                     return;
                 }
@@ -1511,14 +1952,198 @@
             },
 
             setTheme(theme) {
+                if (!this.unlockedSkins.includes(theme)) {
+                    this.buySkin(theme);
+                    return;
+                }
                 this.currentTheme = theme;
                 localStorage.setItem('popcorn_theme', theme);
                 this.applyTheme(theme);
+                this.updateSkinsUI();
+            },
+
+            buySkin(theme) {
+                const prices = { 'dark': 100, 'neon': 150, 'retro': 200, 'cyber': 300 };
+                const price = prices[theme] || 0;
                 
-                // Update UI selection
-                document.querySelectorAll('.skin-card').forEach(c => c.classList.remove('active'));
-                const selectedCard = Array.from(document.querySelectorAll('.skin-card')).find(c => c.innerText.includes(theme.toUpperCase()));
-                if (selectedCard) selectedCard.classList.add('active');
+                if (this.coins >= price) {
+                    this.coins -= price;
+                    this.unlockedSkins.push(theme);
+                    localStorage.setItem('popcorn_coins', this.coins);
+                    localStorage.setItem('popcorn_unlocked_skins', JSON.stringify(this.unlockedSkins));
+                    this.setTheme(theme);
+                    this.updateUI();
+                    this.showFeedback(this.t('skin_unlocked'), 'var(--retro-green)');
+                } else {
+                    this.showAlert(this.t('missing_coins_skin').replace('%d', price - this.coins));
+                }
+            },
+
+            buyHints() {
+                const price = 50;
+                if (this.coins >= price) {
+                    this.coins -= price;
+                    this.addHints(5);
+                    localStorage.setItem('popcorn_coins', this.coins);
+                    this.updateUI();
+                    this.showFeedback(this.t('hints_added'), 'var(--retro-yellow)');
+                } else {
+                    this.showAlert(this.t('missing_coins').replace('%d', price - this.coins));
+                }
+            },
+
+            buyShield() {
+                const price = 80;
+                if (this.coins >= price) {
+                    this.coins -= price;
+                    this.shields++;
+                    localStorage.setItem('popcorn_shields', this.shields);
+                    localStorage.setItem('popcorn_coins', this.coins);
+                    this.updateUI();
+                    this.showFeedback(this.t('shield_added'), 'var(--retro-cyan)');
+                } else {
+                    this.showAlert(this.t('missing_coins').replace('%d', price - this.coins));
+                }
+            },
+
+            buySkip() {
+                const price = 120;
+                if (this.coins >= price) {
+                    this.coins -= price;
+                    this.skips++;
+                    localStorage.setItem('popcorn_skips', this.skips);
+                    localStorage.setItem('popcorn_coins', this.coins);
+                    this.updateUI();
+                    this.showFeedback(this.t('skip_added'), 'var(--retro-pink)');
+                } else {
+                    this.showAlert(this.t('missing_coins').replace('%d', price - this.coins));
+                }
+            },
+
+            buyStyle(style) {
+                const price = 100;
+                if (this.unlockedStyles.includes(style)) {
+                    this.currentStyle = style;
+                    localStorage.setItem('popcorn_style', style);
+                    this.updateStylesUI();
+                    this.showFeedback(this.t('style_applied'), 'var(--retro-green)');
+                    return;
+                }
+
+                if (this.coins >= price) {
+                    this.coins -= price;
+                    this.unlockedStyles.push(style);
+                    this.currentStyle = style;
+                    localStorage.setItem('popcorn_coins', this.coins);
+                    localStorage.setItem('popcorn_unlocked_styles', JSON.stringify(this.unlockedStyles));
+                    localStorage.setItem('popcorn_style', style);
+                    this.updateUI();
+                    this.updateStylesUI();
+                    this.showFeedback(this.t('style_unlocked'), 'var(--retro-green)');
+                } else {
+                    this.showAlert(this.t('missing_coins').replace('%d', price - this.coins));
+                }
+            },
+
+            skipLevel() {
+                if (this.skips > 0) {
+                    this.skips--;
+                    localStorage.setItem('popcorn_skips', this.skips);
+                    this.showFeedback(this.t('level_skipped'), 'var(--retro-pink)');
+                    this.currentLevelIndex++;
+                    this.updateUI();
+                    this.loadLevel();
+                }
+            },
+
+            switchShopTab(tab) {
+                document.querySelectorAll('.shop-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.shop-content').forEach(c => c.style.display = 'none');
+                
+                document.querySelector(`.shop-tab[onclick="game.switchShopTab('${tab}')"]`).classList.add('active');
+                document.getElementById(`shop-${tab}`).style.display = 'block';
+                
+                if (tab === 'skins') this.updateSkinsUI();
+                if (tab === 'styles') this.updateStylesUI();
+                if (tab === 'avatars') this.updateAvatarsUI();
+            },
+
+            updateStylesUI() {
+                const grid = document.getElementById('styles-grid');
+                const styles = ['🍿', '🍦', '🍕', '🌮', '🍩', '🍔', '🍣', '🍫', '🍪', '🍰', '🧁', '🥧', '🥨', '🥞', '🧇', '🥓'];
+                grid.innerHTML = styles.map(s => `
+                    <div class="skin-card ${this.currentStyle === s ? 'active' : ''} ${!this.unlockedStyles.includes(s) ? 'locked' : ''}" onclick="game.buyStyle('${s}')">
+                        <div style="font-size: 30px; margin-bottom: 5px;">${s}</div>
+                        <div class="skin-name">${!this.unlockedStyles.includes(s) ? '100 💰' : this.t('shop_owned')}</div>
+                    </div>
+                `).join('');
+            },
+
+            updateAvatarsUI() {
+                const grid = document.getElementById('avatars-grid');
+                const avatars = ['🍿', '😎', '🧙‍♂️', '🧛', '🤖', '👽', '👻', '🦄', '🦁', '🐯', '🐼', '🦊', '🐨', '🐸', '🐙', '🐲'];
+                grid.innerHTML = avatars.map(a => `
+                    <div class="skin-card ${this.currentAvatar === a ? 'active' : ''} ${!this.unlockedAvatars.includes(a) ? 'locked' : ''}" onclick="game.buyAvatar('${a}')">
+                        <div style="font-size: 30px; margin-bottom: 5px;">${a}</div>
+                        <div class="skin-name">${!this.unlockedAvatars.includes(a) ? '150 💰' : this.t('shop_owned')}</div>
+                    </div>
+                `).join('');
+            },
+
+            buyAvatar(avatar) {
+                const price = 150;
+                if (this.unlockedAvatars.includes(avatar)) {
+                    this.currentAvatar = avatar;
+                    localStorage.setItem('popcorn_avatar', avatar);
+                    this.updateAvatarsUI();
+                    this.updateUI();
+                    this.showFeedback(this.t('avatar_applied'), 'var(--retro-green)');
+                    return;
+                }
+
+                if (this.coins >= price) {
+                    this.coins -= price;
+                    this.unlockedAvatars.push(avatar);
+                    this.currentAvatar = avatar;
+                    localStorage.setItem('popcorn_coins', this.coins);
+                    localStorage.setItem('popcorn_unlocked_avatars', JSON.stringify(this.unlockedAvatars));
+                    localStorage.setItem('popcorn_avatar', avatar);
+                    this.updateUI();
+                    this.updateAvatarsUI();
+                    this.showFeedback(this.t('avatar_unlocked'), 'var(--retro-green)');
+                } else {
+                    this.showAlert(this.t('missing_coins').replace('%d', price - this.coins));
+                }
+            },
+
+            updateSkinsUI() {
+                const cards = document.querySelectorAll('#shop-skins .skin-card');
+                const themes = ['default', 'dark', 'neon', 'retro', 'cyber'];
+                const prices = { 'default': 0, 'dark': 100, 'neon': 150, 'retro': 200, 'cyber': 300 };
+
+                cards.forEach((card, i) => {
+                    const theme = themes[i];
+                    if (!theme) return;
+
+                    card.classList.remove('active', 'locked');
+                    
+                    if (this.currentTheme === theme) card.classList.add('active');
+                    
+                    if (!this.unlockedSkins.includes(theme)) {
+                        card.classList.add('locked');
+                        const nameEl = card.querySelector('.skin-name');
+                        if (nameEl) {
+                            const nameKey = `skin_${theme}`;
+                            nameEl.innerText = `${this.t(nameKey)} (${prices[theme]} 💰)`;
+                        }
+                    } else {
+                        const nameEl = card.querySelector('.skin-name');
+                        if (nameEl) {
+                            const nameKey = `skin_${theme}`;
+                            nameEl.innerText = this.t(nameKey);
+                        }
+                    }
+                });
             },
 
             applyTheme(theme) {
@@ -1588,18 +2213,51 @@
                     const actualDeg = randomDeg % 360;
                     let prize = "";
                     
-                    if (actualDeg >= 0 && actualDeg < 60) { prize = "CADEAU SURPRISE !"; this.addCoins(50); }
-                    else if (actualDeg >= 60 && actualDeg < 120) { prize = "50 PIÈCES !"; this.addCoins(50); }
-                    else if (actualDeg >= 120 && actualDeg < 180) { prize = "2 INDICES !"; this.addHints(2); }
-                    else if (actualDeg >= 180 && actualDeg < 240) { prize = "DOMMAGE... RIEN !"; }
-                    else if (actualDeg >= 240 && actualDeg < 300) { prize = "20 PIÈCES !"; this.addCoins(20); }
-                    else { prize = "1 INDICE !"; this.addHints(1); }
+                    if (actualDeg >= 0 && actualDeg < 60) { this.giveSurpriseGift(); return; }
+                    else if (actualDeg >= 60 && actualDeg < 120) { prize = this.t('prize_50_coins'); this.addCoins(50); }
+                    else if (actualDeg >= 120 && actualDeg < 180) { prize = this.t('prize_2_hints'); this.addHints(2); }
+                    else if (actualDeg >= 180 && actualDeg < 240) { prize = this.t('prize_nothing'); }
+                    else if (actualDeg >= 240 && actualDeg < 300) { prize = this.t('prize_20_coins'); this.addCoins(20); }
+                    else { prize = this.t('prize_1_hint'); this.addHints(1); }
                     
-                    alert(`RÉSULTAT : ${prize}`);
+                    this.showAlert(this.t('wheel_result') + prize);
                     localStorage.setItem('popcorn_last_spin', new Date().toISOString().slice(0, 10));
                     spinBtn.innerText = "DÉJÀ UTILISÉ AUJOURD'HUI";
                     spinBtn.style.opacity = "0.5";
                 }, 3500);
+            },
+
+            giveSurpriseGift() {
+                const allThemes = ['dark', 'neon', 'retro', 'cyber'];
+                const lockedThemes = allThemes.filter(t => !this.unlockedSkins.includes(t));
+                
+                let prizeMsg = "";
+                if (lockedThemes.length > 0) {
+                    const randomTheme = lockedThemes[Math.floor(Math.random() * lockedThemes.length)];
+                    this.unlockedSkins.push(randomTheme);
+                    localStorage.setItem('popcorn_unlocked_skins', JSON.stringify(this.unlockedSkins));
+                    prizeMsg = this.t('surprise_skin').replace('%s', randomTheme.toUpperCase());
+                    this.updateSkinsUI();
+                    confetti({
+                        particleCount: 150,
+                        spread: 100,
+                        origin: { y: 0.3 },
+                        colors: ['#ff00ff', '#00ffff', '#39ff14']
+                    });
+                } else {
+                    // All skins unlocked, give big coins
+                    this.addCoins(200);
+                    prizeMsg = this.t('surprise_coins');
+                }
+                
+                this.showAlert(prizeMsg);
+                localStorage.setItem('popcorn_last_spin', new Date().toISOString().slice(0, 10));
+                const spinBtn = document.getElementById('spin-btn');
+                if (spinBtn) {
+                    spinBtn.innerText = "DÉJÀ UTILISÉ AUJOURD'HUI";
+                    spinBtn.style.opacity = "0.5";
+                }
+                this.updateUI();
             },
 
             addCoins(amount) {
@@ -1665,14 +2323,14 @@
                 this.combo = 0;
                 this.hideAllScreens();
                 this.loadLevel();
-                alert("DÉFI REÇU ! Bonne chance !");
+                this.showAlert(this.t('challenge_received'));
             },
 
             shareChallenge() {
                 const currentId = this.sessionLevels[this.currentLevelIndex].id;
                 const url = `${window.location.origin}${window.location.pathname}?challenge=${currentId}`;
                 navigator.clipboard.writeText(url).then(() => {
-                    alert("Lien de défi copié ! Envoie-le à un ami.");
+                    this.showAlert(this.t('challenge_copied'));
                 });
             },
 
@@ -1705,7 +2363,7 @@
                     // Update display
                     const streakEl = document.getElementById('daily-streak-display');
                     if (streakEl) {
-                        streakEl.innerText = `🔥 Série : ${this.dailyStreak} jours`;
+                        streakEl.innerText = `🔥 ${this.t('streak').replace('%d', this.dailyStreak)}`;
                         streakEl.style.display = 'block';
                     }
                 }
@@ -1750,7 +2408,7 @@
 
             spawnPopcorn(x, y) {
                 const count = 25;
-                const emojis = ['🍿', '✨', '💥', '🧪'];
+                const emojis = [this.currentStyle, '✨', '💥', '🧪'];
                 for (let i = 0; i < count; i++) {
                     const p = document.createElement('div');
                     p.className = 'explosion-particle';
@@ -1780,6 +2438,484 @@
                 document.documentElement.style.setProperty('--retro-cyan', color);
             },
 
+            setLanguage(lang) {
+                this.language = lang;
+                localStorage.setItem('popcorn_lang', lang);
+                this.translateUI();
+                this.showStart();
+            },
+
+            t(key) {
+                const TRANSLATIONS = {
+                    fr: {
+                        title: "POP-CORN ALCHEMY",
+                        subtitle: "L'art de la fusion d'émojis",
+                        play: "JOUER",
+                        daily: "DÉFI DU JOUR",
+                        modes: "MODES DE JEU",
+                        shop: "BOUTIQUE / SKINS",
+                        wheel: "ROUE DE LA CHANCE",
+                        leaderboard: "CLASSEMENT",
+                        resume: "REPRENDRE",
+                        categories: "CHOISIR UNE CATÉGORIE",
+                        cat_all: "TOUT",
+                        cat_movie: "FILMS",
+                        cat_series: "SÉRIES",
+                        cat_game: "JEUX VIDÉO",
+                        cat_music: "MUSIQUE",
+                        game_modes: "MODES DE JEU",
+                        mode_classic: "CLASSIQUE",
+                        mode_chrono: "CHRONO (60s)",
+                        mode_hardcore: "HARDCORE (1 VIE)",
+                        shop_title: "BOUTIQUE",
+                        shop_skins: "SKINS",
+                        shop_powerups: "POWER-UPS",
+                        shop_styles: "STYLES",
+                        shop_avatars: "AVATARS",
+                        shop_hints: "5 INDICES",
+                        shop_shield: "BOUCLIER",
+                        shop_skip: "PASSAGE",
+                        shop_owned: "POSSÉDÉ",
+                        shop_unlocked: "DÉBLOQUÉ",
+                        back: "RETOUR",
+                        score: "SCORE",
+                        best: "BEST",
+                        objective: "Objectif",
+                        level: "Niveau",
+                        tier: "Palier",
+                        fusion: "FUSIONNER",
+                        correct: "CORRECT!",
+                        record: "NOUVEAU RECORD!",
+                        ouch: "OUCH!",
+                        shield_used: "BOUCLIER UTILISÉ !",
+                        level_skipped: "NIVEAU PASSÉ !",
+                        style_applied: "STYLE APPLIQUÉ !",
+                        avatar_applied: "AVATAR APPLIQUÉ !",
+                        tier_complete: "PALIER TERMINÉ !",
+                        victory: "VICTOIRE FINALE !",
+                        game_over: "GAME OVER",
+                        pause: "PAUSE",
+                        views: "COMPTEUR DE VUES",
+                        rules: "RAPPEL DES RÈGLES",
+                        rules_text: [
+                            "1. Associe les bons émojis pour recréer la référence.",
+                            "2. Clique sur FUSIONNER pour valider.",
+                            "3. Sois rapide ! Le Timer impacte ton score.",
+                            "4. Enchaîne les succès pour booster ton Combo !",
+                            "5. Attention : 4 vies par palier. Si tu tombes à 0, retour au Niveau 1 !"
+                        ],
+                        spin: "LANCER !",
+                        already_spun: "DÉJÀ UTILISÉ AUJOURD'HUI",
+                        loading: "Chargement du classement...",
+                        congrats: "Félicitations Alchimiste !<br><br>Tes vies ont été restaurées.<br>Tu gagnes +20 Pièces et +5 Indices !<br>Le niveau de difficulté augmente...",
+                        master: "Tu es le Maître de l'Alchimie Pop-Corn !",
+                        fail: "Ton alchimie a échoué...",
+                        paused: "Le jeu est en pause.",
+                        share_score: "PARTAGER MON SCORE",
+                        challenge_friend: "DÉFIER UN AMI",
+                        return_game: "RETOUR AU JEU",
+                        home: "ACCUEIL",
+                        close: "FERMER",
+                        next_tier: "PROCHAIN PALIER",
+                        retry: "REESSAYER",
+                        replay: "REJOUER",
+                        share_victory: "PARTAGER MA VICTOIRE",
+                        lang_select: "CHOISIS TA LANGUE",
+                        coins: "PIÈCES",
+                        unlocked: "DÉBLOQUÉ !",
+                        skin_unlocked: "SKIN DÉBLOQUÉ !",
+                        avatar_unlocked: "AVATAR DÉBLOQUÉ !",
+                        style_unlocked: "STYLE DÉBLOQUÉ !",
+                        hints_added: "+5 INDICES !",
+                        shield_added: "+1 BOUCLIER !",
+                        skip_added: "+1 PASSAGE !",
+                        no_more_bonus: "PLUS DE BONUS !",
+                        hint_feedback: "INDICE !",
+                        hints_reward: "+5 INDICES !",
+                        err_views: "Erreur lors de la récupération des vues",
+                        access_denied: "Accès refusé",
+                        no_levels: "Aucun niveau dans cette catégorie pour le moment !",
+                        missing_coins_skin: "Il te manque %d pièces pour ce skin ! Joue pour en gagner.",
+                        missing_coins: "Il te manque %d pièces !",
+                        wheel_result: "RÉSULTAT : ",
+                        challenge_received: "DÉFI REÇU ! Bonne chance !",
+                        challenge_copied: "Lien de défi copié ! Envoie-le à un ami.",
+                        no_more_hints: "Plus d'indices ! Gagne-en à la roue de la chance.",
+                        share_copied: "Lien et score copiés dans le presse-papier ! 📋",
+                        ok: "OK",
+                        prize_50_coins: "50 PIÈCES !",
+                        prize_2_hints: "2 INDICES !",
+                        prize_nothing: "DOMMAGE... RIEN !",
+                        prize_20_coins: "20 PIÈCES !",
+                        prize_1_hint: "1 INDICE !",
+                        surprise_skin: "CADEAU SURPRISE : Tu as débloqué le skin %s ! 🎁✨",
+                        surprise_coins: "CADEAU SURPRISE : 200 PIÈCES ! (Tous les skins sont déjà à toi) 💰✨",
+                        rules_label: "🧪 RÈGLES :",
+                        streak: "Série : %d jours",
+                        skin_classic: "CLASSIQUE",
+                        skin_dark: "DARK MODE",
+                        skin_neon: "NEON NIGHT",
+                        skin_retro: "RETRO GOLD",
+                        skin_cyber: "CYBERPUNK",
+                        stats: "STATISTIQUES",
+                        stat_levels: "Niveaux réussis",
+                        stat_coins: "Pièces gagnées",
+                        stat_fusions: "Fusions totales",
+                        stat_daily: "Défis quotidiens",
+                        reset_confirm: "Es-tu sûr de vouloir tout réinitialiser ? Cette action est irréversible !",
+                        yes: "OUI",
+                        no: "NON",
+                        cat_geo: "GÉOGRAPHIE",
+                        cat_brand: "MARQUES"
+                    },
+                    en: {
+                        title: "POP-CORN ALCHEMY",
+                        subtitle: "The art of emoji fusion",
+                        play: "PLAY",
+                        daily: "DAILY CHALLENGE",
+                        modes: "GAME MODES",
+                        shop: "SHOP / SKINS",
+                        wheel: "LUCKY WHEEL",
+                        leaderboard: "LEADERBOARD",
+                        stats: "STATISTICS",
+                        stat_levels: "Levels completed",
+                        stat_coins: "Total coins earned",
+                        stat_fusions: "Total fusions",
+                        stat_daily: "Daily challenges",
+                        reset_confirm: "Are you sure you want to reset everything? This cannot be undone!",
+                        yes: "YES",
+                        no: "NO",
+                        cat_geo: "GEOGRAPHY",
+                        cat_brand: "BRANDS",
+                        resume: "RESUME",
+                        categories: "CHOOSE A CATEGORY",
+                        cat_all: "ALL",
+                        cat_movie: "MOVIES",
+                        cat_series: "SERIES",
+                        cat_game: "VIDEO GAMES",
+                        cat_music: "MUSIC",
+                        game_modes: "GAME MODES",
+                        mode_classic: "CLASSIC",
+                        mode_chrono: "CHRONO (60s)",
+                        mode_hardcore: "HARDCORE (1 LIFE)",
+                        shop_title: "SHOP",
+                        shop_skins: "SKINS",
+                        shop_powerups: "POWER-UPS",
+                        shop_styles: "STYLES",
+                        shop_avatars: "AVATARS",
+                        shop_hints: "5 HINTS",
+                        shop_shield: "SHIELD",
+                        shop_skip: "SKIP",
+                        shop_owned: "OWNED",
+                        shop_unlocked: "UNLOCKED",
+                        back: "BACK",
+                        score: "SCORE",
+                        best: "BEST",
+                        objective: "Objective",
+                        level: "Level",
+                        tier: "Tier",
+                        fusion: "FUSE",
+                        correct: "CORRECT!",
+                        record: "NEW RECORD!",
+                        ouch: "OUCH!",
+                        shield_used: "SHIELD USED!",
+                        level_skipped: "LEVEL SKIPPED!",
+                        style_applied: "STYLE APPLIED!",
+                        avatar_applied: "AVATAR APPLIED!",
+                        tier_complete: "TIER COMPLETE!",
+                        victory: "FINAL VICTORY!",
+                        game_over: "GAME OVER",
+                        pause: "PAUSE",
+                        views: "VIEW COUNTER",
+                        rules: "RULES REMINDER",
+                        rules_text: [
+                            "1. Match the right emojis to recreate the reference.",
+                            "2. Click FUSE to validate.",
+                            "3. Be fast! The Timer impacts your score.",
+                            "4. Chain successes to boost your Combo!",
+                            "5. Warning: 4 lives per tier. If you hit 0, back to Level 1!"
+                        ],
+                        spin: "SPIN!",
+                        already_spun: "ALREADY USED TODAY",
+                        loading: "Loading leaderboard...",
+                        congrats: "Congratulations Alchemist!<br><br>Your lives have been restored.<br>You gain +20 Coins and +5 Hints!<br>Difficulty increases...",
+                        master: "You are the Master of Pop-Corn Alchemy!",
+                        fail: "Your alchemy failed...",
+                        paused: "Game is paused.",
+                        share_score: "SHARE MY SCORE",
+                        challenge_friend: "CHALLENGE A FRIEND",
+                        return_game: "BACK TO GAME",
+                        home: "HOME",
+                        close: "CLOSE",
+                        next_tier: "NEXT TIER",
+                        retry: "RETRY",
+                        replay: "REPLAY",
+                        share_victory: "SHARE MY VICTORY",
+                        lang_select: "CHOOSE YOUR LANGUAGE",
+                        coins: "COINS",
+                        unlocked: "UNLOCKED!",
+                        skin_unlocked: "SKIN UNLOCKED!",
+                        avatar_unlocked: "AVATAR UNLOCKED!",
+                        style_unlocked: "STYLE UNLOCKED!",
+                        hints_added: "+5 HINTS!",
+                        shield_added: "+1 SHIELD!",
+                        skip_added: "+1 SKIP!",
+                        no_more_bonus: "NO MORE BONUSES!",
+                        hint_feedback: "HINT!",
+                        hints_reward: "+5 HINTS!",
+                        err_views: "Error fetching views",
+                        access_denied: "Access denied",
+                        no_levels: "No levels in this category yet!",
+                        missing_coins_skin: "You need %d more coins for this skin! Play to earn more.",
+                        missing_coins: "You need %d more coins!",
+                        wheel_result: "RESULT: ",
+                        challenge_received: "CHALLENGE RECEIVED! Good luck!",
+                        challenge_copied: "Challenge link copied! Send it to a friend.",
+                        no_more_hints: "No more hints! Win some at the lucky wheel.",
+                        share_copied: "Link and score copied to clipboard! 📋",
+                        ok: "OK",
+                        prize_50_coins: "50 COINS!",
+                        prize_2_hints: "2 HINTS!",
+                        prize_nothing: "TOO BAD... NOTHING!",
+                        prize_20_coins: "20 COINS!",
+                        prize_1_hint: "1 HINT!",
+                        surprise_skin: "SURPRISE GIFT: You unlocked the %s skin! 🎁✨",
+                        surprise_coins: "SURPRISE GIFT: 200 COINS! (All skins are already yours) 💰✨",
+                        rules_label: "🧪 RULES:",
+                        streak: "Streak: %d days",
+                        skin_classic: "CLASSIC",
+                        skin_dark: "DARK MODE",
+                        skin_neon: "NEON NIGHT",
+                        skin_retro: "RETRO GOLD",
+                        skin_cyber: "CYBERPUNK"
+                    },
+                    es: {
+                        title: "POP-CORN ALCHEMY",
+                        subtitle: "El arte de la fusión de emojis",
+                        play: "JUGAR",
+                        daily: "DESAFÍO DIARIO",
+                        modes: "MODOS DE JUEGO",
+                        shop: "TIENDA / SKINS",
+                        wheel: "RUEDA DE LA SUERTE",
+                        leaderboard: "CLASIFICACIÓN",
+                        resume: "REANUDAR",
+                        categories: "ELIGE UNA CATEGORÍA",
+                        cat_all: "TODO",
+                        cat_movie: "PELÍCULAS",
+                        cat_series: "SERIES",
+                        cat_game: "VIDEOJUEGOS",
+                        cat_music: "MÚSICA",
+                        game_modes: "MODOS DE JUEGO",
+                        mode_classic: "CLÁSICO",
+                        mode_chrono: "CRONO (60s)",
+                        mode_hardcore: "HARDCORE (1 VIDA)",
+                        shop_title: "TIENDA",
+                        shop_skins: "SKINS",
+                        shop_powerups: "POTENCIADORES",
+                        shop_styles: "ESTILOS",
+                        shop_avatars: "AVATARES",
+                        shop_hints: "5 PISTAS",
+                        shop_shield: "ESCUDO",
+                        shop_skip: "SALTAR",
+                        shop_owned: "PROPIO",
+                        shop_unlocked: "DESBLOQUEADO",
+                        back: "VOLVER",
+                        score: "PUNTUACIÓN",
+                        best: "MEJOR",
+                        objective: "Objetivo",
+                        level: "Nivel",
+                        tier: "Etapa",
+                        fusion: "FUSIONAR",
+                        correct: "¡CORRECTO!",
+                        record: "¡NUEVO RÉCORD!",
+                        ouch: "¡OUCH!",
+                        shield_used: "¡ESCUDO USADO!",
+                        level_skipped: "¡NIVEL SALTADO!",
+                        style_applied: "¡ESTILO APLICADO!",
+                        avatar_applied: "¡AVATAR APLICADO!",
+                        tier_complete: "¡NIVEL COMPLETADO!",
+                        victory: "¡VICTORIA FINAL!",
+                        game_over: "FIN DEL JUEGO",
+                        pause: "PAUSA",
+                        views: "CONTADOR DE VISTAS",
+                        rules: "RECORDATORIO DE REGLAS",
+                        rules_text: [
+                            "1. Combina los emojis correctos para recrear la referencia.",
+                            "2. Haz clic en FUSIONAR para validar.",
+                            "3. ¡Sé rápido! El temporizador afecta tu puntuación.",
+                            "4. ¡Encadena éxitos para aumentar tu Combo!",
+                            "5. Advertencia: 4 vidas por etapa. Si llegas a 0, ¡vuelves al Nivel 1!"
+                        ],
+                        spin: "¡GIRAR!",
+                        already_spun: "YA USADO HOY",
+                        loading: "Cargando clasificación...",
+                        congrats: "¡Felicidades Alquimista!<br><br>Tus vidas han sido restauradas.<br>¡Ganas +20 Monedas y +5 Pistas!<br>La dificultad aumenta...",
+                        master: "¡Eres el Maestro de la Alquimia Pop-Corn!",
+                        fail: "Tu alquimia falló...",
+                        paused: "El juego está en pausa.",
+                        share_score: "COMPARTIR MI PUNTUACIÓN",
+                        challenge_friend: "DESAFIAR A UN AMIGO",
+                        return_game: "VOLVER AL JUEGO",
+                        home: "INICIO",
+                        close: "CERRAR",
+                        next_tier: "SIGUIENTE NIVEL",
+                        retry: "REINTENTAR",
+                        replay: "VOLVER A JUGAR",
+                        share_victory: "COMPARTIR MI VICTORIA",
+                        lang_select: "ELIGE TU IDIOMA",
+                        coins: "MONEDAS",
+                        unlocked: "¡DESBLOQUEADO!",
+                        skin_unlocked: "¡SKIN DESBLOQUEADO!",
+                        avatar_unlocked: "¡AVATAR DESBLOQUEADO!",
+                        style_unlocked: "¡ESTILO DESBLOQUEADO!",
+                        hints_added: "+5 PISTAS!",
+                        shield_added: "+1 ESCUDO!",
+                        skip_added: "+1 SALTO!",
+                        no_more_bonus: "¡NO MÁS BONOS!",
+                        hint_feedback: "¡PISTA!",
+                        hints_reward: "+5 PISTAS!",
+                        err_views: "Error al obtener vistas",
+                        access_denied: "Acceso denegado",
+                        no_levels: "¡No hay niveles en esta categoría todavía!",
+                        missing_coins_skin: "¡Te faltan %d monedas para este skin! Juega para ganar más.",
+                        missing_coins: "¡Te faltan %d monedas!",
+                        wheel_result: "RESULTADO: ",
+                        challenge_received: "¡DESAFÍO RECIBIDO! ¡Buena suerte!",
+                        challenge_copied: "¡Enlace de desafío copiado! Envíaselo a un amigo.",
+                        no_more_hints: "¡No más pistas! Gana algunas en la rueda de la suerte.",
+                        share_copied: "¡Enlace y puntuación copiados al portapapeles! 📋",
+                        ok: "OK",
+                        prize_50_coins: "¡50 MONEDAS!",
+                        prize_2_hints: "¡2 PISTAS!",
+                        prize_nothing: "¡QUÉ PENA... NADA!",
+                        prize_20_coins: "¡20 MONEDAS!",
+                        prize_1_hint: "¡1 PISTA!",
+                        surprise_skin: "¡REGALO SORPRESA: ¡Has desbloqueado el skin %s! 🎁✨",
+                        surprise_coins: "¡REGALO SORPRESA: ¡200 MONEDAS! (Todos los skins ya son tuyos) 💰✨",
+                        rules_label: "🧪 REGLAS:",
+                        streak: "Racha: %d días",
+                        skin_classic: "CLÁSICO",
+                        skin_dark: "MODO OSCURO",
+                        skin_neon: "NOCHE NEÓN",
+                        skin_retro: "ORO RETRO",
+                        skin_cyber: "CYBERPUNK",
+                        stats: "ESTADÍSTICAS",
+                        stat_levels: "Niveles completados",
+                        stat_coins: "Monedas ganadas",
+                        stat_fusions: "Fusiones totales",
+                        stat_daily: "Desafíos diarios",
+                        reset_confirm: "¿Estás seguro de que quieres reiniciar todo? ¡Esta acción es irreversible!",
+                        yes: "SÍ",
+                        no: "NO",
+                        cat_geo: "GEOGRAFÍA",
+                        cat_brand: "MARCAS"
+                    }
+                };
+                return TRANSLATIONS[this.language || 'fr'][key];
+            },
+
+            translateUI() {
+                // Home
+                document.getElementById('game-subtitle').innerText = this.t('subtitle');
+                document.querySelector('button[onclick="game.showCategorySelect()"]').innerText = this.t('play');
+                document.querySelector('button[onclick="game.startDaily()"]').innerText = this.t('daily');
+                document.querySelector('button[onclick="game.showModes()"]').innerText = this.t('modes');
+                document.querySelector('button[onclick="game.showSkins()"]').innerText = this.t('shop');
+                document.querySelector('button[onclick="game.showDailyWheel()"]').innerText = this.t('wheel');
+                document.querySelector('button[onclick="game.showLeaderboard()"]').innerText = this.t('leaderboard');
+                document.querySelector('button[onclick="game.showStats()"]').innerText = this.t('stats');
+                
+                // Categories
+                document.querySelector('#category-screen h1').innerText = this.t('categories');
+                document.querySelectorAll('.cat-name')[0].innerText = this.t('cat_all');
+                document.querySelectorAll('.cat-name')[1].innerText = this.t('cat_movie');
+                document.querySelectorAll('.cat-name')[2].innerText = this.t('cat_series');
+                document.querySelectorAll('.cat-name')[3].innerText = this.t('cat_game');
+                document.querySelectorAll('.cat-name')[4].innerText = this.t('cat_music');
+                document.querySelectorAll('.cat-name')[5].innerText = this.t('cat_geo');
+                document.querySelectorAll('.cat-name')[6].innerText = this.t('cat_brand');
+                
+                // Modes
+                document.querySelector('#modes-screen h1').innerText = this.t('game_modes');
+                document.querySelectorAll('#modes-screen .btn-restart')[0].innerText = this.t('mode_classic');
+                document.querySelectorAll('#modes-screen .btn-restart')[1].innerText = this.t('mode_chrono');
+                document.querySelectorAll('#modes-screen .btn-restart')[2].innerText = this.t('mode_hardcore');
+                
+                // Stats
+                document.querySelector('#stats-screen h1').innerText = this.t('stats');
+                document.getElementById('label-stat-levels').innerText = this.t('stat_levels');
+                document.getElementById('label-stat-coins').innerText = this.t('stat_coins');
+                document.getElementById('label-stat-fusions').innerText = this.t('stat_fusions');
+                document.getElementById('label-stat-daily').innerText = this.t('stat_daily');
+                document.querySelector('button[onclick="game.resetProgress()"]').innerText = this.t('reset_confirm').split('?')[0].toUpperCase(); // Simplified for button
+                if (this.language === 'en') document.querySelector('button[onclick="game.resetProgress()"]').innerText = "RESET ALL";
+                if (this.language === 'fr') document.querySelector('button[onclick="game.resetProgress()"]').innerText = "RÉINITIALISER TOUT";
+                if (this.language === 'es') document.querySelector('button[onclick="game.resetProgress()"]').innerText = "REINICIAR TODO";
+                
+                // Shop
+                document.querySelector('#skins-screen h1').innerText = this.t('shop_title');
+                document.querySelectorAll('.shop-tab')[0].innerText = this.t('shop_skins');
+                document.querySelectorAll('.shop-tab')[1].innerText = this.t('shop_powerups');
+                document.querySelectorAll('.shop-tab')[2].innerText = this.t('shop_styles');
+                document.querySelectorAll('.shop-tab')[3].innerText = this.t('shop_avatars');
+                document.querySelectorAll('#shop-powerups .skin-name')[0].innerText = this.t('shop_hints');
+                document.querySelectorAll('#shop-powerups .skin-name')[1].innerText = this.t('shop_shield');
+                document.querySelectorAll('#shop-powerups .skin-name')[2].innerText = this.t('shop_skip');
+                
+                document.querySelectorAll('#shop-skins .skin-name')[0].innerText = this.t('skin_classic');
+                document.querySelectorAll('#shop-skins .skin-name')[1].innerText = this.t('skin_dark');
+                document.querySelectorAll('#shop-skins .skin-name')[2].innerText = this.t('skin_neon');
+                document.querySelectorAll('#shop-skins .skin-name')[3].innerText = this.t('skin_retro');
+                document.querySelectorAll('#shop-skins .skin-name')[4].innerText = this.t('skin_cyber');
+                
+                // Wheel
+                document.querySelector('#wheel-screen h1').innerText = this.t('wheel');
+                document.getElementById('spin-btn').innerText = this.t('spin');
+                
+                // Leaderboard
+                document.querySelector('#leaderboard-screen h1').innerText = this.t('leaderboard');
+                
+                // Rules
+                document.querySelector('#rules-content h2').innerText = this.t('rules');
+                const rulesPs = document.querySelectorAll('#rules-content p');
+                rulesPs[0].innerText = this.t('rules_label');
+                this.t('rules_text').forEach((text, i) => {
+                    if (rulesPs[i + 1]) rulesPs[i + 1].innerText = text;
+                });
+                
+                // Pause
+                document.querySelector('#pause-screen h1').innerText = this.t('pause');
+                document.querySelector('#pause-screen p').innerText = this.t('paused');
+                document.querySelectorAll('#pause-screen .btn-restart')[0].innerText = this.t('resume');
+                document.querySelectorAll('#pause-screen .btn-restart')[1].innerText = this.t('challenge_friend');
+                document.querySelectorAll('#pause-screen .btn-restart')[2].innerText = this.t('home');
+                
+                // Start Screen Resume Button
+                const btnResume = document.getElementById('btn-resume');
+                if (btnResume && btnResume.style.display !== 'none') {
+                    btnResume.innerText = `${this.t('resume')} (${this.t('level')} ${this.currentLevelIndex + 1})`;
+                }
+                
+                // Victory/GameOver
+                document.querySelector('#victory-screen h1').innerText = this.t('victory');
+                document.querySelector('#victory-screen p').innerText = this.t('master');
+                document.querySelector('#game-over-screen h1').innerText = this.t('game_over');
+                document.querySelector('#game-over-screen p').innerText = this.t('fail');
+                
+                // Generic Back/Close buttons
+                document.querySelectorAll('.btn-restart').forEach(btn => {
+                    if (btn.innerText === 'RETOUR' || btn.innerText === 'BACK' || btn.innerText === 'VOLVER') btn.innerText = this.t('back');
+                    if (btn.innerText === 'FERMER' || btn.innerText === 'CLOSE' || btn.innerText === 'CERRAR') btn.innerText = this.t('close');
+                    if (btn.innerText === 'REJOUER' || btn.innerText === 'REPLAY' || btn.innerText === 'VOLVER A JUGAR') btn.innerText = this.t('replay');
+                    if (btn.innerText === 'REESSAYER' || btn.innerText === 'RETRY' || btn.innerText === 'REINTENTAR') btn.innerText = this.t('retry');
+                });
+
+                const modalBtn = document.getElementById('modal-btn');
+                if (modalBtn) modalBtn.innerText = this.t('ok');
+
+                this.updateUI();
+            },
+
             loadLevel() {
                 document.body.classList.add('game-active');
                 this.updateTierColors();
@@ -1800,8 +2936,9 @@
                 container.classList.add('level-enter');
                 
                 // Objective
-                document.getElementById('objective').innerText = level.objective;
-                document.getElementById('level-info').innerText = `Niveau ${this.currentLevelIndex + 1} / Palier ${Math.ceil((this.currentLevelIndex + 1) / 20)}`;
+                const translatedObjective = this.objectiveTranslations[level.objective] ? this.objectiveTranslations[level.objective][this.language] : level.objective;
+                document.getElementById('objective').innerText = translatedObjective;
+                document.getElementById('level-info').innerText = `${this.t('level')} ${this.currentLevelIndex + 1} / ${this.t('tier')} ${Math.ceil((this.currentLevelIndex + 1) / 20)}`;
 
                 // Fusion Bar Slots
                 const bar = document.getElementById('fusion-bar');
@@ -1861,7 +2998,7 @@
             },
 
             handleTimeOut() {
-                this.showFeedback('PLUS DE BONUS !', 'var(--retro-pink)');
+                this.showFeedback(this.t('no_more_bonus'), 'var(--retro-pink)');
                 this.vibrate(100);
                 
                 // Subtle shake on timeout
@@ -1892,7 +3029,7 @@
             },
 
             addToFusion(emoji, btn) {
-                if (this.isPaused) return;
+                if (this.isPaused || btn.classList.contains('selected')) return;
                 const level = this.sessionLevels[this.currentLevelIndex];
                 if (this.selected.length < level.solution.length && !this.isProcessing) {
                     playSound('pop');
@@ -1937,14 +3074,61 @@
                     livesContainer.appendChild(heart);
                 }
 
-                document.getElementById('score-display').innerText = `SCORE: ${Math.floor(this.score)}`;
-                document.getElementById('high-score-display').innerText = `BEST: ${Math.floor(this.highScore)}`;
+                document.getElementById('score-display').innerText = `${this.t('score')}: ${Math.floor(this.score)}`;
+                document.getElementById('high-score-display').innerText = `${this.t('best')}: ${Math.floor(this.highScore)}`;
                 
+                const objectiveEl = document.getElementById('objective');
+                const level = this.sessionLevels[this.currentLevelIndex];
+                if (objectiveEl && level) {
+                    const objectiveKey = level.objective;
+                    const translatedObjective = (this.objectiveTranslations[objectiveKey] && this.objectiveTranslations[objectiveKey][this.language]) || objectiveKey;
+                    objectiveEl.innerText = translatedObjective;
+                }
+
+                const levelInfoEl = document.getElementById('level-info');
+                if (levelInfoEl) {
+                    const tier = Math.ceil((this.currentLevelIndex + 1) / 20);
+                    levelInfoEl.innerText = `${this.t('level')} ${this.currentLevelIndex + 1} / ${this.t('tier')} ${tier}`;
+                }
+
+                const fusionBtn = document.getElementById('fusion-btn');
+                if (fusionBtn) fusionBtn.innerText = this.t('fusion');
+
+                const coinsDisplay = document.getElementById('coins-display');
+                if (coinsDisplay) {
+                    coinsDisplay.innerHTML = `💰 <span id="user-coins">${this.coins}</span> ${this.t('coins')}`;
+                }
+
+                const coinsStartEl = document.getElementById('user-coins-start');
+                if (coinsStartEl) coinsStartEl.innerText = `💰 ${this.coins}`;
+                
+                const hintsStartEl = document.getElementById('user-hints-start');
+                if (hintsStartEl) hintsStartEl.innerText = `💡 ${this.hints}`;
+                
+                const avatarEl = document.getElementById('user-avatar');
+                if (avatarEl) avatarEl.innerText = this.currentAvatar;
+
                 const hintBtn = document.getElementById('hint-btn');
                 if (hintBtn) {
                     hintBtn.innerText = `💡 ${this.hints}`;
                     if (this.hints <= 0) hintBtn.classList.add('disabled');
                     else if (!this.hintsUsedInLevel) hintBtn.classList.remove('disabled');
+                }
+
+                const shieldBtn = document.getElementById('shield-btn');
+                const shieldCount = document.getElementById('shield-count');
+                if (shieldBtn && shieldCount) {
+                    shieldCount.innerText = this.shields;
+                    if (this.shields <= 0) shieldBtn.classList.add('disabled');
+                    else shieldBtn.classList.remove('disabled');
+                }
+
+                const skipBtn = document.getElementById('skip-btn');
+                const skipCount = document.getElementById('skip-count');
+                if (skipBtn && skipCount) {
+                    skipCount.innerText = this.skips;
+                    if (this.skips <= 0) skipBtn.classList.add('disabled');
+                    else skipBtn.classList.remove('disabled');
                 }
 
                 const comboEl = document.getElementById('combo-display');
@@ -1966,6 +3150,9 @@
                     comboEl.style.display = 'none';
                     document.body.classList.remove('fever-mode');
                 }
+
+                const userCoinsEl = document.getElementById('user-coins');
+                if (userCoinsEl) userCoinsEl.innerText = this.coins;
             },
 
             checkAchievements() {
@@ -2009,7 +3196,7 @@
             useHint() {
                 if (this.hintsUsedInLevel || this.isProcessing || this.isPaused) return;
                 if (this.hints <= 0) {
-                    alert("Plus d'indices ! Gagne-en à la roue de la chance.");
+                    this.showAlert(this.t('no_more_hints'));
                     return;
                 }
                 
@@ -2024,7 +3211,7 @@
                     this.hints--;
                     localStorage.setItem('popcorn_hints', this.hints);
                     playSound('pop');
-                    this.showFeedback('INDICE!', 'var(--retro-yellow)');
+                    this.showFeedback(this.t('hint_feedback'), 'var(--retro-yellow)');
                     const gridBtns = document.querySelectorAll('.emoji-btn');
                     for (const btn of gridBtns) {
                         if (btn.innerText === emojiToHint && !btn.classList.contains('selected')) {
@@ -2070,15 +3257,9 @@
                     const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(text)}`;
                     const emailUrl = `mailto:?subject=Pop-Corn Alchemy&body=${encodeURIComponent(text)}`;
                     
-                    // Show a simple choice or just copy to clipboard
-                    const choice = confirm("Voulez-vous partager sur Twitter ? (OK pour Twitter, Annuler pour copier le lien)");
-                    if (choice) {
-                        window.open(twitterUrl, '_blank');
-                    } else {
-                        navigator.clipboard.writeText(text).then(() => {
-                            alert("Lien et score copiés dans le presse-papier ! 📋");
-                        });
-                    }
+                    navigator.clipboard.writeText(text).then(() => {
+                        this.showAlert(this.t('share_copied'));
+                    });
                 }
             },
 
@@ -2104,7 +3285,7 @@
                 if (isCorrect) {
                     clearInterval(this.timerInterval);
                     playSound('success');
-                    this.showFeedback('CORRECT!', 'var(--retro-green)');
+                    this.showFeedback(this.t('correct'), 'var(--retro-green)');
                     
                     // Popcorn particles
                     const rect = fusionBar.getBoundingClientRect();
@@ -2123,7 +3304,7 @@
                         
                         // New High Score celebration
                         if (oldHighScore > 0 && this.score > oldHighScore) {
-                            this.showFeedback('NOUVEAU RECORD!', 'var(--retro-yellow)', true);
+                            this.showFeedback(this.t('record'), 'var(--retro-yellow)', true);
                             confetti({
                                 particleCount: 150,
                                 spread: 100,
@@ -2134,6 +3315,20 @@
                     }
 
                     this.checkAchievements();
+                    
+                    // Award coins (2-5 per level)
+                    const coinsEarned = Math.floor(Math.random() * 4) + 2;
+                    this.addCoins(coinsEarned);
+                    this.updateStats('levels');
+                    this.updateStats('fusions');
+                    this.updateStats('coins', coinsEarned);
+                    
+                    if (this.isDaily) {
+                        this.updateStats('daily');
+                    }
+                    
+                    this.showFeedback(`+${coinsEarned} 💰`, 'var(--retro-yellow)');
+
                     this.updateUI();
 
                     this.vibrate([100, 50, 100]);
@@ -2160,8 +3355,27 @@
                     }
                 } else {
                     clearInterval(this.timerInterval);
+                    
+                    // Use shield if available
+                    if (this.shields > 0) {
+                        this.shields--;
+                        localStorage.setItem('popcorn_shields', this.shields);
+                        playSound('success');
+                        this.showFeedback(this.t('shield_used'), 'var(--retro-cyan)');
+                        this.vibrate(100);
+                        this.updateUI();
+                        
+                        // Reset selection but don't lose life
+                        this.selected.forEach(s => s.btn.classList.remove('selected'));
+                        this.selected = [];
+                        this.renderFusionBar();
+                        this.isProcessing = false;
+                        this.startTimer(); // Restart timer for the same level
+                        return;
+                    }
+
                     playSound('error');
-                    this.showFeedback('OUCH!', 'var(--retro-pink)');
+                    this.showFeedback(this.t('ouch'), 'var(--retro-pink)');
                     this.vibrate(200);
                     
                     // Screen shake on error
@@ -2222,6 +3436,7 @@
                 
                 // Bonus coins for victory
                 this.addCoins(100);
+                this.updateStats('coins', 100);
 
                 confetti({
                     particleCount: 200,
@@ -2241,14 +3456,22 @@
                 document.body.classList.remove('game-active');
                 this.hideAllScreens();
                 const tier = Math.ceil((this.currentLevelIndex + 1) / 20);
-                document.getElementById('tier-title').innerText = `PALIER ${tier} TERMINÉ !`;
+                document.getElementById('tier-title').innerText = `${this.t('tier_complete')} (${tier})`;
                 document.getElementById('tier-screen').classList.add('active');
+                document.querySelector('#tier-screen p').innerHTML = this.t('congrats');
+                document.querySelectorAll('#tier-screen .btn-restart')[0].innerText = this.t('next_tier');
+                document.querySelectorAll('#tier-screen .btn-restart')[1].innerText = this.t('share_score');
+                
                 this.lives = (this.currentMode === 'hardcore') ? 1 : 4; // Refill lives based on mode
                 this.combo = 0;
-                this.updateUI();
                 
-                // Bonus coins for tier
+                // Bonus rewards for tier
                 this.addCoins(20);
+                this.addHints(5); // Reward 5 hints for tier completion
+                this.updateStats('coins', 20);
+                this.showFeedback(this.t('hints_reward'), 'var(--retro-yellow)');
+                
+                this.updateUI();
             },
 
             nextTier() {
@@ -2362,5 +3585,20 @@
         // Initialize game
         game.init();
     </script>
+
+    <div class="social-links-container">
+        <div class="social-links">
+            <a href="https://www.tiktok.com/@hugo_bsqt" target="_blank" rel="noopener noreferrer">
+                <img src="https://cdn.simpleicons.org/tiktok/2d2d2d" alt="TikTok" referrerPolicy="no-referrer">
+            </a>
+            <a href="https://www.instagram.com/hugo_bsqt/" target="_blank" rel="noopener noreferrer">
+                <img src="https://cdn.simpleicons.org/instagram/2d2d2d" alt="Instagram" referrerPolicy="no-referrer">
+            </a>
+            <a href="https://www.youtube.com/channel/UCUAfM0_WdPb1o-gRWAP8xWg" target="_blank" rel="noopener noreferrer">
+                <img src="https://cdn.simpleicons.org/youtube/2d2d2d" alt="YouTube" referrerPolicy="no-referrer">
+            </a>
+        </div>
+        <div class="copyright">Hugo_BSQT 2026 tous droits réservés</div>
+    </div>
 </body>
 </html>
