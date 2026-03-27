@@ -183,14 +183,18 @@
 
         .wheel-section {
             position: absolute;
-            width: 50%;
-            height: 50%;
-            transform-origin: 100% 100%;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            transform-origin: 50% 50%;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
+            padding-top: 20px;
             font-size: 24px;
-            border: 1px solid #eee;
+            /* 60 degree slice centered at top */
+            clip-path: polygon(50% 50%, 21.15% 0, 78.85% 0);
         }
 
         #wheel-pointer {
@@ -669,6 +673,10 @@
         }
 
         /* Social Links */
+        body.game-active .social-links-container {
+            display: none;
+        }
+
         .social-links-container {
             display: flex;
             flex-direction: column;
@@ -888,6 +896,7 @@
                 <span class="lang-name">ESPAÑOL</span>
             </div>
         </div>
+        <button class="btn-restart" style="margin-top: 30px;" onclick="game.showStart()">RETOUR</button>
     </div>
 
     <div id="game-container">
@@ -1151,12 +1160,12 @@
         <h1 style="font-size: 24px; margin-bottom: 20px;">ROUE DE LA CHANCE</h1>
         <div id="wheel-container">
             <div id="wheel">
-                <div class="wheel-section" style="transform: rotate(0deg);">🎁</div>
-                <div class="wheel-section" style="transform: rotate(60deg);">💰</div>
-                <div class="wheel-section" style="transform: rotate(120deg);">💡</div>
-                <div class="wheel-section" style="transform: rotate(180deg);">❌</div>
-                <div class="wheel-section" style="transform: rotate(240deg);">💰</div>
-                <div class="wheel-section" style="transform: rotate(300deg);">💡</div>
+                <div class="wheel-section" style="transform: rotate(0deg); background: #ffedff;">🎁</div>
+                <div class="wheel-section" style="transform: rotate(60deg); background: #edffff;">💰</div>
+                <div class="wheel-section" style="transform: rotate(120deg); background: #fffeed;">💡</div>
+                <div class="wheel-section" style="transform: rotate(180deg); background: #f0f0f0;">❌</div>
+                <div class="wheel-section" style="transform: rotate(240deg); background: #edffff;">💰</div>
+                <div class="wheel-section" style="transform: rotate(300deg); background: #fffeed;">💡</div>
             </div>
             <div id="wheel-pointer"></div>
         </div>
@@ -1666,8 +1675,14 @@
                 if (this.lastDailyDate) {
                     const last = new Date(this.lastDailyDate);
                     const today = new Date();
-                    const diffTime = Math.abs(today - last);
+                    
+                    // Set both to midnight for accurate day comparison
+                    last.setHours(0, 0, 0, 0);
+                    today.setHours(0, 0, 0, 0);
+                    
+                    const diffTime = today - last;
                     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                    
                     if (diffDays > 1) {
                         this.dailyStreak = 0;
                         localStorage.setItem('popcorn_alchemy_streak', 0);
@@ -1844,13 +1859,13 @@
                 const rng = seed ? this.mulberry32(parseInt(seed)) : Math.random;
                 
                 if (seed) {
-                    // Daily Challenge: Shuffle ALL levels randomly
+                    // Daily Challenge: Shuffle ALL levels randomly, but limit to 10 levels
                     const allLevels = [...LEVELS];
                     for (let i = allLevels.length - 1; i > 0; i--) {
                         const j = Math.floor(rng() * (i + 1));
                         [allLevels[i], allLevels[j]] = [allLevels[j], allLevels[i]];
                     }
-                    this.sessionLevels = allLevels;
+                    this.sessionLevels = allLevels.slice(0, 10);
                 } else {
                     // Normal Mode: Shuffle within tiers to ensure progression
                     const tiers = [];
@@ -1898,11 +1913,8 @@
                     this.sessionLevels = filtered.sort(() => Math.random() - 0.5);
                 } else {
                     // Tier-by-tier for Classic and other modes
-                    const tiers = [];
-                    for (let i = 0; i < filtered.length; i += 20) {
-                        tiers.push(filtered.slice(i, i + 20).sort(() => Math.random() - 0.5));
-                    }
-                    this.sessionLevels = [].concat(...tiers);
+                    // Keep original order as requested by the user
+                    this.sessionLevels = filtered;
                 }
 
                 if (this.sessionLevels.length === 0) {
@@ -2210,17 +2222,41 @@
                 spinBtn.disabled = true;
                 
                 setTimeout(() => {
-                    const actualDeg = randomDeg % 360;
+                    const actualDeg = (360 - (randomDeg % 360)) % 360;
                     let prize = "";
                     
-                    if (actualDeg >= 0 && actualDeg < 60) { this.giveSurpriseGift(); return; }
-                    else if (actualDeg >= 60 && actualDeg < 120) { prize = this.t('prize_50_coins'); this.addCoins(50); }
-                    else if (actualDeg >= 120 && actualDeg < 180) { prize = this.t('prize_2_hints'); this.addHints(2); }
-                    else if (actualDeg >= 180 && actualDeg < 240) { prize = this.t('prize_nothing'); }
-                    else if (actualDeg >= 240 && actualDeg < 300) { prize = this.t('prize_20_coins'); this.addCoins(20); }
-                    else { prize = this.t('prize_1_hint'); this.addHints(1); }
+                    // Each section is 60 degrees, centered at 0, 60, 120, 180, 240, 300
+                    // Ranges for centering (±30 degrees around center):
+                    // 330-30: 🎁 (index 0)
+                    // 30-90: 💰 (index 1)
+                    // 90-150: 💡 (index 2)
+                    // 150-210: ❌ (index 3)
+                    // 210-270: 💰 (index 4)
+                    // 270-330: 💡 (index 5)
                     
-                    this.showAlert(this.t('wheel_result') + prize);
+                    if (actualDeg >= 330 || actualDeg < 30) { 
+                        this.giveSurpriseGift(); 
+                    } else if (actualDeg >= 30 && actualDeg < 90) { 
+                        prize = this.t('prize_50_coins'); 
+                        this.addCoins(50); 
+                        this.showAlert(this.t('wheel_result') + prize);
+                    } else if (actualDeg >= 90 && actualDeg < 150) { 
+                        prize = this.t('prize_2_hints'); 
+                        this.addHints(2); 
+                        this.showAlert(this.t('wheel_result') + prize);
+                    } else if (actualDeg >= 150 && actualDeg < 210) { 
+                        prize = this.t('prize_nothing'); 
+                        this.showAlert(this.t('wheel_result') + prize);
+                    } else if (actualDeg >= 210 && actualDeg < 270) { 
+                        prize = this.t('prize_20_coins'); 
+                        this.addCoins(20); 
+                        this.showAlert(this.t('wheel_result') + prize);
+                    } else { 
+                        prize = this.t('prize_1_hint'); 
+                        this.addHints(1); 
+                        this.showAlert(this.t('wheel_result') + prize);
+                    }
+                    
                     localStorage.setItem('popcorn_last_spin', new Date().toISOString().slice(0, 10));
                     spinBtn.innerText = "DÉJÀ UTILISÉ AUJOURD'HUI";
                     spinBtn.style.opacity = "0.5";
@@ -2346,8 +2382,12 @@
                 if (this.lastDailyDate !== today) {
                     const last = this.lastDailyDate ? new Date(this.lastDailyDate) : null;
                     const now = new Date(today);
+                    
                     if (last) {
-                        const diff = Math.floor(Math.abs(now - last) / (1000 * 60 * 60 * 24));
+                        last.setHours(0, 0, 0, 0);
+                        now.setHours(0, 0, 0, 0);
+                        const diff = Math.floor((now - last) / (1000 * 60 * 60 * 24));
+                        
                         if (diff === 1) {
                             this.dailyStreak++;
                         } else {
@@ -3201,11 +3241,19 @@
                 }
                 
                 const level = this.sessionLevels[this.currentLevelIndex];
-                // Find a correct emoji that isn't already selected
-                const correctEmojis = level.solution;
+                // Find a correct emoji that isn't already selected, handling duplicates
+                const correctEmojis = [...level.solution];
                 const selectedEmojis = this.selected.map(s => s.emoji);
                 
-                const emojiToHint = correctEmojis.find(e => !selectedEmojis.includes(e));
+                // Remove selected emojis from the pool of correct ones
+                selectedEmojis.forEach(selected => {
+                    const index = correctEmojis.indexOf(selected);
+                    if (index > -1) {
+                        correctEmojis.splice(index, 1);
+                    }
+                });
+                
+                const emojiToHint = correctEmojis[0];
                 
                 if (emojiToHint) {
                     this.hints--;
@@ -3434,14 +3482,24 @@
                 document.getElementById('final-score-victory').innerText = `SCORE: ${Math.floor(this.score)}`;
                 document.getElementById('victory-screen').classList.add('active');
                 
-                // Bonus coins for victory
-                this.addCoins(100);
-                this.updateStats('coins', 100);
+                let bonusCoins = 100;
+                let bonusHints = 0;
+                
+                if (this.isDaily) {
+                    bonusCoins = 50;
+                    bonusHints = 2;
+                    this.showFeedback(`+50 💰 +2 💡`, 'var(--retro-yellow)', true);
+                }
+                
+                this.addCoins(bonusCoins);
+                this.addHints(bonusHints);
+                this.updateStats('coins', bonusCoins);
 
                 confetti({
                     particleCount: 200,
-                    spread: 100,
-                    origin: { y: 0.6 }
+                    spread: 120,
+                    origin: { y: 0.3 },
+                    colors: ['#ff00ff', '#00ffff', '#39ff14', '#ffc107']
                 });
 
                 // Save to leaderboard
@@ -3478,6 +3536,11 @@
                 document.getElementById('tier-screen').classList.remove('active');
                 this.currentLevelIndex++;
                 this.isProcessing = false;
+                
+                // Reward for passing a tier: 2 hints
+                this.addHints(2);
+                this.showFeedback(`+2 💡`, 'var(--retro-cyan)', true);
+                
                 this.loadLevel();
             },
 
@@ -3515,6 +3578,7 @@
             goToHome() {
                 if (this.modeTimerInterval) clearInterval(this.modeTimerInterval);
                 this.isPaused = false;
+                this.saveGame();
                 this.hideAllScreens();
                 document.getElementById('start-screen').classList.add('active');
                 this.init();
