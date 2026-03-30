@@ -165,9 +165,10 @@
         /* Wheel */
         #wheel-container {
             position: relative;
-            width: 400px;
-            height: 400px;
+            width: min(400px, 90vw);
+            aspect-ratio: 1 / 1;
             margin: 0 auto;
+            flex-shrink: 0;
         }
 
         #wheel {
@@ -188,8 +189,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
+            width: 15%;
+            height: 15%;
             background: var(--text);
             border-radius: 50%;
             z-index: 5;
@@ -207,19 +208,19 @@
             display: flex;
             align-items: flex-start;
             justify-content: center;
-            padding-top: 40px;
-            font-size: 36px;
+            padding-top: 10%;
+            font-size: clamp(16px, 8vw, 36px);
             /* 22.5 degree slice centered at top */
             clip-path: polygon(50% 50%, 40% 0, 60% 0);
         }
 
         #wheel-pointer {
             position: absolute;
-            top: -20px;
+            top: -5%;
             left: 50%;
             transform: translateX(-50%);
-            width: 40px;
-            height: 50px;
+            width: 10%;
+            height: 12%;
             background: var(--retro-pink);
             clip-path: polygon(0 0, 100% 0, 50% 100%);
             z-index: 10;
@@ -1057,7 +1058,35 @@
                 </a>
             </div>
             <div id="copyright-text" class="copyright">Hugo_BSQT 2026 tous droits réservés</div>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px; flex-wrap: wrap;">
+                <button id="btn-privacy" style="background: none; border: none; color: var(--text); font-family: inherit; font-size: 6px; cursor: pointer; text-decoration: underline; opacity: 0.6;" onclick="game.showPrivacy()">POLITIQUE DE CONFIDENTIALITÉ</button>
+                <button id="btn-legal" style="background: none; border: none; color: var(--text); font-family: inherit; font-size: 6px; cursor: pointer; text-decoration: underline; opacity: 0.6;" onclick="game.showLegal()">MENTIONS LÉGALES</button>
+            </div>
         </div>
+    </div>
+
+    <!-- Privacy Policy Screen -->
+    <div id="privacy-screen" class="screen">
+        <h1 id="privacy-title" style="font-size: 18px;">POLITIQUE DE CONFIDENTIALITÉ</h1>
+        <div class="scroll-content" style="text-align: left; font-size: 8px; line-height: 1.6; max-width: 400px; margin: 0 auto; padding: 20px; background: var(--card-bg); border: 3px solid var(--text); border-radius: 15px;">
+            <p><strong>1. Collecte des données</strong><br>Nous ne collectons aucune donnée personnelle nominative sans votre consentement. Les seules données stockées sont votre score local, vos pièces et vos skins débloqués, enregistrés uniquement sur votre appareil via le LocalStorage.</p>
+            <p><strong>2. Utilisation des données</strong><br>Vos données de jeu sont utilisées exclusivement pour assurer le bon fonctionnement de l'application (sauvegarde de votre progression) et pour l'affichage du classement mondial si vous choisissez d'y participer.</p>
+            <p><strong>3. Cookies</strong><br>Cette application n'utilise pas de cookies publicitaires. Seuls des éléments techniques de stockage local sont utilisés pour votre confort de jeu.</p>
+            <p><strong>4. Services tiers</strong><br>Nous utilisons Google Firebase pour la gestion du classement mondial et des statistiques anonymes de jeu.</p>
+        </div>
+        <button id="btn-back-privacy" class="btn-restart" style="margin-top: 20px;" onclick="game.showStart()">RETOUR</button>
+    </div>
+
+    <!-- Legal Mentions Screen -->
+    <div id="legal-screen" class="screen">
+        <h1 id="legal-title" style="font-size: 18px;">MENTIONS LÉGALES</h1>
+        <div class="scroll-content" style="text-align: left; font-size: 8px; line-height: 1.6; max-width: 400px; margin: 0 auto; padding: 20px; background: var(--card-bg); border: 3px solid var(--text); border-radius: 15px;">
+            <p><strong>Éditeur du site :</strong><br>Hugo_BSQT<br>Contact : via les réseaux sociaux officiels.</p>
+            <p><strong>Hébergement :</strong><br>L'application est hébergée sur Google Cloud Run.</p>
+            <p><strong>Propriété intellectuelle :</strong><br>L'ensemble du contenu de ce jeu (textes, graphismes, logos, sons) est la propriété exclusive de Hugo_BSQT, sauf mention contraire.</p>
+            <p><strong>Responsabilité :</strong><br>L'éditeur ne peut être tenu responsable des dommages directs ou indirects résultant de l'utilisation de l'application.</p>
+        </div>
+        <button id="btn-back-legal" class="btn-restart" style="margin-top: 20px;" onclick="game.showStart()">RETOUR</button>
     </div>
 
     <!-- Category Selection -->
@@ -1096,6 +1125,18 @@
                 <span class="cat-icon">🌿</span>
                 <span id="label-cat-nature" class="cat-name">NATURE</span>
             </button>
+            <button id="cat-youtube" class="cat-card" onclick="game.startGame('youtube')">
+                <span class="cat-icon">🎥</span>
+                <span id="label-cat-youtube" class="cat-name">YOUTUBERS (FR & US)</span>
+            </button>
+            <button id="cat-anime" class="cat-card" onclick="game.startGame('anime')">
+                <span class="cat-icon">🎌</span>
+                <span id="label-cat-anime" class="cat-name">ANIME</span>
+            </button>
+            <button id="cat-food" class="cat-card" onclick="game.startGame('food')">
+                <span class="cat-icon">🍕</span>
+                <span id="label-cat-food" class="cat-name">CUISINE</span>
+            </button>
         </div>
         <button id="btn-back-categories" class="btn-restart" style="margin-top: 20px;" onclick="game.showStart()">RETOUR</button>
     </div>
@@ -1114,25 +1155,31 @@
     <!-- Stats Screen -->
     <div id="stats-screen" class="screen">
         <h1 id="stats-title" style="font-size: 24px; margin-bottom: 20px;">STATISTIQUES</h1>
-        <div style="width: 100%; max-width: 300px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; border: 3px solid var(--text); text-align: left; margin-bottom: 20px;">
-            <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
-                <span style="font-size: 10px; opacity: 0.8;" id="label-stat-levels">Niveaux réussis</span>
-                <span style="font-size: 12px; color: var(--retro-green); font-weight: bold;" id="stat-levels">0</span>
+        <div style="width: 100%; max-width: 320px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; border: 3px solid var(--text); text-align: left; margin-bottom: 15px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px;">
+                    <span style="font-size: 8px; opacity: 0.8; display: block;" id="label-stat-levels">Niveaux réussis</span>
+                    <span style="font-size: 14px; color: var(--retro-green); font-weight: bold;" id="stat-levels">0</span>
+                </div>
+                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px;">
+                    <span style="font-size: 8px; opacity: 0.8; display: block;" id="label-stat-coins">Pièces gagnées</span>
+                    <span style="font-size: 14px; color: var(--retro-yellow); font-weight: bold;" id="stat-coins">0</span>
+                </div>
+                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px;">
+                    <span style="font-size: 8px; opacity: 0.8; display: block;" id="label-stat-fusions">Fusions totales</span>
+                    <span style="font-size: 14px; color: var(--retro-cyan); font-weight: bold;" id="stat-fusions">0</span>
+                </div>
+                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px;">
+                    <span style="font-size: 8px; opacity: 0.8; display: block;" id="label-stat-daily">Défis quotidiens</span>
+                    <span style="font-size: 14px; color: var(--retro-pink); font-weight: bold;" id="stat-daily">0</span>
+                </div>
             </div>
-            <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
-                <span style="font-size: 10px; opacity: 0.8;" id="label-stat-coins">Pièces gagnées</span>
-                <span style="font-size: 12px; color: var(--retro-yellow); font-weight: bold;" id="stat-coins">0</span>
-            </div>
-            <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
-                <span style="font-size: 10px; opacity: 0.8;" id="label-stat-fusions">Fusions totales</span>
-                <span style="font-size: 12px; color: var(--retro-cyan); font-weight: bold;" id="stat-fusions">0</span>
-            </div>
-            <div style="margin-bottom: 0; display: flex; justify-content: space-between;">
-                <span style="font-size: 10px; opacity: 0.8;" id="label-stat-daily">Défis quotidiens</span>
-                <span style="font-size: 12px; color: var(--retro-pink); font-weight: bold;" id="stat-daily">0</span>
+
+            <div id="category-stats-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px;">
+                <!-- Category stats will be injected here -->
             </div>
         </div>
-        <button id="btn-reset-stats" class="btn-restart" style="background: var(--retro-pink); font-size: 10px; padding: 10px; margin-bottom: 20px;" onclick="game.resetProgress()">RÉINITIALISER TOUT</button>
+        <button id="btn-reset-stats" class="btn-restart" style="background: var(--retro-pink); font-size: 10px; padding: 10px; margin-bottom: 15px;" onclick="game.resetProgress()">RÉINITIALISER TOUT</button>
         <button id="btn-back-stats" class="btn-restart" onclick="game.showStart()">RETOUR</button>
     </div>
 
@@ -1333,15 +1380,49 @@
         </div>
     </div>
 
+    <!-- Name Entry Modal -->
+    <div id="name-modal" class="screen" style="background: rgba(0,0,0,0.8); z-index: 1001; display: none; align-items: center; justify-content: center;">
+        <div class="card" style="width: 80%; max-width: 300px; text-align: center; padding: 20px; background: white; border: 3px solid black; border-radius: 15px; box-shadow: 4px 4px 0px #000;">
+            <h2 id="name-modal-title" style="font-size: 14px; margin-bottom: 15px; color: var(--retro-pink);">NOUVEAU SCORE !</h2>
+            <p id="name-modal-text" style="font-size: 10px; margin-bottom: 15px;">Entre ton pseudo :</p>
+            <input type="text" id="leaderboard-name-input" placeholder="Alchimiste" style="width: 100%; padding: 10px; border: 2px solid black; border-radius: 10px; margin-bottom: 20px; font-family: 'Press Start 2P', cursive; font-size: 8px; text-align: center;">
+            <button class="btn-restart" onclick="game.confirmLeaderboardName()" id="name-modal-btn">VALIDER</button>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="password-modal" class="screen" style="background: rgba(0,0,0,0.8); z-index: 1002; display: none; align-items: center; justify-content: center;">
+        <div class="card" style="width: 80%; max-width: 300px; text-align: center; padding: 20px; background: white; border: 3px solid black; border-radius: 15px; box-shadow: 4px 4px 0px #000;">
+            <h2 style="font-size: 14px; margin-bottom: 15px; color: var(--retro-cyan);">ACCÈS RÉSERVÉ</h2>
+            <p style="font-size: 10px; margin-bottom: 15px;">Entrez le mot de passe :</p>
+            <input type="password" id="admin-password-input" style="width: 100%; padding: 10px; border: 2px solid black; border-radius: 10px; margin-bottom: 20px; font-family: 'Press Start 2P', cursive; font-size: 8px; text-align: center;">
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-restart" onclick="document.getElementById('password-modal').style.display='none'" style="background: var(--retro-pink); font-size: 8px;">ANNULER</button>
+                <button class="btn-restart" onclick="game.confirmPassword()" style="font-size: 8px;">VALIDER</button>
+            </div>
+        </div>
+    </div>
+
     <div id="achievement-toast" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--retro-yellow); color: #000; padding: 10px 20px; border-radius: 10px; font-weight: bold; font-size: 12px; box-shadow: 4px 4px 0px #000; z-index: 2000; display: none; animation: slideUp 0.3s ease-out;">SUCCÈS DÉVERROUILLÉ !</div>
 
     <script>
         // --- Audio Engine ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let isMuted = false;
+
+        // Resume audio context on first user interaction
+        document.addEventListener('click', () => {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }, { once: true });
         
         function playSound(type) {
             if (isMuted) return;
+            // Ensure audio context is active (browsers often suspend it)
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.connect(gain);
@@ -1404,6 +1485,70 @@
                 gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.05);
+            } else if (type === 'spin') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+            } else if (type === 'wheel_win') {
+                const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+                notes.forEach((freq, i) => {
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.connect(g);
+                    g.connect(audioCtx.destination);
+                    o.type = 'triangle';
+                    o.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.1);
+                    g.gain.setValueAtTime(0.1, audioCtx.currentTime + i * 0.1);
+                    g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.1 + 0.2);
+                    o.start(audioCtx.currentTime + i * 0.1);
+                    o.stop(audioCtx.currentTime + i * 0.1 + 0.2);
+                });
+            } else if (type === 'wheel_lose') {
+                const notes = [392.00, 311.13]; // G4, Eb4
+                notes.forEach((freq, i) => {
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.connect(g);
+                    g.connect(audioCtx.destination);
+                    o.type = 'sawtooth';
+                    o.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.15);
+                    g.gain.setValueAtTime(0.1, audioCtx.currentTime + i * 0.15);
+                    g.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.15 + 0.3);
+                    o.start(audioCtx.currentTime + i * 0.15);
+                    o.stop(audioCtx.currentTime + i * 0.15 + 0.3);
+                });
+            } else if (type === 'buy') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'powerup') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.2);
             }
         }
 
@@ -1411,151 +1556,194 @@
         const COMMON_DECOYS = ["🔥", "💧", "⚡", "🌈", "💀", "🍕", "🚗", "🎮", "🎸", "👽", "🍔", "🍦", "🚀", "💎", "👑", "🎩", "👠", "🎻", "🎲", "🎯", "🎨", "🎭", "🎪", "🎫", "🎬", "🎤", "🎧", "🎷", "🎺", "🎹", "🥨", "🍩", "🍿", "🥤", "🛹", "🚲", "🛸", "🪐"];
 
         const LEVELS = [
-            // Palier 1 (1-20) : 2 emojis
+            // Palier 1 (1-20) : Mix de catégories (Difficulté variée)
             { id: 1, objective: "Titanic", solution: ["🚢", "🧊"], category: "movie" },
-            { id: 2, objective: "Spider-Man", solution: ["🕷️", "👦"], category: "movie" },
-            { id: 3, objective: "Harry Potter", solution: ["⚡", "👓"], category: "movie" },
-            { id: 4, objective: "Batman", solution: ["🦇", "👨"], category: "movie" },
-            { id: 5, objective: "Le Roi Lion", solution: ["🦁", "👑"], category: "movie" },
-            { id: 6, objective: "Les Dents de la Mer", solution: ["🦈", "🌊"], category: "movie" },
-            { id: 7, objective: "Là-Haut", solution: ["🎈", "🏠"], category: "movie" },
-            { id: 8, objective: "La Reine des Neiges", solution: ["❄️", "👸"], category: "movie" },
-            { id: 9, objective: "Joker", solution: ["🤡", "🃏"], category: "movie" },
-            { id: 10, objective: "Shrek", solution: ["👹", "🧅"], category: "movie" },
-            { id: 11, objective: "Toy Story", solution: ["🤠", "🚀"], category: "movie" },
-            { id: 12, objective: "Le Monde de Nemo", solution: ["🤡", "🐟"], category: "movie" },
-            { id: 13, objective: "King Kong", solution: ["🦍", "🏢"], category: "movie" },
-            { id: 14, objective: "Cendrillon", solution: ["👠", "🎃"], category: "movie" },
-            { id: 15, objective: "Aladdin", solution: ["🧞", "🏮"], category: "movie" },
-            { id: 16, objective: "Pinocchio", solution: ["🤥", "🪵"], category: "movie" },
-            { id: 17, objective: "Blanche-Neige", solution: ["🍎", "👸"], category: "movie" },
-            { id: 18, objective: "Ratatouille", solution: ["🐀", "👨‍🍳"], category: "movie" },
-            { id: 19, objective: "Wall-E", solution: ["🤖", "🌱"], category: "movie" },
-            { id: 20, objective: "Cars", solution: ["🏎️", "⚡"], category: "movie" },
+            { id: 2, objective: "Stranger Things", solution: [" waffle", "🚲", "🔦", "👾"], category: "series" },
+            { id: 3, objective: "Super Mario", solution: ["🍄", "🐢", "🏰", "👨‍🔧"], category: "game" },
+            { id: 4, objective: "Michael Jackson", solution: ["🎤", "🧤", "🧟"], category: "music" },
+            { id: 5, objective: "Apple", solution: ["🍎", "💻"], category: "brand" },
+            { id: 6, objective: "France", solution: ["🇫🇷", "🥖"], category: "geo" },
+            { id: 7, objective: "Lion", solution: ["🦁", "🌍"], category: "nature" },
+            { id: 8, objective: "Squeezie", solution: ["🇫🇷", "🎮", "🎤"], category: "youtube" },
+            { id: 9, objective: "Pizza", solution: ["🍕", "🇮🇹", "🍅"], category: "food" },
+            { id: 10, objective: "Spider-Man", solution: ["🕷️", "👦"], category: "movie" },
+            { id: 11, objective: "Squid Game", solution: ["🦑", "🔴", "🔺", "🟥", "🟢"], category: "series" },
+            { id: 12, objective: "Pokémon", solution: ["🐭", "⚡", "🔴", "⚪"], category: "game" },
+            { id: 13, objective: "Queen", solution: ["👑", "👨🏻‍🦱", "🎸"], category: "music" },
+            { id: 14, objective: "Nike", solution: ["👟", "✔️"], category: "brand" },
+            { id: 15, objective: "USA", solution: ["🇺🇸", "🗽"], category: "geo" },
+            { id: 16, objective: "Abeille", solution: ["🐝", "🍯"], category: "nature" },
+            { id: 17, objective: "MrBeast", solution: ["🇺🇸", "💵", "🍔"], category: "youtube" },
+            { id: 18, objective: "Sushi", solution: ["🍣", "🇯🇵", "🍱"], category: "food" },
+            { id: 19, objective: "Harry Potter", solution: ["⚡", "👓"], category: "movie" },
+            { id: 20, objective: "Game of Thrones", solution: ["🐉", "❄️", "🐺", "👑", "⚔️"], category: "series" },
 
-            // Palier 2 (21-40) : 3 emojis
-            { id: 21, objective: "Star Wars", solution: ["⚔️", "🌌", "🤖"], category: "movie" },
-            { id: 22, objective: "Jurassic Park", solution: ["🦖", "🦟", "🧬"], category: "movie" },
-            { id: 23, objective: "Matrix", solution: ["💊", "🕶️", "💻"], category: "movie" },
-            { id: 24, objective: "Retour vers le Futur", solution: ["🚗", "⚡", "🕰️"], category: "movie" },
-            { id: 25, objective: "Pirates des Caraïbes", solution: ["🏴‍☠️", "⚓", "🦜"], category: "movie" },
-            { id: 26, objective: "SOS Fantômes", solution: ["👻", "🚫", "🔫"], category: "movie" },
-            { id: 27, objective: "Indiana Jones", solution: ["🤠", "🐍", "💎"], category: "movie" },
-            { id: 28, objective: "E.T. l'extra-terrestre", solution: ["👽", "🚲", "🌕"], category: "movie" },
-            { id: 29, objective: "Men in Black", solution: ["🕶️", "👽", "🔫"], category: "movie" },
-            { id: 30, objective: "Terminator", solution: ["🤖", "🕶️", "🏍️"], category: "movie" },
-            { id: 31, objective: "Gladiator", solution: ["⚔️", "🏟️", "🛡️"], category: "movie" },
-            { id: 32, objective: "Forrest Gump", solution: ["🏃", "🍫", "👟"], category: "movie" },
-            { id: 33, objective: "Seul au Monde", solution: ["🏝️", "🏐", "📦"], category: "movie" },
-            { id: 34, objective: "Maman j'ai raté l'avion", solution: ["🏠", "👦", "❄️"], category: "movie" },
-            { id: 35, objective: "L'Exorciste", solution: ["👧", "🤮", "⛪"], category: "movie" },
-            { id: 36, objective: "Psychose", solution: ["🚿", "🔪", "🏨"], category: "movie" },
-            { id: 37, objective: "Scream", solution: ["😱", "🔪", "📞"], category: "movie" },
-            { id: 38, objective: "Saw", solution: ["🤡", "🚲", "🪚"], category: "movie" },
-            { id: 39, objective: "Ça (IT)", solution: ["🤡", "🎈", "⛵"], category: "movie" },
-            { id: 40, objective: "Shining", solution: ["🪓", "🏨", "❄️"], category: "movie" },
+            // Palier 2 (21-40)
+            { id: 21, objective: "Zelda", solution: ["🗡️", "🛡️", "🧚", "👑"], category: "game" },
+            { id: 22, objective: "Daft Punk", solution: ["🤖", "🎧", "🇫🇷"], category: "music" },
+            { id: 23, objective: "McDonald's", solution: ["🍔", "🍟"], category: "brand" },
+            { id: 24, objective: "Japon", solution: ["🇯🇵", "🍣"], category: "geo" },
+            { id: 25, objective: "PewDiePie", solution: ["🇸🇪", "🎮", "👊"], category: "youtube" },
+            { id: 26, objective: "Burger", solution: ["🍔", "🍟", "🥤"], category: "food" },
+            { id: 27, objective: "Batman", solution: ["🦇", "👨"], category: "movie" },
+            { id: 28, objective: "Breaking Bad", solution: ["🧪", "🚐", "💵", "🏜️", "👨‍🔬"], category: "series" },
+            { id: 29, objective: "Minecraft", solution: ["🟩", "⛏️", "🧱", "🧟"], category: "game" },
+            { id: 30, objective: "Beatles", solution: ["🐞", "🎸", "🇬🇧"], category: "music" },
+            { id: 31, objective: "Starbucks", solution: ["☕", "🧜‍♀️"], category: "brand" },
+            { id: 32, objective: "Italie", solution: ["🇮🇹", "🍕"], category: "geo" },
+            { id: 33, objective: "Papillon", solution: ["🐛", "🦋"], category: "nature" },
+            { id: 34, objective: "Michou", solution: ["🇫🇷", "🕺", "🎮"], category: "youtube" },
+            { id: 35, objective: "Tacos", solution: ["🌮", "🇲🇽", "🌶️"], category: "food" },
+            { id: 36, objective: "Le Roi Lion", solution: ["🦁", "👑"], category: "movie" },
+            { id: 37, objective: "La Casa de Papel", solution: ["👺", "🏦", "💵", "🔫", "🇪🇸"], category: "series" },
+            { id: 38, objective: "Fortnite", solution: ["🔫", "🧱", "🕺", "🚌"], category: "game" },
+            { id: 39, objective: "Nirvana", solution: ["🎸", "👶", "💵"], category: "music" },
+            { id: 40, objective: "Netflix", solution: ["🎬", "📺"], category: "brand" },
 
-            // Palier 3 (41-60) : 4 emojis
-            { id: 41, objective: "Avengers", solution: ["🛡️", "🔨", "🏹", "🦾"], category: "movie" },
-            { id: 42, objective: "Stranger Things", solution: ["🧇", "🚲", "🔦", "👾"], category: "series" },
-            { id: 43, objective: "Super Mario", solution: ["🍄", "🐢", "🏰", "👨‍🔧"], category: "game" },
-            { id: 44, objective: "Pokémon", solution: ["🐭", "⚡", "🔴", "⚪"], category: "game" },
-            { id: 45, objective: "Zelda", solution: ["🗡️", "🛡️", "🧚", "👑"], category: "game" },
-            { id: 46, objective: "Minecraft", solution: ["🟩", "⛏️", "🧱", "🧟"], category: "game" },
-            { id: 47, objective: "Fortnite", solution: ["🔫", "🧱", "🕺", "🚌"], category: "game" },
-            { id: 48, objective: "GTA", solution: ["🚗", "🔫", "💰", "🚁"], category: "game" },
-            { id: 49, objective: "Pac-Man", solution: ["🟡", "👻", "🍒", "🕹️"], category: "game" },
-            { id: 50, objective: "Tetris", solution: ["🧱", "🟦", "🟥", "🟨"], category: "game" },
-            { id: 51, objective: "Sonic", solution: ["🦔", "💨", "🔵", "💍"], category: "game" },
-            { id: 52, objective: "Street Fighter", solution: ["🥋", "🥊", "👊", "💥"], category: "game" },
-            { id: 53, objective: "Mortal Kombat", solution: ["🐉", "🩸", "💀", "❄️"], category: "game" },
-            { id: 54, objective: "Resident Evil", solution: ["🧟", "🔫", "💊", "🏢"], category: "game" },
-            { id: 55, objective: "Tomb Raider", solution: ["🏹", "🏺", "🧗", "🔫"], category: "game" },
-            { id: 56, objective: "God of War", solution: ["🪓", "🧔", "🏹", "❄️"], category: "game" },
-            { id: 57, objective: "Halo", solution: ["🔫", "🛸", "🪐", "🦾"], category: "game" },
-            { id: 58, objective: "Call of Duty", solution: ["🔫", "🚁", "💣", "🪖"], category: "game" },
-            { id: 59, objective: "Assassin's Creed", solution: ["🦅", "🗡️", "⛪", "🕰️"], category: "game" },
-            { id: 60, objective: "The Witcher", solution: ["🐺", "⚔️", "🧙‍♀️", "🐎"], category: "game" },
+            // Palier 3 (41-60)
+            { id: 41, objective: "Égypte", solution: ["🇪🇬", "🏜️"], category: "geo" },
+            { id: 42, objective: "Pingouin", solution: ["🐧", "❄️"], category: "nature" },
+            { id: 43, objective: "Amixem", solution: ["🇫🇷", "🛠️", "🎥"], category: "youtube" },
+            { id: 44, objective: "Croissant", solution: ["🥐", "🇫🇷", "☕"], category: "food" },
+            { id: 45, objective: "Les Dents de la Mer", solution: ["🦈", "🌊"], category: "movie" },
+            { id: 46, objective: "Peaky Blinders", solution: ["🎩", "🚬", "🐴", "🥃", "🇬🇧"], category: "series" },
+            { id: 47, objective: "GTA", solution: ["🚗", "🔫", "💰", "🚁"], category: "game" },
+            { id: 48, objective: "Eminem", solution: ["🎤", "🍝", "🐰"], category: "music" },
+            { id: 49, objective: "Coca-Cola", solution: ["🥤", "🔴"], category: "brand" },
+            { id: 50, objective: "Brésil", solution: ["🇧🇷", "⚽"], category: "geo" },
+            { id: 51, objective: "Inoxtag", solution: ["🇫🇷", "🏔️", "🎮"], category: "youtube" },
+            { id: 52, objective: "Paella", solution: ["🥘", "🇪🇸", "🦐"], category: "food" },
+            { id: 53, objective: "Là-Haut", solution: ["🎈", "🏠"], category: "movie" },
+            { id: 54, objective: "The Walking Dead", solution: ["🧟", "🏹", "🤠", "🏚️", "🧟‍♂️"], category: "series" },
+            { id: 55, objective: "Pac-Man", solution: ["🟡", "👻", "🍒", "🕹️"], category: "game" },
+            { id: 56, objective: "Lady Gaga", solution: ["🥩", "👗", "🎤"], category: "music" },
+            { id: 57, objective: "Amazon", solution: ["📦", "🚚"], category: "brand" },
+            { id: 58, objective: "Royaume-Uni", solution: ["🇬🇧", "☕"], category: "geo" },
+            { id: 59, objective: "Chameau", solution: ["🐪", "🏜️"], category: "nature" },
+            { id: 60, objective: "La Reine des Neiges", solution: ["❄️", "👸"], category: "movie" },
 
-            // Palier 4 (61-80) : 5 emojis
-            { id: 61, objective: "Inception", solution: ["🌀", "🏢", "🔫", "🛌", "⏳"], category: "movie" },
-            { id: 62, objective: "Le Seigneur des Anneaux", solution: ["💍", "🌋", "🗡️", "🧙‍♂️", "👣"], category: "movie" },
-            { id: 63, objective: "Squid Game", solution: ["🦑", "🔴", "🔺", "🟥", "🟢"], category: "series" },
-            { id: 64, objective: "Game of Thrones", solution: ["🐉", "❄️", "🐺", "👑", "⚔️"], category: "series" },
-            { id: 65, objective: "Breaking Bad", solution: ["🧪", "🚐", "💵", "🏜️", "👨‍🔬"], category: "series" },
-            { id: 66, objective: "La Casa de Papel", solution: ["👺", "🏦", "💵", "🔫", "🇪🇸"], category: "series" },
-            { id: 67, objective: "Peaky Blinders", solution: ["🎩", "🚬", "🐴", "🥃", "🇬🇧"], category: "series" },
-            { id: 68, objective: "The Walking Dead", solution: ["🧟", "🏹", "🤠", "🏚️", "🧟‍♂️"], category: "series" },
-            { id: 69, objective: "Sherlock Holmes", solution: ["🕵️‍♂️", "🎻", "🔍", "🎩", "🇬🇧"], category: "movie" },
-            { id: 70, objective: "James Bond", solution: ["🔫", "🍸", "🚗", "🤵", "🇬🇧"], category: "movie" },
-            { id: 71, objective: "Mission Impossible", solution: ["💣", "🚁", "🧗", "🕶️", "🏃"], category: "movie" },
-            { id: 72, objective: "Fast & Furious", solution: ["🏎️", "🏁", "💥", "👨‍👩‍👧‍👦", "🚗"], category: "movie" },
-            { id: 73, objective: "Mad Max: Fury Road", solution: ["🏜️", "🚗", "⛓️", "🎸", "💀"], category: "movie" },
-            { id: 74, objective: "Blade Runner", solution: ["🤖", "🏙️", "🚗", "👁️", "☔"], category: "movie" },
-            { id: 75, objective: "Interstellar", solution: ["🚀", "🪐", "⏳", "🌽", "🌌"], category: "movie" },
-            { id: 76, objective: "Gravity", solution: ["🚀", "👩‍🚀", "🛰️", "🌍", "🌑"], category: "movie" },
-            { id: 77, objective: "Seul sur Mars", solution: ["🚀", "🥔", "🏜️", "👨‍🚀", "🔴"], category: "movie" },
-            { id: 78, objective: "Dune", solution: ["🏜️", "🐛", "👁️", "🗡️", "👑"], category: "movie" },
-            { id: 79, objective: "Avatar", solution: ["🟦", "🏹", "🐉", "🌳", "🪐"], category: "movie" },
-            { id: 80, objective: "Black Panther", solution: ["🐆", "🦾", "🟣", "👑", "🌍"], category: "movie" },
+            // Palier 4 (61-80)
+            { id: 61, objective: "Joker", solution: ["🤡", "🃏"], category: "movie" },
+            { id: 62, objective: "Tetris", solution: ["🧱", "🟦", "🟥", "🟨"], category: "game" },
+            { id: 63, objective: "Elton John", solution: ["🎹", "👓", "🚀"], category: "music" },
+            { id: 64, objective: "Disney", solution: ["🐭", "🏰"], category: "brand" },
+            { id: 65, objective: "Chine", solution: ["🇨🇳", "🐼"], category: "geo" },
+            { id: 66, objective: "Baleine", solution: ["🐋", "🌊"], category: "nature" },
+            { id: 67, objective: "Logan Paul", solution: ["🇺🇸", "🥊", "🥤"], category: "youtube" },
+            { id: 68, objective: "Ramen", solution: ["🍜", "🥚", "🥢"], category: "food" },
+            { id: 69, objective: "Shrek", solution: ["👹", "🧅"], category: "movie" },
+            { id: 70, objective: "Toy Story", solution: ["🤠", "🚀"], category: "movie" },
+            { id: 71, objective: "Sonic", solution: ["🦔", "💨", "🔵", "💍"], category: "game" },
+            { id: 72, objective: "Bob Marley", solution: ["🌿", "🎸", "🇯🇲"], category: "music" },
+            { id: 73, objective: "Tesla", solution: ["🚗", "⚡"], category: "brand" },
+            { id: 74, objective: "Australie", solution: ["🇦🇺", "🦘"], category: "geo" },
+            { id: 75, objective: "Markiplier", solution: ["🇺🇸", "🎮", "😱"], category: "youtube" },
+            { id: 76, objective: "Glace", solution: ["🍦", "🍧", "🍨"], category: "food" },
+            { id: 77, objective: "Le Monde de Nemo", solution: ["🤡", "🐟"], category: "movie" },
+            { id: 78, objective: "King Kong", solution: ["🦍", "🏢"], category: "movie" },
+            { id: 79, objective: "Street Fighter", solution: ["🥋", "🥊", "👊", "💥"], category: "game" },
+            { id: 80, objective: "Pink Floyd", solution: ["🌈", "🔺", "🎸"], category: "music" },
 
-            // Musique (81-100)
-            { id: 81, objective: "Michael Jackson", solution: ["🎤", "🧤", "🧟"], category: "music" },
-            { id: 82, objective: "Queen", solution: ["👑", "👨🏻‍🦱", "🎸"], category: "music" },
-            { id: 83, objective: "Daft Punk", solution: ["🤖", "🎧", "🇫🇷"], category: "music" },
-            { id: 84, objective: "Beatles", solution: ["🐞", "🎸", "🇬🇧"], category: "music" },
-            { id: 85, objective: "Nirvana", solution: ["🎸", "👶", "💵"], category: "music" },
-            { id: 86, objective: "Eminem", solution: ["🎤", "🍝", "🐰"], category: "music" },
-            { id: 87, objective: "Lady Gaga", solution: ["🥩", "👗", "🎤"], category: "music" },
-            { id: 88, objective: "Elton John", solution: ["🎹", "👓", "🚀"], category: "music" },
-            { id: 89, objective: "Bob Marley", solution: ["🌿", "🎸", "🇯🇲"], category: "music" },
-            { id: 90, objective: "Pink Floyd", solution: ["🌈", "🔺", "🎸"], category: "music" },
-            { id: 91, objective: "AC/DC", solution: ["⚡", "🎸", "🇦🇺"], category: "music" },
-            { id: 92, objective: "Rolling Stones", solution: ["👅", "🎸", "🇬🇧"], category: "music" },
-            { id: 93, objective: "ABBA", solution: ["🇸🇪", "💃", "🕺"], category: "music" },
-            { id: 94, objective: "Metallica", solution: ["🤘", "🎸", "🔥"], category: "music" },
-            { id: 95, objective: "Coldplay", solution: ["🌈", "🎹", "🌟"], category: "music" },
-            { id: 96, objective: "Gorillaz", solution: ["🦍", "🎧", "🤖"], category: "music" },
-            { id: 97, objective: "Red Hot Chili Peppers", solution: ["🌶️", "🎸", "🌴"], category: "music" },
-            { id: 98, objective: "Linkin Park", solution: ["⛓️", "🎤", "🌅"], category: "music" },
-            { id: 99, objective: "Radiohead", solution: ["📻", "👤", "🌈"], category: "music" },
-            { id: 100, objective: "Oasis", solution: ["🌵", "🎸", "🇬🇧"], category: "music" },
+            // Palier 5 (81-100)
+            { id: 81, objective: "Google", solution: ["🔍", "🌈"], category: "brand" },
+            { id: 82, objective: "Canada", solution: ["🇨🇦", "🍁"], category: "geo" },
+            { id: 83, objective: "Serpent", solution: ["🐍", "🍎"], category: "nature" },
+            { id: 84, objective: "Cyprien", solution: ["🇫🇷", "🎥", "👓"], category: "youtube" },
+            { id: 85, objective: "Pâtes", solution: ["🍝", "🍝", "🇮🇹"], category: "food" },
+            { id: 86, objective: "Cendrillon", solution: ["👠", "🎃"], category: "movie" },
+            { id: 87, objective: "Aladdin", solution: ["🧞", "🏮"], category: "movie" },
+            { id: 88, objective: "Mortal Kombat", solution: ["🐉", "🩸", "💀", "❄️"], category: "game" },
+            { id: 89, objective: "AC/DC", solution: ["⚡", "🎸", "🇦🇺"], category: "music" },
+            { id: 90, objective: "Pinocchio", solution: ["🤥", "🪵"], category: "movie" },
+            { id: 91, objective: "Blanche-Neige", solution: ["🍎", "👸"], category: "movie" },
+            { id: 92, objective: "Hibou", solution: ["🦉", "🌙"], category: "nature" },
+            { id: 93, objective: "Norman", solution: ["🇫🇷", "🎥", "🏠"], category: "youtube" },
+            { id: 94, objective: "Fondue", solution: ["🧀", "🍞", "🇨🇭"], category: "food" },
+            { id: 95, objective: "Ratatouille", solution: ["🐀", "👨‍🍳"], category: "movie" },
+            { id: 96, objective: "Wall-E", solution: ["🤖", "🌱"], category: "movie" },
+            { id: 97, objective: "Resident Evil", solution: ["🧟", "🔫", "💊", "🏢"], category: "game" },
+            { id: 98, objective: "Rolling Stones", solution: ["👅", "🎸", "🇬🇧"], category: "music" },
+            { id: 99, objective: "Cars", solution: ["🏎️", "⚡"], category: "movie" },
+            { id: 100, objective: "Grenouille", solution: ["🐸", "👑"], category: "nature" },
 
-            // Marques (101-110)
-            { id: 101, objective: "Apple", solution: ["🍎", "💻"], category: "brand" },
-            { id: 102, objective: "Nike", solution: ["👟", "✔️"], category: "brand" },
-            { id: 103, objective: "McDonald's", solution: ["🍔", "🍟"], category: "brand" },
-            { id: 104, objective: "Starbucks", solution: ["☕", "🧜‍♀️"], category: "brand" },
-            { id: 105, objective: "Netflix", solution: ["🎬", "📺"], category: "brand" },
-            { id: 106, objective: "Coca-Cola", solution: ["🥤", "🔴"], category: "brand" },
-            { id: 107, objective: "Amazon", solution: ["📦", "🚚"], category: "brand" },
-            { id: 108, objective: "Disney", solution: ["🐭", "🏰"], category: "brand" },
-            { id: 109, objective: "Tesla", solution: ["🚗", "⚡"], category: "brand" },
-            { id: 110, objective: "Google", solution: ["🔍", "🌈"], category: "brand" },
+            // Palier 6 (101-120)
+            { id: 101, objective: "Star Wars", solution: ["⚔️", "🌌", "🤖"], category: "movie" },
+            { id: 102, objective: "Jurassic Park", solution: ["🦖", "🦟", "🧬"], category: "movie" },
+            { id: 103, objective: "Tomb Raider", solution: ["🏹", "🏺", "🧗", "🔫"], category: "game" },
+            { id: 104, objective: "ABBA", solution: ["🇸🇪", "💃", "🕺"], category: "music" },
+            { id: 105, objective: "Matrix", solution: ["💊", "🕶️", "💻"], category: "movie" },
+            { id: 106, objective: "Retour vers le Futur", solution: ["🚗", "⚡", "🕰️"], category: "movie" },
+            { id: 107, objective: "Seb la Frite", solution: ["🇫🇷", "🎥", "🧢"], category: "youtube" },
+            { id: 108, objective: "Pirates des Caraïbes", solution: ["🏴‍☠️", "⚓", "🦜"], category: "movie" },
+            { id: 109, objective: "SOS Fantômes", solution: ["👻", "🚫", "🔫"], category: "movie" },
+            { id: 110, objective: "God of War", solution: ["🪓", "🧔", "🏹", "❄️"], category: "game" },
+            { id: 111, objective: "Metallica", solution: ["🤘", "🎸", "🔥"], category: "music" },
+            { id: 112, objective: "Indiana Jones", solution: ["🤠", "🐍", "💎"], category: "movie" },
+            { id: 113, objective: "Poutine", solution: ["🍟", "🧀", "🇨🇦"], category: "food" },
+            { id: 114, objective: "Men in Black", solution: ["🕶️", "👽", "🔫"], category: "movie" },
+            { id: 115, objective: "Terminator", solution: ["🤖", "🕶️", "🏍️"], category: "movie" },
+            { id: 116, objective: "Halo", solution: ["🔫", "🛸", "🪐", "🦾"], category: "game" },
+            { id: 117, objective: "Coldplay", solution: ["🌈", "🎹", "🌟"], category: "music" },
+            { id: 118, objective: "Gladiator", solution: ["⚔️", "🏟️", "🛡️"], category: "movie" },
+            { id: 119, objective: "Dream", solution: ["🇺🇸", "🟩", "🎭"], category: "youtube" },
+            { id: 120, objective: "Seul au Monde", solution: ["🏝️", "🏐", "📦"], category: "movie" },
 
-            // Géographie (111-120)
-            { id: 111, objective: "France", solution: ["🇫🇷", "🥖"], category: "geo" },
-            { id: 112, objective: "USA", solution: ["🇺🇸", "🗽"], category: "geo" },
-            { id: 113, objective: "Japon", solution: ["🇯🇵", "🍣"], category: "geo" },
-            { id: 114, objective: "Italie", solution: ["🇮🇹", "🍕"], category: "geo" },
-            { id: 115, objective: "Égypte", solution: ["🇪🇬", "🏜️"], category: "geo" },
-            { id: 116, objective: "Brésil", solution: ["🇧🇷", "⚽"], category: "geo" },
-            { id: 117, objective: "Royaume-Uni", solution: ["🇬🇧", "☕"], category: "geo" },
-            { id: 118, objective: "Chine", solution: ["🇨🇳", "🐼"], category: "geo" },
-            { id: 119, objective: "Australie", solution: ["🇦🇺", "🦘"], category: "geo" },
-            { id: 120, objective: "Canada", solution: ["🇨🇦", "🍁"], category: "geo" },
-            
-            // Nature & Animaux (121-130)
-            { id: 121, objective: "Lion", solution: ["🦁", "🌍"], category: "nature" },
-            { id: 122, objective: "Abeille", solution: ["🐝", "🍯"], category: "nature" },
-            { id: 123, objective: "Papillon", solution: ["🐛", "🦋"], category: "nature" },
-            { id: 124, objective: "Pingouin", solution: ["🐧", "❄️"], category: "nature" },
-            { id: 125, objective: "Chameau", solution: ["🐪", "🏜️"], category: "nature" },
-            { id: 126, objective: "Baleine", solution: ["🐋", "🌊"], category: "nature" },
-            { id: 127, objective: "Serpent", solution: ["🐍", "🍎"], category: "nature" },
-            { id: 128, objective: "Hibou", solution: ["🦉", "🌙"], category: "nature" },
-            { id: 129, objective: "Grenouille", solution: ["🐸", "👑"], category: "nature" },
-            { id: 130, objective: "Éléphant", solution: ["🐘", "🌳"], category: "nature" }
+            // Palier 7 (121-140)
+            { id: 121, objective: "Maman j'ai raté l'avion", solution: ["🏠", "👦", "❄️"], category: "movie" },
+            { id: 122, objective: "L'Exorciste", solution: ["👧", "🤮", "⛪"], category: "movie" },
+            { id: 123, objective: "Call of Duty", solution: ["🔫", "🚁", "💣", "🪖"], category: "game" },
+            { id: 124, objective: "Gorillaz", solution: ["🦍", "🎧", "🤖"], category: "music" },
+            { id: 125, objective: "Sidemen", solution: ["🇬🇧", "⚽", "🎥"], category: "youtube" },
+            { id: 126, objective: "Scream", solution: ["😱", "🔪", "📞"], category: "movie" },
+            { id: 127, objective: "Saw", solution: ["🤡", "🚲", "🪚"], category: "movie" },
+            { id: 128, objective: "Ça (IT)", solution: ["🤡", "🎈", "⛵"], category: "movie" },
+            { id: 129, objective: "Shining", solution: ["🪓", "🏨", "❄️"], category: "movie" },
+            { id: 130, objective: "Assassin's Creed", solution: ["🦅", "🗡️", "⛪", "🕰️"], category: "game" },
+            { id: 131, objective: "Curry", solution: ["🍛", "🇮🇳", "🌶️"], category: "food" },
+            { id: 132, objective: "Avengers", solution: ["🛡️", "🔨", "🏹", "🦾"], category: "movie" },
+            { id: 133, objective: "Inception", solution: ["🌀", "🏢", "🔫", "🛌", "⏳"], category: "movie" },
+            { id: 134, objective: "Le Seigneur des Anneaux", solution: ["💍", "🌋", "🗡️", "🧙‍♂️", "👣"], category: "movie" },
+            { id: 135, objective: "Ninja", solution: ["🇺🇸", "🎮", "💇‍♂️"], category: "youtube" },
+            { id: 136, objective: "The Witcher", solution: ["🐺", "⚔️", "🧙‍♀️", "🐎"], category: "game" },
+            { id: 137, objective: "Linkin Park", solution: ["⛓️", "🎤", "🌅"], category: "music" },
+            { id: 138, objective: "James Bond", solution: ["🔫", "🍸", "🚗", "🤵", "🇬🇧"], category: "movie" },
+            { id: 139, objective: "Mission Impossible", solution: ["💣", "🚁", "🧗", "🕶️", "🏃"], category: "movie" },
+            { id: 140, objective: "Fast & Furious", solution: ["🏎️", "🏁", "💥", "👨‍👩‍👧‍👦", "🚗"], category: "movie" },
+
+            // Palier 8 (141-150)
+            { id: 141, objective: "Mad Max: Fury Road", solution: ["🏜️", "🚗", "⛓️", "🎸", "💀"], category: "movie" },
+            { id: 142, objective: "Blade Runner", solution: ["🤖", "🏙️", "🚗", "👁️", "☔"], category: "movie" },
+            { id: 143, objective: "Interstellar", solution: ["🚀", "🪐", "⏳", "🌽", "🌌"], category: "movie" },
+            { id: 144, objective: "Mcfly et Carlito", solution: ["🇫🇷", "🎥", "👯‍♂️"], category: "youtube" },
+            { id: 145, objective: "Gravity", solution: ["🚀", "👩‍🚀", "🛰️", "🌍", "🌑"], category: "movie" },
+            { id: 146, objective: "Seul sur Mars", solution: ["🚀", "🥔", "🏜️", "👨‍🚀", "🔴"], category: "movie" },
+            { id: 147, objective: "Dune", solution: ["🏜️", "🐛", "👁️", "🗡️", "👑"], category: "movie" },
+            { id: 148, objective: "Cheesecake", solution: ["🍰", "🧀", "🇺🇸"], category: "food" },
+            { id: 149, objective: "Avatar", solution: ["🟦", "🏹", "🐉", "🌳", "🪐"], category: "movie" },
+            { id: 150, objective: "Black Panther", solution: ["🐆", "🦾", "🟣", "👑", "🌍"], category: "movie" },
+
+            // Palier 9 (151-170) - Nouvelles Catégories
+            { id: 151, objective: "MrBeast", solution: ["🇺🇸", "💰", "🍔"], category: "youtube" },
+            { id: 152, objective: "Squeezie", solution: ["🇫🇷", "🎮", "🐕"], category: "youtube" },
+            { id: 153, objective: "PewDiePie", solution: ["🇸🇪", "👊", "🎮"], category: "youtube" },
+            { id: 154, objective: "Michou", solution: ["🇫🇷", "💙", "🕺"], category: "youtube" },
+            { id: 155, objective: "Inoxtag", solution: ["🇫🇷", "🏔️", "👒"], category: "youtube" },
+            { id: 156, objective: "Casey Neistat", solution: ["🇺🇸", "🛹", "🕶️"], category: "youtube" },
+            { id: 157, objective: "Amixem", solution: ["🇫🇷", "🚀", "🛠️"], category: "youtube" },
+            { id: 158, objective: "Dude Perfect", solution: ["🇺🇸", "🏀", "🎯"], category: "youtube" },
+            { id: 159, objective: "Marques Brownlee", solution: ["🇺🇸", "📱", "🔋"], category: "youtube" },
+            { id: 160, objective: "One Piece", solution: ["🏴‍☠️", "👒", "🌊"], category: "anime" },
+            { id: 161, objective: "Naruto", solution: ["🍥", "🦊", "🥋"], category: "anime" },
+            { id: 162, objective: "Dragon Ball", solution: ["🐉", "🟠", "⚡"], category: "anime" },
+            { id: 163, objective: "Death Note", solution: ["📓", "🍎", "💀"], category: "anime" },
+            { id: 164, objective: "Attack on Titan", solution: ["🧱", "⚔️", "👹"], category: "anime" },
+            { id: 165, objective: "Demon Slayer", solution: ["⚔️", "👺", "🌊"], category: "anime" },
+            { id: 166, objective: "My Hero Academia", solution: ["🦸‍♂️", "🏫", "💥"], category: "anime" },
+            { id: 167, objective: "Hunter x Hunter", solution: ["🎣", "🐜", "🃏"], category: "anime" },
+            { id: 168, objective: "Jujutsu Kaisen", solution: ["🤞", "🧿", "👹"], category: "anime" },
+            { id: 169, objective: "Fullmetal Alchemist", solution: ["🦾", "🧪", "⚙️"], category: "anime" },
+            { id: 170, objective: "Pokimane", solution: ["🇨🇦", "🎮", "🎧"], category: "youtube" }
+
         ];
 
         // --- Game Logic ---
@@ -1614,7 +1802,10 @@
                 cat_game_count: parseInt(localStorage.getItem('popcorn_stats_cat_game_count')) || 0,
                 cat_geo_count: parseInt(localStorage.getItem('popcorn_stats_cat_geo_count')) || 0,
                 cat_brand_count: parseInt(localStorage.getItem('popcorn_stats_cat_brand_count')) || 0,
-                cat_nature_count: parseInt(localStorage.getItem('popcorn_stats_cat_nature_count')) || 0
+                cat_nature_count: parseInt(localStorage.getItem('popcorn_stats_cat_nature_count')) || 0,
+                cat_youtube_count: parseInt(localStorage.getItem('popcorn_stats_cat_youtube_count')) || 0,
+                cat_anime_count: parseInt(localStorage.getItem('popcorn_stats_cat_anime_count')) || 0,
+                cat_food_count: parseInt(localStorage.getItem('popcorn_stats_cat_food_count')) || 0
             },
             objectiveTranslations: {
                 "Titanic": { fr: "Titanic", en: "Titanic", es: "Titanic" },
@@ -1697,6 +1888,26 @@
                 "Dune": { fr: "Dune", en: "Dune", es: "Dune" },
                 "Avatar": { fr: "Avatar", en: "Avatar", es: "Avatar" },
                 "Black Panther": { fr: "Black Panther", en: "Black Panther", es: "Black Panther" },
+                "MrBeast": { fr: "MrBeast", en: "MrBeast", es: "MrBeast" },
+                "Squeezie": { fr: "Squeezie", en: "Squeezie", es: "Squeezie" },
+                "PewDiePie": { fr: "PewDiePie", en: "PewDiePie", es: "PewDiePie" },
+                "Michou": { fr: "Michou", en: "Michou", es: "Michou" },
+                "Inoxtag": { fr: "Inoxtag", en: "Inoxtag", es: "Inoxtag" },
+                "Casey Neistat": { fr: "Casey Neistat", en: "Casey Neistat", es: "Casey Neistat" },
+                "Amixem": { fr: "Amixem", en: "Amixem", es: "Amixem" },
+                "Dude Perfect": { fr: "Dude Perfect", en: "Dude Perfect", es: "Dude Perfect" },
+                "Marques Brownlee": { fr: "Marques Brownlee", en: "Marques Brownlee", es: "Marques Brownlee" },
+                "One Piece": { fr: "One Piece", en: "One Piece", es: "One Piece" },
+                "Naruto": { fr: "Naruto", en: "Naruto", es: "Naruto" },
+                "Dragon Ball": { fr: "Dragon Ball", en: "Dragon Ball", es: "Dragon Ball" },
+                "Death Note": { fr: "Death Note", en: "Death Note", es: "Death Note" },
+                "Attack on Titan": { fr: "L'Attaque des Titans", en: "Attack on Titan", es: "Ataque a los Titanes" },
+                "Demon Slayer": { fr: "Demon Slayer", en: "Demon Slayer", es: "Guardianes de la Noche" },
+                "My Hero Academia": { fr: "My Hero Academia", en: "My Hero Academia", es: "My Hero Academia" },
+                "Hunter x Hunter": { fr: "Hunter x Hunter", en: "Hunter x Hunter", es: "Hunter x Hunter" },
+                "Jujutsu Kaisen": { fr: "Jujutsu Kaisen", en: "Jujutsu Kaisen", es: "Jujutsu Kaisen" },
+                "Fullmetal Alchemist": { fr: "Fullmetal Alchemist", en: "Fullmetal Alchemist", es: "Fullmetal Alchemist" },
+                "Pokimane": { fr: "Pokimane", en: "Pokimane", es: "Pokimane" },
                 "Michael Jackson": { fr: "Michael Jackson", en: "Michael Jackson", es: "Michael Jackson" },
                 "Queen": { fr: "Queen", en: "Queen", es: "Queen" },
                 "Daft Punk": { fr: "Daft Punk", en: "Daft Punk", es: "Daft Punk" },
@@ -1746,7 +1957,15 @@
                 "Serpent": { fr: "Serpent", en: "Snake", es: "Serpiente" },
                 "Hibou": { fr: "Hibou", en: "Owl", es: "Búho" },
                 "Grenouille": { fr: "Grenouille", en: "Frog", es: "Rana" },
-                "Éléphant": { fr: "Éléphant", en: "Elephant", es: "Elefante" }
+                "Éléphant": { fr: "Éléphant", en: "Elephant", es: "Elefante" },
+                "Seb la Frite": { fr: "Seb la Frite", en: "Seb la Frite", es: "Seb la Frite" },
+                "Poutine": { fr: "Poutine", en: "Poutine", es: "Poutine" },
+                "Dream": { fr: "Dream", en: "Dream", es: "Dream" },
+                "Sidemen": { fr: "Sidemen", en: "Sidemen", es: "Sidemen" },
+                "Curry": { fr: "Curry", en: "Curry", es: "Curry" },
+                "Ninja": { fr: "Ninja", en: "Ninja", es: "Ninja" },
+                "Mcfly et Carlito": { fr: "Mcfly et Carlito", en: "Mcfly et Carlito", es: "Mcfly et Carlito" },
+                "Cheesecake": { fr: "Cheesecake", en: "Cheesecake", es: "Cheesecake" }
             },
 
             updateStats(key, value = 1) {
@@ -1761,6 +1980,31 @@
                 document.getElementById('stat-coins').innerText = this.stats.coins;
                 document.getElementById('stat-fusions').innerText = this.stats.fusions;
                 document.getElementById('stat-daily').innerText = this.stats.daily;
+
+                // Category stats
+                const catStatsContainer = document.getElementById('category-stats-container');
+                if (catStatsContainer) {
+                    const categories = [
+                        { id: 'movie', icon: '🎬' },
+                        { id: 'series', icon: '📺' },
+                        { id: 'game', icon: '🎮' },
+                        { id: 'music', icon: '🎵' },
+                        { id: 'geo', icon: '🌍' },
+                        { id: 'brand', icon: '🏷️' },
+                        { id: 'nature', icon: '🌿' },
+                        { id: 'youtube', icon: '🎥' },
+                        { id: 'anime', icon: '🎌' },
+                        { id: 'food', icon: '🍕' }
+                    ];
+
+                    catStatsContainer.innerHTML = categories.map(cat => `
+                        <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <span style="font-size: 16px; margin-bottom: 5px;">${cat.icon}</span>
+                            <span style="font-size: 10px; font-weight: bold; color: var(--retro-cyan);">${this.stats['cat_' + cat.id + '_count']}</span>
+                            <span style="font-size: 6px; opacity: 0.6; text-transform: uppercase;">${this.t('cat_' + cat.id)}</span>
+                        </div>
+                    `).join('');
+                }
             },
 
             showAchievements() {
@@ -1867,10 +2111,10 @@
                         descEl.innerText = this.t(ach.desc);
                         
                         if (isUnlocked) {
-                            statusEl.innerText = "✓ DÉBLOQUÉ";
+                            statusEl.innerText = "✓ " + this.t('unlocked_status');
                             statusEl.style.color = "var(--retro-green)";
                         } else {
-                            statusEl.innerText = "🔒 VERROUILLÉ";
+                            statusEl.innerText = "🔒 " + this.t('locked');
                             statusEl.style.color = "var(--retro-pink)";
                         }
                         
@@ -2145,6 +2389,16 @@
                 this.loadLeaderboard();
             },
 
+            showPrivacy() {
+                this.hideAllScreens();
+                document.getElementById('privacy-screen').classList.add('active');
+            },
+
+            showLegal() {
+                this.hideAllScreens();
+                document.getElementById('legal-screen').classList.add('active');
+            },
+
             hideAllScreens() {
                 const screens = document.querySelectorAll('.screen');
                 screens.forEach(s => s.classList.remove('active'));
@@ -2159,7 +2413,15 @@
             },
 
             async showPrivateCounter() {
-                const password = prompt("Accès réservé. Entrez le mot de passe :");
+                document.getElementById('password-modal').style.display = 'flex';
+                document.getElementById('admin-password-input').value = "";
+                document.getElementById('admin-password-input').focus();
+            },
+
+            async confirmPassword() {
+                const password = document.getElementById('admin-password-input').value;
+                document.getElementById('password-modal').style.display = 'none';
+                
                 if (password === "popcorn7") { // Simple password for the user
                     try {
                         const res = await fetch('/api/views');
@@ -2231,13 +2493,12 @@
                 // Filter levels
                 let filtered = category === 'all' ? [...LEVELS] : LEVELS.filter(l => l.category === category);
                 
-                if (mode === 'timeattack' || mode === 'hardcore') {
-                    // Random shuffle for these modes
-                    this.sessionLevels = filtered.sort(() => Math.random() - 0.5);
-                } else {
-                    // Tier-by-tier for Classic and other modes
-                    // Keep original order as requested by the user
+                if (mode === 'classic' && category === 'all') {
+                    // Tier-by-tier for Classic + All
                     this.sessionLevels = filtered;
+                } else {
+                    // Random shuffle for everything else
+                    this.sessionLevels = filtered.sort(() => Math.random() - 0.5);
                 }
 
                 if (this.sessionLevels.length === 0) {
@@ -2423,12 +2684,19 @@
                 if (tab === 'avatars') this.updateAvatarsUI();
             },
 
+            getStyleBonus() {
+                const styles = ['🍿', '🍦', '🍕', '🌮', '🍩', '🍔', '🍣', '🍫', '🍪', '🍰', '🧁', '🥧', '🥨', '🥞', '🧇', '🥓'];
+                const index = styles.indexOf(this.currentStyle);
+                return 1 + (index * 0.05); // 5% bonus per style level (much more impactful!)
+            },
+
             updateStylesUI() {
                 const grid = document.getElementById('styles-grid');
                 const styles = ['🍿', '🍦', '🍕', '🌮', '🍩', '🍔', '🍣', '🍫', '🍪', '🍰', '🧁', '🥧', '🥨', '🥞', '🧇', '🥓'];
-                grid.innerHTML = styles.map(s => `
+                grid.innerHTML = styles.map((s, i) => `
                     <div class="skin-card ${this.currentStyle === s ? 'active' : ''} ${!this.unlockedStyles.includes(s) ? 'locked' : ''}" onclick="game.buyStyle('${s}')">
                         <div style="font-size: 30px; margin-bottom: 5px;">${s}</div>
+                        <div style="font-size: 8px; color: var(--retro-yellow); margin-bottom: 5px;">+${i * 5}% Score</div>
                         <div class="skin-name">${!this.unlockedStyles.includes(s) ? '100 💰' : this.t('shop_owned')}</div>
                     </div>
                 `).join('');
@@ -2565,7 +2833,13 @@
                 spinBtn.disabled = true;
                 this.updateStats('spins');
                 
+                // Play spin sound periodically
+                const spinInterval = setInterval(() => {
+                    playSound('spin');
+                }, 150);
+
                 setTimeout(() => {
+                    clearInterval(spinInterval);
                     const actualDeg = (360 - (randomDeg % 360)) % 360;
                     
                     // 16 sections, each 22.5 degrees
@@ -2594,17 +2868,22 @@
                     
                     const result = prizes[section];
                     if (result.type === 'coins') {
+                        playSound('wheel_win');
                         this.addCoins(result.val);
                         this.showAlert(this.t('wheel_result') + result.val + " " + this.t('coins'));
                     } else if (result.type === 'hints') {
+                        playSound('wheel_win');
                         this.addHints(result.val);
                         const hintLabel = result.val > 1 ? this.t('shop_hints').split(' ')[1] : this.t('prize_1_hint').split(' ')[1];
                         this.showAlert(this.t('wheel_result') + result.val + " " + hintLabel);
                     } else if (result.type === 'nothing') {
+                        playSound('wheel_lose');
                         this.showAlert(this.t('wheel_result') + this.t('prize_nothing'));
                     } else if (result.type === 'gift') {
+                        playSound('wheel_win');
                         this.giveSurpriseGift();
                     } else if (result.type === 'jackpot') {
+                        playSound('victory');
                         this.addCoins(500);
                         this.showAlert(this.t('wheel_result') + "JACKPOT: 500 " + this.t('coins') + "!");
                         confetti({
@@ -2727,11 +3006,11 @@
             loadLeaderboard() {
                 const list = document.getElementById('leaderboard-list');
                 let leaderboard = JSON.parse(localStorage.getItem('popcorn_leaderboard')) || [
-                    { name: "PopcornMaster", score: 15000 },
-                    { name: "EmojiKing", score: 12400 },
-                    { name: "MovieBuff", score: 11000 },
-                    { name: "GamerPro", score: 9500 },
-                    { name: "Newbie", score: 1200 }
+                    { name: "PopcornMaster", score: 125000 },
+                    { name: "EmojiKing", score: 98500 },
+                    { name: "MovieBuff", score: 75000 },
+                    { name: "GamerPro", score: 52000 },
+                    { name: "Newbie", score: 15000 }
                 ];
                 
                 // Sort by score
@@ -2748,20 +3027,30 @@
             saveToLeaderboard() {
                 if (this.score <= 0) return;
                 
+                document.getElementById('name-modal').style.display = 'flex';
+                document.getElementById('leaderboard-name-input').value = "Alchimiste";
+                document.getElementById('leaderboard-name-input').focus();
+            },
+
+            confirmLeaderboardName() {
+                const nameInput = document.getElementById('leaderboard-name-input');
+                const name = nameInput.value.trim() || "Alchimiste";
+                document.getElementById('name-modal').style.display = 'none';
+
                 let leaderboard = JSON.parse(localStorage.getItem('popcorn_leaderboard')) || [
-                    { name: "PopcornMaster", score: 15000 },
-                    { name: "EmojiKing", score: 12400 },
-                    { name: "MovieBuff", score: 11000 },
-                    { name: "GamerPro", score: 9500 },
-                    { name: "Newbie", score: 1200 }
+                    { name: "PopcornMaster", score: 125000 },
+                    { name: "EmojiKing", score: 98500 },
+                    { name: "MovieBuff", score: 75000 },
+                    { name: "GamerPro", score: 52000 },
+                    { name: "Newbie", score: 15000 }
                 ];
                 
-                const name = prompt("NOUVEAU SCORE ! Entre ton pseudo :", "Alchimiste") || "Alchimiste";
                 leaderboard.push({ name, score: Math.floor(this.score) });
                 leaderboard.sort((a, b) => b.score - a.score);
                 leaderboard = leaderboard.slice(0, 10); // Keep top 10
                 
                 localStorage.setItem('popcorn_leaderboard', JSON.stringify(leaderboard));
+                this.showLeaderboard();
             },
 
             startChallenge(levelIds) {
@@ -2863,7 +3152,7 @@
 
             spawnPopcorn(x, y) {
                 const count = 25;
-                const emojis = [this.currentStyle, '✨', '💥', '🧪'];
+                const emojis = [this.currentStyle, this.currentStyle, this.currentStyle, '✨', '💥', '🧪'];
                 for (let i = 0; i < count; i++) {
                     const p = document.createElement('div');
                     p.className = 'explosion-particle';
@@ -2918,6 +3207,9 @@
                         cat_series: "SÉRIES",
                         cat_game: "JEUX VIDÉO",
                         cat_music: "MUSIQUE",
+                        cat_youtube: "YOUTUBERS (FR & US)",
+                        cat_anime: "ANIME & MANGA",
+                        cat_food: "CUISINE",
                         game_modes: "MODES DE JEU",
                         mode_classic: "CLASSIQUE",
                         mode_chrono: "CHRONO (60s)",
@@ -2959,6 +3251,11 @@
                             "4. Enchaîne les succès pour booster ton Combo !",
                             "5. Attention : 4 vies par palier. Si tu tombes à 0, retour au Niveau 1 !"
                         ],
+                        rule_1: "1. Associe les bons émojis pour recréer la référence.",
+                        rule_2: "2. Clique sur FUSIONNER pour valider.",
+                        rule_3: "3. Sois rapide ! Le Timer impacte ton score.",
+                        rule_4: "4. Enchaîne les succès pour booster ton Combo !",
+                        rule_5: "5. Attention : 4 vies par palier. Si tu tombes à 0, retour au Niveau 1 !",
                         spin: "LANCER !",
                         already_spun: "DÉJÀ UTILISÉ AUJOURD'HUI",
                         loading: "Chargement du classement...",
@@ -3007,11 +3304,14 @@
                         surprise_coins: "CADEAU SURPRISE : 200 PIÈCES ! (Tous les skins sont déjà à toi) 💰✨",
                         rules_label: "🧪 RÈGLES :",
                         streak: "Série : %d jours",
-                        skin_classic: "CLASSIQUE",
+                        skin_default: "CLASSIQUE",
                         skin_dark: "DARK MODE",
                         skin_neon: "NEON NIGHT",
                         skin_retro: "RETRO GOLD",
                         skin_cyber: "CYBERPUNK",
+                        copyright: "Hugo_BSQT 2026 tous droits réservés",
+                        privacy_policy: "POLITIQUE DE CONFIDENTIALITÉ",
+                        legal_mentions: "MENTIONS LÉGALES",
                         stats: "STATISTIQUES",
                         stat_levels: "Niveaux réussis",
                         stat_coins: "Pièces gagnées",
@@ -3020,9 +3320,12 @@
                         reset_confirm: "Es-tu sûr de vouloir tout réinitialiser ? Cette action est irréversible !",
                         yes: "OUI",
                         no: "NON",
+                        locked: "VERROUILLÉ",
+                        unlocked_status: "DÉBLOQUÉ",
                         cat_geo: "GÉOGRAPHIE",
                         cat_brand: "MARQUES",
                         cat_nature: "NATURE & ANIMAUX",
+                        cat_anime: "ANIME & MANGA",
                         achievements: "TROPHÉES",
                         achievements_subtitle: "Débloque les succès pour devenir une légende !",
                         ach_first_fusion: "Première Fusion",
@@ -3099,9 +3402,15 @@
                         ach_nature_expert_desc: "Réussis 20 niveaux de nature.",
                         ach_brand_expert: "Logo Master",
                         ach_brand_expert_desc: "Réussis 20 niveaux de marques.",
+                        ach_yt_expert: "Expert YouTube",
+                        ach_yt_expert_desc: "Réussis 20 niveaux de la catégorie YouTubers.",
+                        ach_anime_expert: "Expert Anime",
+                        ach_anime_expert_desc: "Réussis 20 niveaux de la catégorie Anime.",
                         shop_double: "DOUBLE PIÈCES",
                         double_added: "DOUBLE PIÈCES ACTIVÉ !",
                         double_used: "DOUBLE PIÈCES UTILISÉ !",
+                        reset_progress: "RÉINITIALISER LA PROGRESSION",
+                        views_subtitle: "Vues totales sur le site",
                     },
                     en: {
                         title: "POP-CORN ALCHEMY",
@@ -3120,6 +3429,8 @@
                         reset_confirm: "Are you sure you want to reset everything? This cannot be undone!",
                         yes: "YES",
                         no: "NO",
+                        locked: "LOCKED",
+                        unlocked_status: "UNLOCKED",
                         cat_geo: "GEOGRAPHY",
                         cat_brand: "BRANDS",
                         resume: "RESUME",
@@ -3129,6 +3440,9 @@
                         cat_series: "SERIES",
                         cat_game: "VIDEO GAMES",
                         cat_music: "MUSIC",
+                        cat_youtube: "YOUTUBERS (FR & US)",
+                        cat_anime: "ANIME & MANGA",
+                        cat_food: "FOOD",
                         game_modes: "GAME MODES",
                         mode_classic: "CLASSIC",
                         mode_chrono: "CHRONO (60s)",
@@ -3170,6 +3484,11 @@
                             "4. Chain successes to boost your Combo!",
                             "5. Warning: 4 lives per tier. If you hit 0, back to Level 1!"
                         ],
+                        rule_1: "1. Match the right emojis to recreate the reference.",
+                        rule_2: "2. Click FUSE to validate.",
+                        rule_3: "3. Be fast! The Timer impacts your score.",
+                        rule_4: "4. Chain successes to boost your Combo!",
+                        rule_5: "5. Warning: 4 lives per tier. If you hit 0, back to Level 1!",
                         spin: "SPIN!",
                         already_spun: "ALREADY USED TODAY",
                         loading: "Loading leaderboard...",
@@ -3218,12 +3537,17 @@
                         surprise_coins: "SURPRISE GIFT: 200 COINS! (All skins are already yours) 💰✨",
                         rules_label: "🧪 RULES:",
                         streak: "Streak: %d days",
-                        skin_classic: "CLASSIC",
+                        skin_default: "CLASSIC",
                         skin_dark: "DARK MODE",
                         skin_neon: "NEON NIGHT",
                         skin_retro: "RETRO GOLD",
                         skin_cyber: "CYBERPUNK",
+                        copyright: "Hugo_BSQT 2026 all rights reserved",
+                        privacy_policy: "PRIVACY POLICY",
+                        legal_mentions: "LEGAL MENTIONS",
                         cat_nature: "NATURE & ANIMALS",
+                        cat_yt_fr_us: "YOUTUBERS (FR & US)",
+                        cat_anime: "ANIME & MANGA",
                         achievements: "ACHIEVEMENTS",
                         achievements_subtitle: "Unlock achievements to become a legend!",
                         ach_first_fusion: "First Fusion",
@@ -3300,9 +3624,15 @@
                         ach_nature_expert_desc: "Complete 20 nature levels.",
                         ach_brand_expert: "Logo Master",
                         ach_brand_expert_desc: "Complete 20 brand levels.",
+                        ach_yt_expert: "YouTube Expert",
+                        ach_yt_expert_desc: "Complete 20 levels in the YouTubers category.",
+                        ach_anime_expert: "Anime Expert",
+                        ach_anime_expert_desc: "Complete 20 levels in the Anime category.",
                         shop_double: "DOUBLE COINS",
                         double_added: "DOUBLE COINS ACTIVATED!",
                         double_used: "DOUBLE COINS USED!",
+                        reset_progress: "RESET PROGRESS",
+                        views_subtitle: "Total site views",
                     },
                     es: {
                         title: "POP-CORN ALCHEMY",
@@ -3320,6 +3650,9 @@
                         cat_series: "SERIES",
                         cat_game: "VIDEOJUEGOS",
                         cat_music: "MÚSICA",
+                        cat_youtube: "YOUTUBERS (FR & US)",
+                        cat_anime: "ANIME & MANGA",
+                        cat_food: "COCINA",
                         game_modes: "MODOS DE JUEGO",
                         mode_classic: "CLÁSICO",
                         mode_chrono: "CRONO (60s)",
@@ -3361,6 +3694,11 @@
                             "4. ¡Encadena éxitos para aumentar tu Combo!",
                             "5. Advertencia: 4 vidas por etapa. Si llegas a 0, ¡vuelves al Nivel 1!"
                         ],
+                        rule_1: "1. Combina los emojis correctos para recrear la referencia.",
+                        rule_2: "2. Haz clic en FUSIONAR para validar.",
+                        rule_3: "3. ¡Sé rápido! El temporizador afecta tu puntuación.",
+                        rule_4: "4. ¡Encadena éxitos para aumentar tu Combo!",
+                        rule_5: "5. Advertencia: 4 vidas por etapa. Si llegas a 0, ¡vuelves al Nivel 1!",
                         spin: "¡GIRAR!",
                         already_spun: "YA USADO HOY",
                         loading: "Cargando clasificación...",
@@ -3409,14 +3747,18 @@
                         surprise_coins: "¡REGALO SORPRESA: ¡200 MONEDAS! (Todos los skins ya son tuyos) 💰✨",
                         rules_label: "🧪 REGLAS:",
                         streak: "Racha: %d días",
-                        skin_classic: "CLÁSICO",
+                        skin_default: "CLÁSICO",
                         skin_dark: "MODO OSCURO",
                         skin_neon: "NOCHE NEÓN",
                         skin_retro: "ORO RETRO",
                         skin_cyber: "CYBERPUNK",
+                        copyright: "Hugo_BSQT 2026 todos los derechos reservados",
+                        privacy_policy: "POLÍTICA DE PRIVACIDAD",
+                        legal_mentions: "AVISO LEGAL",
                         cat_geo: "GEOGRAFÍA",
                         cat_brand: "MARCAS",
                         cat_nature: "NATURALEZA & ANIMALES",
+                        cat_anime: "ANIME & MANGA",
                         achievements: "LOGROS",
                         achievements_subtitle: "¡Desbloquea logros para convertirte en una leyenda!",
                         ach_first_fusion: "Primera Fusión",
@@ -3493,9 +3835,15 @@
                         ach_nature_expert_desc: "Completa 20 niveles de naturaleza.",
                         ach_brand_expert: "Maestro de Logos",
                         ach_brand_expert_desc: "Completa 20 niveles de marcas.",
+                        ach_yt_expert: "Experto en YouTube",
+                        ach_yt_expert_desc: "Completa 20 niveles en la categoría YouTubers.",
+                        ach_anime_expert: "Experto en Anime",
+                        ach_anime_expert_desc: "Completa 20 niveles en la categoría Anime.",
                         shop_double: "DOBLE MONEDAS",
                         double_added: "¡DOBLE MONEDAS ACTIVADO!",
                         double_used: "¡DOBLE MONEDAS USADO!",
+                        reset_progress: "REINICIAR PROGRESO",
+                        views_subtitle: "Vistas totales del sitio",
                         stats: "ESTADÍSTICAS",
                         stat_levels: "Niveles completados",
                         stat_coins: "Monedas ganadas",
@@ -3503,7 +3851,9 @@
                         stat_daily: "Desafíos diarios",
                         reset_confirm: "¿Estás seguro de que quieres reiniciar todo? ¡Esta acción es irreversible!",
                         yes: "SÍ",
-                        no: "NO"
+                        no: "NO",
+                        locked: "BLOQUEADO",
+                        unlocked_status: "DESBLOQUEADO"
                     }
                 };
                 return TRANSLATIONS[this.language || 'fr'][key];
@@ -3532,6 +3882,9 @@
                     'label-cat-geo': 'cat_geo',
                     'label-cat-brand': 'cat_brand',
                     'label-cat-nature': 'cat_nature',
+                    'label-cat-youtube': 'cat_youtube',
+                    'label-cat-anime': 'cat_anime',
+                    'label-cat-food': 'cat_food',
                     'btn-back-categories': 'back',
                     'modes-title': 'game_modes',
                     'mode-classic': 'mode_classic',
@@ -3592,6 +3945,12 @@
                     'rule-5': 'rule_5',
                     'btn-close-rules': 'close',
                     'copyright-text': 'copyright',
+                    'btn-privacy': 'privacy_policy',
+                    'btn-legal': 'legal_mentions',
+                    'privacy-title': 'privacy_policy',
+                    'legal-title': 'legal_mentions',
+                    'btn-back-privacy': 'back',
+                    'btn-back-legal': 'back',
                     'modal-btn': 'ok'
                 };
 
@@ -3669,7 +4028,8 @@
                 container.classList.add('level-enter');
                 
                 // Objective
-                const translatedObjective = this.objectiveTranslations[level.objective] ? this.objectiveTranslations[level.objective][this.language] : level.objective;
+                const lang = this.language || 'fr';
+                const translatedObjective = this.objectiveTranslations[level.objective] ? this.objectiveTranslations[level.objective][lang] : level.objective;
                 document.getElementById('objective').innerText = translatedObjective;
                 document.getElementById('level-info').innerText = `${this.t('level')} ${this.currentLevelIndex + 1} / ${this.t('tier')} ${Math.ceil((this.currentLevelIndex + 1) / 20)}`;
 
@@ -3710,24 +4070,27 @@
                 this.isPaused = false;
                 
                 // Difficulty increase: timer gets faster as levels progress
+                // Slowed down the progression and increased base time
                 const tier = Math.ceil((this.currentLevelIndex + 1) / 20);
-                const baseDuration = 15000;
-                const levelReduction = this.currentLevelIndex * 250;
-                const tierReduction = (tier - 1) * 2000;
+                const baseDuration = 20000; // 20 seconds instead of 15
+                const levelReduction = this.currentLevelIndex * 150; // 150ms instead of 250ms
+                const tierReduction = (tier - 1) * 1000; // 1000ms instead of 2000ms
                 
-                const duration = Math.max(4000, baseDuration - levelReduction - tierReduction);
-                const step = 100 / (duration / 100);
+                const duration = Math.max(5000, baseDuration - levelReduction - tierReduction);
+                const intervalMs = 50; // Smoother updates (50ms instead of 100ms)
+                const step = 100 / (duration / intervalMs);
                 
                 this.timerInterval = setInterval(() => {
                     if (this.isProcessing || this.isPaused) return;
                     this.timer -= step;
+                    if (this.timer < 0) this.timer = 0;
                     document.getElementById('timer-bar').style.width = `${this.timer}%`;
                     
                     if (this.timer <= 0) {
                         clearInterval(this.timerInterval);
                         this.handleTimeOut();
                     }
-                }, 100);
+                }, intervalMs);
             },
 
             handleTimeOut() {
@@ -3785,7 +4148,13 @@
                 const level = this.sessionLevels[this.currentLevelIndex];
                 const slots = document.querySelectorAll('.fusion-slot');
                 slots.forEach((slot, i) => {
-                    slot.innerText = this.selected[i] ? this.selected[i].emoji : '';
+                    if (this.selected[i]) {
+                        slot.innerText = this.selected[i].emoji;
+                        slot.style.opacity = "1";
+                    } else {
+                        slot.innerText = this.currentStyle;
+                        slot.style.opacity = "0.2";
+                    }
                 });
 
                 // Update Fusion Button state
@@ -3825,7 +4194,9 @@
                 }
 
                 const fusionBtn = document.getElementById('fusion-btn');
-                if (fusionBtn) fusionBtn.innerText = this.t('fusion');
+                if (fusionBtn) {
+                    fusionBtn.innerText = this.currentStyle + ' ' + this.t('fusion');
+                }
 
                 const coinsDisplay = document.getElementById('coins-display');
                 if (coinsDisplay) {
@@ -3884,7 +4255,7 @@
                 if (dailyStreakDisplay) {
                     if (this.dailyStreak > 0) {
                         dailyStreakDisplay.style.display = 'block';
-                        dailyStreakDisplay.innerText = `🔥 ${this.t('streak')} : ${this.dailyStreak} ${this.t('days')}`;
+                        dailyStreakDisplay.innerText = `🔥 ${this.t('streak').replace('%d', this.dailyStreak)}`;
                     } else {
                         dailyStreakDisplay.style.display = 'none';
                     }
@@ -3966,7 +4337,9 @@
                     { id: 'gamer', title: 'ach_gamer', desc: 'ach_gamer_desc', icon: '🎮', x: 4, y: 4, dependsOn: 'series_fan', condition: () => this.stats.cat_game_count >= 20 },
                     { id: 'traveler', title: 'ach_traveler', desc: 'ach_traveler_desc', icon: '✈️', x: 5, y: 4, dependsOn: 'gamer', condition: () => this.stats.cat_geo_count >= 20 },
                     { id: 'nature_expert', title: 'ach_nature_expert', desc: 'ach_nature_expert_desc', icon: '🐘', x: 6, y: 4, dependsOn: 'traveler', condition: () => this.stats.cat_nature_count >= 20 },
-                    { id: 'brand_expert', title: 'ach_brand_expert', desc: 'ach_brand_expert_desc', icon: '🏷️', x: 7, y: 4, dependsOn: 'nature_expert', condition: () => this.stats.cat_brand_count >= 20 }
+                    { id: 'brand_expert', title: 'ach_brand_expert', desc: 'ach_brand_expert_desc', icon: '🏷️', x: 7, y: 4, dependsOn: 'nature_expert', condition: () => this.stats.cat_brand_count >= 20 },
+                    { id: 'yt_expert', title: 'ach_yt_expert', desc: 'ach_yt_expert_desc', icon: '🎥', x: 8, y: 4, dependsOn: 'brand_expert', condition: () => this.stats.cat_youtube_count >= 20 },
+                    { id: 'anime_expert', title: 'ach_anime_expert', desc: 'ach_anime_expert_desc', icon: '🎌', x: 9, y: 4, dependsOn: 'yt_expert', condition: () => this.stats.cat_anime_count >= 20 }
                 ];
             },
 
@@ -3985,6 +4358,7 @@
             showAchievement(title) {
                 const toast = document.getElementById('achievement-toast');
                 toast.innerText = `🏆 ${title}`;
+                toast.style.display = 'block';
                 toast.classList.add('active');
                 playSound('success');
                 confetti({
@@ -3993,7 +4367,13 @@
                     origin: { y: 0.1 },
                     colors: ['#ffc107', '#ffffff']
                 });
-                setTimeout(() => toast.classList.remove('active'), 3000);
+                
+                setTimeout(() => {
+                    toast.classList.remove('active');
+                    setTimeout(() => {
+                        toast.style.display = 'none';
+                    }, 500);
+                }, 4000);
             },
 
             updateProgressBar() {
@@ -4111,11 +4491,16 @@
                     this.spawnPopcorn(rect.left + rect.width / 2, rect.top + rect.height / 2);
 
                     // Score calculation
-                    const timeBonus = this.timer / 10;
-                    const levelPoints = 100 * (1 + (this.currentLevelIndex / 10));
+                    const timeBonus = this.timer / 5;
+                    const levelPoints = 250 * (1 + (this.currentLevelIndex / 10));
                     this.combo++;
                     const oldHighScore = this.highScore;
-                    this.score += (levelPoints + timeBonus) * this.combo;
+                    const styleBonus = this.getStyleBonus();
+                    const bonusPercent = Math.round((styleBonus - 1) * 100);
+                    if (bonusPercent > 0) {
+                        this.showFeedback(`+${bonusPercent}% Style Bonus!`, 'var(--retro-cyan)');
+                    }
+                    this.score += (levelPoints + timeBonus) * this.combo * styleBonus;
                     
                     if (this.combo === 5) {
                         this.updateStats('fever_count');
@@ -4272,6 +4657,11 @@
                 this.addHints(bonusHints);
                 this.updateStats('coins', bonusCoins);
                 this.checkAchievements();
+
+                // Save to leaderboard
+                setTimeout(() => {
+                    this.saveToLeaderboard();
+                }, 1500);
 
                 confetti({
                     particleCount: 200,
