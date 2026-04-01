@@ -32,7 +32,7 @@
             padding: 0;
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Press Start 2P', cursive;
+            font-family: 'Press Start 2P', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', 'Android Emoji', 'EmojiSymbols', cursive;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -425,18 +425,26 @@
         /* Achievement Notification */
         #achievement-toast {
             position: fixed;
-            top: 60px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%) translateY(-100px);
-            background: var(--text);
+            background: #212121;
             color: #fff;
-            padding: 10px 20px;
-            border: 3px solid var(--retro-yellow);
-            font-size: 8px;
-            z-index: 1000;
+            padding: 12px 20px;
+            border: 3px solid #ffaa00;
+            border-radius: 8px;
+            font-family: 'Press Start 2P', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', cursive;
+            font-size: 10px;
+            z-index: 10000;
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-align: center;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.3);
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.8);
+            pointer-events: none;
+            max-width: 320px;
+            width: max-content;
+            display: none;
+            box-sizing: border-box;
+            line-height: 1.4;
         }
 
         #achievement-toast.active {
@@ -974,7 +982,7 @@
             <div class="powerup-bar" style="margin-bottom: 10px;">
                 <button id="shield-btn" class="powerup-btn" title="Bouclier Alchimique">🛡️ <span id="shield-count">0</span></button>
                 <button id="skip-btn" class="powerup-btn" onclick="game.skipLevel()" title="Passer le niveau">⏭️ <span id="skip-count">0</span></button>
-                <button id="double-btn" class="powerup-btn" onclick="game.useDouble()" title="Double Pièces">✖️2 <span id="double-count">0</span></button>
+                <button id="double-btn" class="powerup-btn" onclick="game.useDouble()" title="Double Pièces">✨ <span id="double-count">0</span></button>
             </div>
             <div id="fusion-bar"></div>
             <button id="fusion-btn">FUSIONNER</button>
@@ -1130,7 +1138,7 @@
                 <span id="label-cat-youtube" class="cat-name">YOUTUBERS (FR & US)</span>
             </button>
             <button id="cat-anime" class="cat-card" onclick="game.startGame('anime')">
-                <span class="cat-icon">🎌</span>
+                <span class="cat-icon">🏮</span>
                 <span id="label-cat-anime" class="cat-name">ANIME</span>
             </button>
             <button id="cat-food" class="cat-card" onclick="game.startGame('food')">
@@ -1264,7 +1272,7 @@
                     <div style="font-size: 10px; color: var(--retro-yellow);">120 💰</div>
                 </div>
                 <div class="skin-card" onclick="game.buyDouble()">
-                    <div style="font-size: 30px; margin-bottom: 5px;">✖️2</div>
+                    <div style="font-size: 30px; margin-bottom: 5px;">✨</div>
                     <div class="skin-name" id="label-shop-double">DOUBLE PIÈCES</div>
                     <div style="font-size: 10px; color: var(--retro-yellow);">150 💰</div>
                 </div>
@@ -1403,7 +1411,7 @@
         </div>
     </div>
 
-    <div id="achievement-toast" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--retro-yellow); color: #000; padding: 10px 20px; border-radius: 10px; font-weight: bold; font-size: 12px; box-shadow: 4px 4px 0px #000; z-index: 2000; display: none; animation: slideUp 0.3s ease-out;">SUCCÈS DÉVERROUILLÉ !</div>
+    <div id="achievement-toast">SUCCÈS DÉVERROUILLÉ !</div>
 
     <script>
         // --- Audio Engine ---
@@ -1558,7 +1566,7 @@
         const LEVELS = [
             // Palier 1 (1-20) : Mix de catégories (Difficulté variée)
             { id: 1, objective: "Titanic", solution: ["🚢", "🧊"], category: "movie" },
-            { id: 2, objective: "Stranger Things", solution: [" waffle", "🚲", "🔦", "👾"], category: "series" },
+            { id: 2, objective: "Stranger Things", solution: ["🧇", "🚲", "🔦", "👾"], category: "series" },
             { id: 3, objective: "Super Mario", solution: ["🍄", "🐢", "🏰", "👨‍🔧"], category: "game" },
             { id: 4, objective: "Michael Jackson", solution: ["🎤", "🧤", "🧟"], category: "music" },
             { id: 5, objective: "Apple", solution: ["🍎", "💻"], category: "brand" },
@@ -1993,7 +2001,7 @@
                         { id: 'brand', icon: '🏷️' },
                         { id: 'nature', icon: '🌿' },
                         { id: 'youtube', icon: '🎥' },
-                        { id: 'anime', icon: '🎌' },
+                        { id: 'anime', icon: '🏮' },
                         { id: 'food', icon: '🍕' }
                     ];
 
@@ -2206,7 +2214,14 @@
             },
 
             confirmReset() {
-                localStorage.clear();
+                const keys = [
+                    'popcorn_coins', 'popcorn_hints', 'popcorn_shields', 'popcorn_skips', 'popcorn_doubles',
+                    'popcorn_lang', 'popcorn_unlocked_skins', 'popcorn_unlocked_styles', 'popcorn_unlocked_avatars',
+                    'popcorn_unlocked_achievements', 'popcorn_style', 'popcorn_avatar', 'popcorn_theme',
+                    'popcorn_alchemy_highscore', 'popcorn_alchemy_streak', 'popcorn_alchemy_last_daily',
+                    'popcorn_alchemy_save', 'popcorn_leaderboard', 'popcorn_last_spin'
+                ];
+                keys.forEach(k => localStorage.removeItem(k));
                 window.location.reload();
             },
 
@@ -2486,6 +2501,7 @@
                 this.lives = (mode === 'hardcore') ? 1 : 4;
                 this.selected = [];
                 this.isPaused = false;
+                this.isProcessing = false;
                 this.score = 0;
                 this.combo = 0;
                 this.isDaily = false;
@@ -2636,7 +2652,10 @@
             },
 
             buyStyle(style) {
-                const price = 100;
+                const styles = ['🍿', '🍦', '🍕', '🌮', '🍩', '🍔', '🍣', '🍫', '🍪', '🍰', '🧁', '🥧', '🥨', '🥞', '🧇', '🥓'];
+                const index = styles.indexOf(style);
+                const price = this.getStylePrice(index);
+                
                 if (this.unlockedStyles.includes(style)) {
                     this.currentStyle = style;
                     localStorage.setItem('popcorn_style', style);
@@ -2684,6 +2703,10 @@
                 if (tab === 'avatars') this.updateAvatarsUI();
             },
 
+            getStylePrice(index) {
+                return 100 + (index * 250);
+            },
+
             getStyleBonus() {
                 const styles = ['🍿', '🍦', '🍕', '🌮', '🍩', '🍔', '🍣', '🍫', '🍪', '🍰', '🧁', '🥧', '🥨', '🥞', '🧇', '🥓'];
                 const index = styles.indexOf(this.currentStyle);
@@ -2693,13 +2716,17 @@
             updateStylesUI() {
                 const grid = document.getElementById('styles-grid');
                 const styles = ['🍿', '🍦', '🍕', '🌮', '🍩', '🍔', '🍣', '🍫', '🍪', '🍰', '🧁', '🥧', '🥨', '🥞', '🧇', '🥓'];
-                grid.innerHTML = styles.map((s, i) => `
-                    <div class="skin-card ${this.currentStyle === s ? 'active' : ''} ${!this.unlockedStyles.includes(s) ? 'locked' : ''}" onclick="game.buyStyle('${s}')">
-                        <div style="font-size: 30px; margin-bottom: 5px;">${s}</div>
-                        <div style="font-size: 8px; color: var(--retro-yellow); margin-bottom: 5px;">+${i * 5}% Score</div>
-                        <div class="skin-name">${!this.unlockedStyles.includes(s) ? '100 💰' : this.t('shop_owned')}</div>
-                    </div>
-                `).join('');
+                grid.innerHTML = styles.map((s, i) => {
+                    const price = this.getStylePrice(i);
+                    const isUnlocked = this.unlockedStyles.includes(s);
+                    return `
+                        <div class="skin-card ${this.currentStyle === s ? 'active' : ''} ${!isUnlocked ? 'locked' : ''}" onclick="game.buyStyle('${s}')">
+                            <div style="font-size: 30px; margin-bottom: 5px;">${s}</div>
+                            <div style="font-size: 8px; color: var(--retro-yellow); margin-bottom: 5px;">+${i * 5}% Score</div>
+                            <div class="skin-name">${!isUnlocked ? price + ' 💰' : this.t('shop_owned')}</div>
+                        </div>
+                    `;
+                }).join('');
             },
 
             updateAvatarsUI() {
@@ -2931,7 +2958,7 @@
                         prizeMsg = "CADEAU SURPRISE : 1 ⏭️ PASSAGE !";
                     } else {
                         this.addDoubles(1);
-                        prizeMsg = "CADEAU SURPRISE : 1 ✖️2 DOUBLE PIÈCES !";
+                        prizeMsg = "CADEAU SURPRISE : 1 DOUBLE PIÈCES ! ✨";
                     }
                 } else {
                     // Give big coins
@@ -2964,24 +2991,6 @@
             addHints(amount) {
                 this.hints += amount;
                 localStorage.setItem('popcorn_hints', this.hints);
-                this.updateUI();
-            },
-
-            addShields(amount) {
-                this.shields += amount;
-                localStorage.setItem('popcorn_shields', this.shields);
-                this.updateUI();
-            },
-
-            addSkips(amount) {
-                this.skips += amount;
-                localStorage.setItem('popcorn_skips', this.skips);
-                this.updateUI();
-            },
-
-            addDoubles(amount) {
-                this.doubles += amount;
-                localStorage.setItem('popcorn_doubles', this.doubles);
                 this.updateUI();
             },
 
@@ -3082,6 +3091,9 @@
                 const today = new Date().toISOString().slice(0, 10);
                 const seed = today.split('-').join('');
                 
+                // Check if already played today (optional: allow replay but only count streak once)
+                const alreadyPlayed = localStorage.getItem('popcorn_alchemy_last_daily') === today;
+
                 // Update streak
                 if (this.lastDailyDate !== today) {
                     const last = this.lastDailyDate ? new Date(this.lastDailyDate) : null;
@@ -3090,11 +3102,11 @@
                     if (last) {
                         last.setHours(0, 0, 0, 0);
                         now.setHours(0, 0, 0, 0);
-                        const diff = Math.floor((now - last) / (1000 * 60 * 60 * 24));
+                        const diff = Math.floor((now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24));
                         
                         if (diff === 1) {
                             this.dailyStreak++;
-                        } else {
+                        } else if (diff > 1) {
                             this.dailyStreak = 1;
                         }
                     } else {
@@ -3325,7 +3337,7 @@
                         cat_geo: "GÉOGRAPHIE",
                         cat_brand: "MARQUES",
                         cat_nature: "NATURE & ANIMAUX",
-                        cat_anime: "ANIME & MANGA",
+                        cat_anime: "ANIME",
                         achievements: "TROPHÉES",
                         achievements_subtitle: "Débloque les succès pour devenir une légende !",
                         ach_first_fusion: "Première Fusion",
@@ -3441,7 +3453,7 @@
                         cat_game: "VIDEO GAMES",
                         cat_music: "MUSIC",
                         cat_youtube: "YOUTUBERS (FR & US)",
-                        cat_anime: "ANIME & MANGA",
+                        cat_anime: "ANIME",
                         cat_food: "FOOD",
                         game_modes: "GAME MODES",
                         mode_classic: "CLASSIC",
@@ -3758,7 +3770,7 @@
                         cat_geo: "GEOGRAFÍA",
                         cat_brand: "MARCAS",
                         cat_nature: "NATURALEZA & ANIMALES",
-                        cat_anime: "ANIME & MANGA",
+                        cat_anime: "ANIME",
                         achievements: "LOGROS",
                         achievements_subtitle: "¡Desbloquea logros para convertirte en una leyenda!",
                         ach_first_fusion: "Primera Fusión",
@@ -4120,6 +4132,12 @@
                 feedback.className = 'floating-feedback' + (isRecord ? ' record' : '');
                 feedback.innerText = text;
                 feedback.style.color = color;
+                
+                // Offset vertically if multiple feedbacks are shown
+                const existingFeedbacks = document.querySelectorAll('.floating-feedback');
+                const offset = existingFeedbacks.length * 40;
+                feedback.style.marginTop = `${offset}px`;
+                
                 document.body.appendChild(feedback);
                 setTimeout(() => feedback.remove(), isRecord ? 1500 : 1000);
             },
@@ -4179,14 +4197,6 @@
                 document.getElementById('score-display').innerText = `${this.t('score')}: ${Math.floor(this.score)}`;
                 document.getElementById('high-score-display').innerText = `${this.t('best')}: ${Math.floor(this.highScore)}`;
                 
-                const objectiveEl = document.getElementById('objective');
-                const level = this.sessionLevels[this.currentLevelIndex];
-                if (objectiveEl && level) {
-                    const objectiveKey = level.objective;
-                    const translatedObjective = (this.objectiveTranslations[objectiveKey] && this.objectiveTranslations[objectiveKey][this.language]) || objectiveKey;
-                    objectiveEl.innerText = translatedObjective;
-                }
-
                 const levelInfoEl = document.getElementById('level-info');
                 if (levelInfoEl) {
                     const tier = Math.ceil((this.currentLevelIndex + 1) / 20);
@@ -4326,7 +4336,7 @@
                     { id: 'hint_user', title: 'ach_hint_user', desc: 'ach_hint_user_desc', icon: '💡', x: 0, y: -3, dependsOn: 'first_fusion', condition: () => this.stats.hints_used >= 50 },
                     { id: 'shield_user', title: 'ach_shield_user', desc: 'ach_shield_user_desc', icon: '🛡️', x: 1, y: 3, dependsOn: 'lucky_spin', condition: () => this.stats.shields_used >= 20 },
                     { id: 'skip_user', title: 'ach_skip_user', desc: 'ach_skip_user_desc', icon: '⏭️', x: 2, y: 3, dependsOn: 'shield_user', condition: () => this.stats.skips_used >= 10 },
-                    { id: 'double_user', title: 'ach_double_user', desc: 'ach_double_user_desc', icon: '✖️2', x: 3, y: 3, dependsOn: 'skip_user', condition: () => this.stats.doubles_used >= 10 },
+                    { id: 'double_user', title: 'ach_double_user', desc: 'ach_double_user_desc', icon: '✨', x: 3, y: 3, dependsOn: 'skip_user', condition: () => this.stats.doubles_used >= 10 },
                     { id: 'fever_master', title: 'ach_fever_master', desc: 'ach_fever_master_desc', icon: '🌡️', x: 4, y: 3, dependsOn: 'double_user', condition: () => this.stats.fever_count >= 50 },
                     
                     // Expertise
@@ -4339,7 +4349,7 @@
                     { id: 'nature_expert', title: 'ach_nature_expert', desc: 'ach_nature_expert_desc', icon: '🐘', x: 6, y: 4, dependsOn: 'traveler', condition: () => this.stats.cat_nature_count >= 20 },
                     { id: 'brand_expert', title: 'ach_brand_expert', desc: 'ach_brand_expert_desc', icon: '🏷️', x: 7, y: 4, dependsOn: 'nature_expert', condition: () => this.stats.cat_brand_count >= 20 },
                     { id: 'yt_expert', title: 'ach_yt_expert', desc: 'ach_yt_expert_desc', icon: '🎥', x: 8, y: 4, dependsOn: 'brand_expert', condition: () => this.stats.cat_youtube_count >= 20 },
-                    { id: 'anime_expert', title: 'ach_anime_expert', desc: 'ach_anime_expert_desc', icon: '🎌', x: 9, y: 4, dependsOn: 'yt_expert', condition: () => this.stats.cat_anime_count >= 20 }
+                    { id: 'anime_expert', title: 'ach_anime_expert', desc: 'ach_anime_expert_desc', icon: '🏮', x: 9, y: 4, dependsOn: 'yt_expert', condition: () => this.stats.cat_anime_count >= 20 }
                 ];
             },
 
@@ -4357,9 +4367,14 @@
 
             showAchievement(title) {
                 const toast = document.getElementById('achievement-toast');
-                toast.innerText = `🏆 ${title}`;
+                toast.innerHTML = `
+                    <div style="color: #ffaa00; font-size: 8px; margin-bottom: 4px;">PROGRÈS RÉALISÉ !</div>
+                    <div style="color: #ffffff; font-size: 10px;">${title}</div>
+                `;
                 toast.style.display = 'block';
-                toast.classList.add('active');
+                setTimeout(() => {
+                    toast.classList.add('active');
+                }, 10);
                 playSound('success');
                 confetti({
                     particleCount: 100,
@@ -4412,22 +4427,31 @@
                     playSound('pop');
                     this.showFeedback(this.t('hint_feedback'), 'var(--retro-yellow)');
                     const gridBtns = document.querySelectorAll('.emoji-btn');
+                    let foundBtn = null;
                     for (const btn of gridBtns) {
                         if (btn.innerText === emojiToHint && !btn.classList.contains('selected')) {
-                            // Highlight the button
-                            btn.style.background = 'var(--retro-yellow)';
-                            btn.style.transform = 'scale(1.1)';
-                            setTimeout(() => {
-                                btn.style.background = '#fff';
-                                btn.style.transform = 'scale(1)';
-                            }, 1000);
-                            
-                            this.hintsUsedInLevel = true;
-                            document.getElementById('hint-btn').classList.add('disabled');
-                            this.vibrate(50);
-                            this.updateUI();
+                            foundBtn = btn;
                             break;
                         }
+                    }
+
+                    if (foundBtn) {
+                        // Highlight the button and auto-select it
+                        foundBtn.style.background = 'var(--retro-yellow)';
+                        foundBtn.style.transform = 'scale(1.2)';
+                        foundBtn.style.zIndex = '10';
+                        
+                        setTimeout(() => {
+                            this.addToFusion(emojiToHint, foundBtn);
+                            foundBtn.style.background = '#fff';
+                            foundBtn.style.transform = 'scale(1)';
+                            foundBtn.style.zIndex = '1';
+                        }, 800);
+                        
+                        this.hintsUsedInLevel = true;
+                        document.getElementById('hint-btn').classList.add('disabled');
+                        this.vibrate(50);
+                        this.updateUI();
                     }
                 }
             },
@@ -4609,6 +4633,7 @@
                         this.selected = [];
                         this.renderFusionBar();
                         this.isProcessing = false;
+                        this.startTimer(); // Restart timer for the level
                     }
                 }
             },
